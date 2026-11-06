@@ -2,6 +2,7 @@
 
 #include "protocol.h"
 
+#include <memory>
 #include <QAbstractSocket>
 #include <QCryptographicHash>
 #include <QDateTime>
