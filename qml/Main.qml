@@ -287,7 +287,7 @@ ApplicationWindow {
             notify(player.name + " is already playing.", "warning")
             return
         }
-        if (player.away) {
+        if (player.away || player.channelAway) {
             notify(player.name + " is away.", "warning")
             return
         }

@@ -3,16 +3,103 @@
 #include "protocol.h"
 
 #include <QAbstractSocket>
+#include <QCryptographicHash>
 #include <QDateTime>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QProcess>
+#include <QStandardPaths>
 #include <QTimer>
 #include <QUrl>
 #include <QSet>
+#include <QSysInfo>
+#include <QUuid>
 
 using namespace FightcadeProtocol;
+
+namespace {
+
+QString stableMachineSeed()
+{
+    QByteArray seed = QSysInfo::machineUniqueId();
+    if (seed.isEmpty())
+        seed = QSysInfo::machineHostName().toUtf8();
+    if (seed.isEmpty())
+        seed = QByteArrayLiteral("deckade");
+    return QString::fromUtf8(seed);
+}
+
+QString md5Hex(const QString &value)
+{
+    return QString::fromLatin1(
+        QCryptographicHash::hash(value.toUtf8(), QCryptographicHash::Md5).toHex());
+}
+
+QString uuidFromSeed(const QString &seed)
+{
+    const QString hex = md5Hex(QStringLiteral("deckade-uuid:") + seed);
+    return QStringLiteral("%1-%2-%3-%4-%5")
+        .arg(hex.mid(0, 8), hex.mid(8, 4), hex.mid(12, 4), hex.mid(16, 4), hex.mid(20, 12));
+}
+
+QString findLauncherToken(const QJsonValue &value)
+{
+    if (value.isObject()) {
+        const QJsonObject object = value.toObject();
+        const QString direct = stringValue(object.value(QStringLiteral("token")));
+        if (!direct.isEmpty())
+            return direct;
+        for (auto it = object.constBegin(); it != object.constEnd(); ++it) {
+            const QString nested = findLauncherToken(it.value());
+            if (!nested.isEmpty())
+                return nested;
+        }
+    } else if (value.isArray()) {
+        for (const QJsonValue &entry : value.toArray()) {
+            const QString nested = findLauncherToken(entry);
+            if (!nested.isEmpty())
+                return nested;
+        }
+    }
+    return {};
+}
+
+QJsonObject launcherStatusPayload(const QString &token)
+{
+    // Fightcade's native launcher reports its machine identity after login.
+    // The lobby uses this to decide whether challenges are allowed; without
+    // it the server treats the client as a broken installation.
+    const QString seed = stableMachineSeed();
+    const QString uuid = uuidFromSeed(seed);
+    const QString guid = uuid;
+    const QString huid = QStringLiteral("0030613289.684") + md5Hex(seed);
+    // Deckade does not currently distinguish Wi-Fi from Ethernet. Report a
+    // wired connection so the lobby's optional Wi-Fi challenge filter does
+    // not reject us; the server still sees a valid launcher identity.
+    const QString userStatus = QStringLiteral("stcable");
+    constexpr int version = 6;
+    const QString hashInput = QStringLiteral("3jedoQ") + token
+        + QStringLiteral("qmkq0") + uuid
+        + QStringLiteral("dsnds") + guid
+        + QStringLiteral("sec or") + QString::number(version)
+        + QStringLiteral("2jden3") + userStatus
+        + QStringLiteral("llNjjha") + huid;
+
+    return QJsonObject{
+        {"req", "userstatus"},
+        {"token", token},
+        {"userstatus", userStatus},
+        {"uuid", uuid},
+        {"guid", guid},
+        {"huid", huid},
+        {"version", version},
+        {"hash", md5Hex(hashInput)}
+    };
+}
+
+} // namespace
 
 FightcadeClient::FightcadeClient(QObject *parent)
     : QObject(parent)
@@ -84,7 +171,6 @@ void FightcadeClient::withSocket(const std::function<void()> &ready,
 
     QNetworkRequest request(QUrl(QString::fromLatin1(WebSocketUrl)));
     request.setHeader(QNetworkRequest::UserAgentHeader, QString::fromLatin1(UserAgent));
-    request.setRawHeader("Origin", QByteArray::fromStdString(WebUrl));
     m_socket.open(request);
 }
 
@@ -206,7 +292,7 @@ void FightcadeClient::handleAuthResponse(const QJsonObject &payload)
         return;
     }
 
-    const QString token = stringValue(payload.value(QStringLiteral("token")));
+    const QString token = findLauncherToken(payload);
     if (!token.isEmpty()) {
         user.insert(QStringLiteral("token"), token);
     }
@@ -222,7 +308,86 @@ void FightcadeClient::handleAuthResponse(const QJsonObject &payload)
     setStatus(QStringLiteral("connected"), QStringLiteral("Connected as %1").arg(user.value(QStringLiteral("displayName")).toString()));
     m_lastPong = QDateTime::currentMSecsSinceEpoch();
     emit userChanged();
-    emit loggedIn(m_user, m_appInfo);
+
+    // The official launcher registers its machine/status with the lobby before
+    // the web client starts joining channels. Macade does the same, and the
+    // server otherwise keeps reporting a "broken or incomplete" installation
+    // and rejects challenges.
+    if (!token.isEmpty()) {
+        reportLauncherStatus(token, [this](bool ok, const QString &message) {
+            if (!ok) {
+                qWarning().noquote() << "Fightcade launcher status report failed:" << message;
+            }
+            emit loggedIn(m_user, m_appInfo);
+        });
+    } else {
+        qWarning() << "Fightcade autologin did not include a launcher token";
+        emit loggedIn(m_user, m_appInfo);
+    }
+}
+
+void FightcadeClient::reportLauncherStatus(const QString &token,
+                                           const std::function<void(bool, const QString &)> &callback)
+{
+    const QByteArray body = QJsonDocument(launcherStatusPayload(token)).toJson(QJsonDocument::Compact);
+    const QString curl = QStandardPaths::findExecutable(QStringLiteral("curl"));
+    if (curl.isEmpty()) {
+        qWarning() << "curl is not available; cannot report Fightcade launcher status";
+        if (callback) callback(false, QStringLiteral("curl is not installed"));
+        return;
+    }
+
+    auto *process = new QProcess(this);
+    auto finished = std::make_shared<bool>(false);
+    auto complete = [this, process, callback, finished](bool ok, const QString &message) {
+        if (*finished) return;
+        *finished = true;
+        emit launcherStatusReported(ok, message);
+        if (callback) callback(ok, message);
+        process->deleteLater();
+    };
+
+    connect(process, &QProcess::errorOccurred, this, [process, complete](QProcess::ProcessError error) {
+        if (error == QProcess::FailedToStart) {
+            complete(false, QStringLiteral("Could not start curl"));
+        }
+    });
+    connect(process, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this,
+            [process, complete](int exitCode, QProcess::ExitStatus status) {
+                const QByteArray output = process->readAllStandardOutput().trimmed();
+                const QByteArray error = process->readAllStandardError().trimmed();
+                if (status != QProcess::NormalExit || exitCode != 0) {
+                    complete(false, QString::fromUtf8(error.isEmpty() ? output : error).left(200));
+                    return;
+                }
+                if (!output.contains("\"OK\"")) {
+                    complete(false, QStringLiteral("Unexpected status response: %1")
+                                       .arg(QString::fromUtf8(output).left(200)));
+                    return;
+                }
+                complete(true, QStringLiteral("launcher status registered"));
+            });
+    QTimer::singleShot(12000, process, [process, complete] {
+        if (process->state() != QProcess::NotRunning) {
+            process->kill();
+            complete(false, QStringLiteral("Launcher status request timed out"));
+        }
+    });
+
+    process->start(curl, {
+        QStringLiteral("-sS"),
+        QStringLiteral("--max-time"),
+        QStringLiteral("10"),
+        QStringLiteral("-A"),
+        QStringLiteral("fcade"),
+        QStringLiteral("-H"),
+        QStringLiteral("Content-Type: application/json"),
+        QStringLiteral("--data-binary"),
+        QStringLiteral("@-"),
+        QStringLiteral("https://web.fightcade.com/fc2status/api/")
+    });
+    process->write(body);
+    process->closeWriteChannel();
 }
 
 void FightcadeClient::logout()
@@ -680,6 +845,21 @@ void FightcadeClient::handleEvent(const QJsonObject &payload)
         if (message.isEmpty()) message = stringValue(payload.value(QStringLiteral("chat")));
         if (!message.isEmpty()) {
             qWarning().noquote() << "Fightcade server notice:" << message;
+            // The lobby can push a "broken installation" warning while a
+            // challenge is pending. Treat it as the challenge failure instead
+            // of waiting for the 20-second request timeout.
+            if (message.contains(QStringLiteral("challenge"), Qt::CaseInsensitive)
+                || message.contains(QStringLiteral("broken or incomplete"), Qt::CaseInsensitive)) {
+                for (auto it = m_pending.begin(); it != m_pending.end();) {
+                    if (it->context == QStringLiteral("challenge") || it->context == QStringLiteral("accept")) {
+                        const PendingRequest pending = it.value();
+                        it = m_pending.erase(it);
+                        pending.callback(false, payload, message);
+                    } else {
+                        ++it;
+                    }
+                }
+            }
             // A broken message with a channel is a channel system message and
             // is rendered in the chat log below. Only surface notices that
             // have no channel as a toast.

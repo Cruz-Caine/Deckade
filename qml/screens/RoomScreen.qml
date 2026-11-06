@@ -41,7 +41,9 @@ Item {
             if (screen.isLocal(a)) return -1
             if (screen.isLocal(b)) return 1
             if (aPlaying !== bPlaying) return aPlaying - bPlaying
-            if (a.away !== b.away) return a.away ? 1 : -1
+            var aAway = a.away || a.channelAway
+            var bAway = b.away || b.channelAway
+            if (aAway !== bAway) return aAway ? 1 : -1
             return (a.name ?? "").localeCompare(b.name ?? "")
         })
         return users
@@ -156,7 +158,7 @@ Item {
                     Row {
                         spacing: 14
                         Pill {
-                            text: String(screen.sortedUsers().filter(function(u) { return !u.away }).length) + " ONLINE"
+                            text: String(screen.sortedUsers().filter(function(u) { return !u.away && !u.channelAway }).length) + " ONLINE"
                             dot: true
                             foreground: theme.green
                             fill: "#0b1512"

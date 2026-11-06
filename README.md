@@ -78,6 +78,9 @@ Steam Deck Game Mode presents the built-in controls as an Xbox-style controller.
 ## Requirements
 
 ### Runtime
+Deckade uses the system `curl` for Fightcade's launcher-status registration,
+which the lobby requires before it allows challenges. `curl` is included on
+SteamOS and standard Linux distributions.
 
 - Linux x86_64 (Steam Deck / SteamOS, Arch, Fedora, Ubuntu, etc.)
 - A GPU/display stack supported by Qt 6 and SDL2

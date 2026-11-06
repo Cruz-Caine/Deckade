@@ -423,6 +423,7 @@ QVariantMap normalizeUser(const QJsonObject &object, const QString &channelName)
         {"virtualPing", firstInt(object, {"vping", "virtualPing"}, -1)},
         {"rank", firstInt(object, {"rank"}, 0)},
         {"away", firstBool(object, {"away"})},
+        {"channelAway", firstBool(object, {"channel_away"})},
         {"isWifi", firstBool(object, {"wlan"})},
         {"isProxy", firstBool(object, {"proxy"})},
         {"settings", QVariantMap{{"ranked", ranked}}},

@@ -22,6 +22,11 @@ int main(int argc, char **argv)
     const bool chatProbe = qEnvironmentVariableIsSet("DECKADE_PROBE_CHAT");
     const bool challengeProbe = qEnvironmentVariableIsSet("DECKADE_PROBE_CHALLENGE");
     const QString challengeUser = qEnvironmentVariable("DECKADE_PROBE_CHALLENGE_USER");
+    const int holdMs = qEnvironmentVariableIntValue("DECKADE_PROBE_HOLD_MS");
+    const int challengeDelay = qEnvironmentVariableIsSet("DECKADE_PROBE_CHALLENGE_DELAY_MS")
+        ? qEnvironmentVariableIntValue("DECKADE_PROBE_CHALLENGE_DELAY_MS") : 2500;
+    const int challengeRanked = qEnvironmentVariableIsSet("DECKADE_PROBE_RANKED")
+        ? qEnvironmentVariableIntValue("DECKADE_PROBE_RANKED") : 3;
     bool finished = false;
 
     auto finish = [&](int code) {
@@ -37,6 +42,9 @@ int main(int argc, char **argv)
     QObject::connect(&client, &FightcadeClient::loginFailed, [&](const QString &code, const QString &message) {
         qWarning().noquote() << "LOGIN_FAILED" << code << message;
         finish(1);
+    });
+    QObject::connect(&client, &FightcadeClient::launcherStatusReported, [&](bool ok, const QString &message) {
+        qInfo().noquote() << "LAUNCHER_STATUS" << (ok ? "OK" : "FAILED") << message;
     });
     QObject::connect(&client, &FightcadeClient::loggedIn, [&](const QVariantMap &user, const QVariantMap &) {
         qInfo().noquote() << "LOGGED_IN" << user.value("name").toString()
@@ -168,10 +176,16 @@ int main(int argc, char **argv)
                 client.leaveChannel(channelName);
             } else {
                 qInfo().noquote() << "CHALLENGING" << target << "in" << channelName;
-                QTimer::singleShot(2500, &client, [&client, target, channelName] {
-                    client.challenge(target, channelName, 1, 3);
+                QTimer::singleShot(challengeDelay, &client, [&client, target, channelName, challengeRanked] {
+                    client.challenge(target, channelName, 1, challengeRanked);
                 });
             }
+        } else if (holdMs > 0) {
+            qInfo().noquote() << "HOLD" << holdMs << "ms in" << channel.value("name").toString();
+            QTimer::singleShot(holdMs, &client, [&client, &finish, channel] {
+                client.leaveChannel(channel.value("name").toString());
+                QTimer::singleShot(500, &client, [&finish] { finish(0); });
+            });
         } else {
             client.leaveChannel(channel.value("name").toString());
         }

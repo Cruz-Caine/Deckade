@@ -11,7 +11,7 @@ namespace FightcadeProtocol {
 inline constexpr auto ApiUrl = "https://web.fightcade.com/api/";
 inline constexpr auto WebUrl = "https://web.fightcade.com";
 inline constexpr auto WebSocketUrl = "wss://ggs.fightcade.com/ws/";
-inline constexpr auto UserAgent = "Fightcade2-LINUX-v2.1.45";
+inline constexpr auto UserAgent = "Fightcade2-WIN32-v2.1.45";
 
 QString previewUrl(const QString &gameId, const QString &channelName);
 QString avatarUrl(const QString &gravatarHash);

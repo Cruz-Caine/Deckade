@@ -19,7 +19,7 @@
 #include <QUrl>
 
 namespace {
-constexpr auto UserAgent = "Fightcade2-LINUX-v2.1.45";
+constexpr auto UserAgent = "Fightcade2-WIN32-v2.1.45";
 
 QStringList jsonFilesFor(const QString &emulator)
 {

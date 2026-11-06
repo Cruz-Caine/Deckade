@@ -57,6 +57,7 @@ signals:
     void statusChanged();
     void userChanged();
     void loggedIn(const QVariantMap &user, const QVariantMap &appInfo);
+    void launcherStatusReported(bool ok, const QString &message);
     void loginFailed(const QString &code, const QString &message);
     void loggedOut();
     void connectionLost(const QString &message);
@@ -105,6 +106,8 @@ private:
     void withSocket(const std::function<void()> &ready, const std::function<void(const QString &)> &error);
     void sendAuth(const QString &action, const QJsonObject &payload);
     void handleAuthResponse(const QJsonObject &payload);
+    void reportLauncherStatus(const QString &token,
+                              const std::function<void(bool, const QString &)> &callback);
     void sendRequest(const QJsonObject &payload, const QString &context, RequestCallback callback);
     void sendOneWay(const QJsonObject &payload);
     void handleEvent(const QJsonObject &payload);

@@ -17,7 +17,7 @@ ones Deckade implements in `src/fightcade/`.
 | Bootstrap location | `POST https://web.fightcade.com/api/` with `{"req":"location"}` |
 | Lobby WebSocket | `wss://ggs.fightcade.com/ws/` |
 | Web client | `https://web.fightcade.com/` |
-| User-Agent used by the Linux client | `Fightcade2-LINUX-v2.1.45` |
+| User-Agent used by the desktop client | `Fightcade2-WIN32-v2.1.45` |
 
 The API requires a browser/desktop User-Agent. The `location` response is an
 encrypted opaque string consumed by `login`/`autologin`.
@@ -43,8 +43,33 @@ or:
 ```
 
 A successful response has `result: 200`, a `user` object, `app_info`, and on
-password login a `cookie`. `user.token`/top-level `token` is the launcher token.
+password login a `cookie`. The launcher token may be at the top level, inside
+`user`, or nested deeper in the response; Deckade searches recursively.
 The cookie is the persistent session; Deckade stores it owner-only.
+
+After login every client must register the launcher with the status service.
+Without this the lobby treats the installation as broken and rejects
+challenges with `cant challenge user`:
+
+```json
+POST https://web.fightcade.com/fc2status/api/
+{
+  "req": "userstatus",
+  "token": "<launcher token>",
+  "userstatus": "stcable",
+  "uuid": "<stable UUID>",
+  "guid": "<stable UUID>",
+  "huid": "0030613289.684<md5(machine id)>",
+  "version": 6,
+  "hash": "<md5 formula>"
+}
+```
+
+The hash input is the literal concatenation
+`3jedoQ<token>qmkq0<uuid>dsnds<guid>sec or62jden3<userstatus>llNjjha<huid>`
+(example for version 6; there is no separator between `6` and `2jden3`). The response is `{"res":"OK"}`. Deckade performs
+this POST with `curl` before it emits `loggedIn`, so channels and challenges are
+only started after the launcher status is accepted.
 
 Auth failures return `result != 200` plus an `error` string. Known errors:
 
@@ -144,7 +169,7 @@ fcade://stream/<emulator>/<gameid>/<quarkid>.2,<port>
 fcade://play/<emulator>/<gameid>
 fcade://training/<emulator>/<gameid>
 fcade://killemu
-fcade://userstatus/<status>/<token>
+fcade://userstatus/<status>/<token>   (Deckade performs the equivalent HTTP POST)
 fcade://checkrom/<emulator>/<gameid>
 ```
 
