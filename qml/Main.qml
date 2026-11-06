@@ -859,12 +859,16 @@ ApplicationWindow {
             if (!root.challengeDialogVisible) root.openIncomingChallenge(challenge)
         }
         function onChallengeCancelled(challenge) {
+            var wasOutgoing = root.outgoingChallenges.some(function(item) {
+                return item.challenger === challenge.challenger && item.challengeId === challenge.challengeId
+            })
             root.incomingChallenges = root.incomingChallenges.filter(function(item) {
                 return !(item.challenger === challenge.challenger && item.challengeId === challenge.challengeId)
             })
             root.outgoingChallenges = root.outgoingChallenges.filter(function(item) {
                 return !(item.challenger === challenge.challenger && item.challengeId === challenge.challengeId)
             })
+            if (wasOutgoing) root.notify("Challenge to " + challenge.challenger + " canceled.", "info")
             if (root.challengeIncoming && root.activeIncoming
                 && root.activeIncoming.challenger === challenge.challenger
                 && root.activeIncoming.challengeId === challenge.challengeId) {
@@ -887,7 +891,10 @@ ApplicationWindow {
             })
             root.notify(challenge.challenger + " accepted. Starting match...", "info")
         }
-        function onChallengeSent(challenge) { root.outgoingChallenges = root.outgoingChallenges.concat([challenge]); root.notify("Challenge sent to " + challenge.challenger, "info") }
+        function onChallengeSent(challenge) {
+            root.outgoingChallenges = root.outgoingChallenges.concat([challenge])
+            root.notify("Challenge sent to " + challenge.challenger + " — waiting for a response.", "info")
+        }
         function onChallengeFailed(channelName, message) { root.notify(message, "error") }
         function onMatchStarted(match) {
             var channel = root.channelByName(match.channelName) ?? root.currentChannel

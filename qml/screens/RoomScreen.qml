@@ -27,6 +27,67 @@ Item {
     signal cancelChallenge(var challenge)
     signal copyRequested(string text)
 
+    // Keep an outgoing challenge visible until the server reports an accept,
+    // reject, cancel, or match start. A transient toast alone leaves the player
+    // unsure whether the challenge was actually delivered.
+    Rectangle {
+        id: outgoingBanner
+        z: 30
+        visible: screen.outgoingChallenges.length > 0
+        anchors.top: parent.top
+        anchors.topMargin: 154
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: Math.min(520, parent.width - 40)
+        height: 64
+        radius: 12
+        color: "#16130bdd"
+        border.width: 1
+        border.color: theme.gold
+
+        Row {
+            anchors.fill: parent
+            anchors.leftMargin: 16
+            anchors.rightMargin: 10
+            spacing: 12
+
+            Column {
+                width: parent.width - 126
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 2
+
+                Text {
+                    width: parent.width
+                    text: "CHALLENGE SENT · " + (screen.outgoingChallenges.length > 0 ? (screen.outgoingChallenges[0].challenger ?? "") : "")
+                    color: theme.gold
+                    font.family: theme.displayFamily
+                    font.weight: Font.DemiBold
+                    font.pixelSize: 13
+                    elide: Text.ElideRight
+                }
+                Text {
+                    width: parent.width
+                    text: screen.outgoingChallenges.length > 1
+                          ? "Waiting for a response · " + screen.outgoingChallenges.length + " pending"
+                          : "Waiting for a response"
+                    color: theme.textMuted
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 11
+                    elide: Text.ElideRight
+                }
+            }
+
+            AppButton {
+                text: "CANCEL"
+                compact: true
+                danger: true
+                width: 108
+                height: 42
+                anchors.verticalCenter: parent.verticalCenter
+                onClicked: screen.cancelChallenge(screen.outgoingChallenges[0])
+            }
+        }
+    }
+
     function isLocal(player) {
         return (screen.user.name ?? "") === (player.name ?? "")
     }
