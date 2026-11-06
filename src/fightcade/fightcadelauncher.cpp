@@ -537,6 +537,12 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
     environment.insert(QStringLiteral("MACADE_ROM_DIR"), romRoot);
     environment.insert(QStringLiteral("XDG_DATA_HOME"), QDir(workDir).filePath(QStringLiteral("data")));
     environment.insert(QStringLiteral("WINEDEBUG"), QStringLiteral("-all"));
+    // SDL's fullscreen-desktop path is unreliable through XWayland/sway. The
+    // window is deliberately windowed; i3 and Steam Deck Game Mode can make it
+    // fullscreen, and X11 is the reliable SDL backend on both.
+    if (!qEnvironmentVariableIsEmpty("DISPLAY")) {
+        environment.insert(QStringLiteral("SDL_VIDEODRIVER"), QStringLiteral("x11"));
+    }
     if (singlePlayer) {
         environment.insert(QStringLiteral("MACADE_SINGLE_PLAYER_INPUT"), QStringLiteral("1"));
     } else {
@@ -846,7 +852,7 @@ bool FightcadeLauncher::launchMatch(const QVariantMap &match)
     }
     QStringList arguments;
     if (emulator == QStringLiteral("fbneo")) {
-        arguments << QStringLiteral("-fullscreen") << QStringLiteral("-joy") << uriForMatch(match);
+        arguments << QStringLiteral("-joy") << uriForMatch(match);
     } else if (emulator == QStringLiteral("snes9x")) {
         arguments << QStringLiteral("quark:served,%1,%2.%3,%4,%5,%6")
                          .arg(gameId, match.value(QStringLiteral("quarkId")).toString())
@@ -880,7 +886,7 @@ bool FightcadeLauncher::launchSpectate(const QVariantMap &match)
                                      QString::number(match.value(QStringLiteral("port")).toInt()));
     QStringList arguments;
     if (emulator == QStringLiteral("fbneo")) {
-        arguments << QStringLiteral("-fullscreen") << QStringLiteral("-joy") << command;
+        arguments << QStringLiteral("-joy") << command;
     } else if (emulator == QStringLiteral("snes9x")) {
         arguments << command;
     } else {
@@ -907,7 +913,7 @@ bool FightcadeLauncher::launchSolo(const QString &emulatorName, const QString &g
     }
     QStringList arguments;
     if (emulator == QStringLiteral("fbneo")) {
-        arguments << QStringLiteral("-fullscreen") << QStringLiteral("-joy") << gameId;
+        arguments << QStringLiteral("-joy") << gameId;
     } else if (emulator == QStringLiteral("snes9x")) {
         arguments << gameId;
     } else {
@@ -935,7 +941,7 @@ bool FightcadeLauncher::launchTraining(const QString &emulatorName, const QStrin
     const QString command = QStringLiteral("macade:training,%1").arg(gameId);
     QStringList arguments;
     if (emulator == QStringLiteral("fbneo")) {
-        arguments << QStringLiteral("-fullscreen") << QStringLiteral("-joy") << command;
+        arguments << QStringLiteral("-joy") << command;
     } else if (emulator == QStringLiteral("snes9x")) {
         arguments << command;
     } else {

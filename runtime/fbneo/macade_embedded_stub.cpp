@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -144,8 +145,12 @@ void MacadeEmbeddedSetOverlayGameInfo(const char *player1, const char *player2, 
     (void)spectator;
     (void)ranked;
     (void)player;
-    gPlayer1 = player1 ? player1 : "";
-    gPlayer2 = player2 ? player2 : "";
+    // Local direct/quark-loopback runs have no Fightcade server to supply
+    // names. Allow the launcher/test harness to pass display names explicitly.
+    const char *override1 = std::getenv("DECKADE_OVERLAY_P1");
+    const char *override2 = std::getenv("DECKADE_OVERLAY_P2");
+    gPlayer1 = override1 && *override1 ? override1 : (player1 ? player1 : "");
+    gPlayer2 = override2 && *override2 ? override2 : (player2 ? player2 : "");
 }
 
 void MacadeEmbeddedSetOverlayScores(int score1, int score2)

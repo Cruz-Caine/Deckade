@@ -40,6 +40,20 @@ The Controls editor is available for FBNeo rooms. The Settings screen cycles
 the controller used for both launcher navigation and Player 1; this matters
 when Steam Input or a virtual controller occupies SDL joystick index 0.
 
+## Local match test
+
+A second Fightcade account is not required to test the native netplay path. The
+two-peer GGPO loopback runs two FBNeo processes locally and draws test names in
+the match overlay:
+
+```sh
+./tests/quark_loopback.sh sfiii3nr1
+```
+
+Both windows should show `Local Test P1 vs Local Test P2`; inserting a coin and
+pressing start should advance both peers. See `docs/MATCH_TESTING.md` for
+details.
+
 ## In-game overlay
 
 The native FBNeo runtime now draws a Fightcade-style top overlay with Player 1
