@@ -50,6 +50,9 @@ jobs:
       - name: Build AppImage
         run: ./scripts/build-appimage.sh
 
+      - name: Run protocol tests
+        run: ctest --test-dir build-appimage --output-on-failure
+
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:

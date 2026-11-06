@@ -1,6 +1,7 @@
 #include "fightcadeclient.h"
 
 #include "protocol.h"
+#include "userstatus.h"
 
 #include <memory>
 #include <QAbstractSocket>
@@ -19,88 +20,6 @@
 #include <QUuid>
 
 using namespace FightcadeProtocol;
-
-namespace {
-
-QString stableMachineSeed()
-{
-    QByteArray seed = QSysInfo::machineUniqueId();
-    if (seed.isEmpty())
-        seed = QSysInfo::machineHostName().toUtf8();
-    if (seed.isEmpty())
-        seed = QByteArrayLiteral("deckade");
-    return QString::fromUtf8(seed);
-}
-
-QString md5Hex(const QString &value)
-{
-    return QString::fromLatin1(
-        QCryptographicHash::hash(value.toUtf8(), QCryptographicHash::Md5).toHex());
-}
-
-QString uuidFromSeed(const QString &seed)
-{
-    const QString hex = md5Hex(QStringLiteral("deckade-uuid:") + seed);
-    return QStringLiteral("%1-%2-%3-%4-%5")
-        .arg(hex.mid(0, 8), hex.mid(8, 4), hex.mid(12, 4), hex.mid(16, 4), hex.mid(20, 12));
-}
-
-QString findLauncherToken(const QJsonValue &value)
-{
-    if (value.isObject()) {
-        const QJsonObject object = value.toObject();
-        const QString direct = stringValue(object.value(QStringLiteral("token")));
-        if (!direct.isEmpty())
-            return direct;
-        for (auto it = object.constBegin(); it != object.constEnd(); ++it) {
-            const QString nested = findLauncherToken(it.value());
-            if (!nested.isEmpty())
-                return nested;
-        }
-    } else if (value.isArray()) {
-        for (const QJsonValue &entry : value.toArray()) {
-            const QString nested = findLauncherToken(entry);
-            if (!nested.isEmpty())
-                return nested;
-        }
-    }
-    return {};
-}
-
-QJsonObject launcherStatusPayload(const QString &token)
-{
-    // Fightcade's native launcher reports its machine identity after login.
-    // The lobby uses this to decide whether challenges are allowed; without
-    // it the server treats the client as a broken installation.
-    const QString seed = stableMachineSeed();
-    const QString uuid = uuidFromSeed(seed);
-    const QString guid = uuid;
-    const QString huid = QStringLiteral("0030613289.684") + md5Hex(seed);
-    // Deckade does not currently distinguish Wi-Fi from Ethernet. Report a
-    // wired connection so the lobby's optional Wi-Fi challenge filter does
-    // not reject us; the server still sees a valid launcher identity.
-    const QString userStatus = QStringLiteral("stcable");
-    constexpr int version = 6;
-    const QString hashInput = QStringLiteral("3jedoQ") + token
-        + QStringLiteral("qmkq0") + uuid
-        + QStringLiteral("dsnds") + guid
-        + QStringLiteral("sec or") + QString::number(version)
-        + QStringLiteral("2jden3") + userStatus
-        + QStringLiteral("llNjjha") + huid;
-
-    return QJsonObject{
-        {"req", "userstatus"},
-        {"token", token},
-        {"userstatus", userStatus},
-        {"uuid", uuid},
-        {"guid", guid},
-        {"huid", huid},
-        {"version", version},
-        {"hash", md5Hex(hashInput)}
-    };
-}
-
-} // namespace
 
 FightcadeClient::FightcadeClient(QObject *parent)
     : QObject(parent)
@@ -293,7 +212,7 @@ void FightcadeClient::handleAuthResponse(const QJsonObject &payload)
         return;
     }
 
-    const QString token = findLauncherToken(payload);
+    const QString token = FightcadeProtocol::findLauncherToken(payload);
     if (!token.isEmpty()) {
         user.insert(QStringLiteral("token"), token);
     }
@@ -330,7 +249,7 @@ void FightcadeClient::handleAuthResponse(const QJsonObject &payload)
 void FightcadeClient::reportLauncherStatus(const QString &token,
                                            const std::function<void(bool, const QString &)> &callback)
 {
-    const QByteArray body = QJsonDocument(launcherStatusPayload(token)).toJson(QJsonDocument::Compact);
+    const QByteArray body = QJsonDocument(FightcadeUserStatus::payload(token)).toJson(QJsonDocument::Compact);
     const QString curl = QStandardPaths::findExecutable(QStringLiteral("curl"));
     if (curl.isEmpty()) {
         qWarning() << "curl is not available; cannot report Fightcade launcher status";
@@ -907,19 +826,8 @@ void FightcadeClient::handleEvent(const QJsonObject &payload)
         return;
     }
     if (request == QStringLiteral("start")) {
-        const QVariantMap match{
-            {"channelName", channelName},
-            {"gameId", stringValue(payload.value(QStringLiteral("gameid")))},
-            {"emulator", stringValue(payload.value(QStringLiteral("emulator")))},
-            {"quarkId", stringValue(payload.value(QStringLiteral("quarkid")))},
-            {"playerId", intValue(payload.value(QStringLiteral("playerid")))},
-            {"port", intValue(payload.value(QStringLiteral("port")))},
-            {"ranked", intValue(payload.value(QStringLiteral("ranked")))},
-            {"delay", intValue(payload.value(QStringLiteral("delay")))},
-            {"token", stringValue(payload.value(QStringLiteral("token")))},
-            {"opponent", stringValue(payload.value(QStringLiteral("username")))}
-        };
-        emit matchStarted(match);
+        const QVariantMap match = normalizeMatchStart(payload);
+        if (!match.isEmpty()) emit matchStarted(match);
         return;
     }
     if (request == QStringLiteral("staway") || request == QStringLiteral("stnoaway")

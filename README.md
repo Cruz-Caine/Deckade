@@ -40,6 +40,19 @@ The Controls editor is available for FBNeo rooms. The Settings screen cycles
 the controller used for both launcher navigation and Player 1; this matters
 when Steam Input or a virtual controller occupies SDL joystick index 0.
 
+## Tests
+
+The headless protocol contract suite runs with:
+
+```sh
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+It covers lobby users/playing state, challenge warnings, welcome sections,
+preview URLs, quark routes, ROM metadata, and the launcher-status hash. The
+GUI/netplay loopback test is separate: `./tests/quark_loopback.sh sfiii3nr1`.
+
 ## Local match test
 
 A second Fightcade account is not required to test the native netplay path. The

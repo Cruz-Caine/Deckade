@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(Deckade VERSION 0.1.1 LANGUAGES CXX)
+project(Deckade VERSION 0.1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -46,6 +46,8 @@ set(DECKADE_SOURCES
     src/fightcade/controllerprofile.h
     src/fightcade/protocol.cpp
     src/fightcade/protocol.h
+    src/fightcade/userstatus.cpp
+    src/fightcade/userstatus.h
 )
 
 qt_add_executable(deckade ${DECKADE_SOURCES})
@@ -107,6 +109,7 @@ add_executable(deckade_client_smoke
     tests/client_smoke.cpp
     src/fightcade/fightcadeclient.cpp
     src/fightcade/protocol.cpp
+    src/fightcade/userstatus.cpp
 )
 target_include_directories(deckade_client_smoke PRIVATE src)
 target_link_libraries(deckade_client_smoke PRIVATE
@@ -120,6 +123,7 @@ add_executable(deckade_live_probe
     src/core/settingsstore.cpp
     src/fightcade/fightcadeclient.cpp
     src/fightcade/protocol.cpp
+    src/fightcade/userstatus.cpp
 )
 target_include_directories(deckade_live_probe PRIVATE src)
 target_link_libraries(deckade_live_probe PRIVATE
@@ -146,6 +150,7 @@ add_executable(deckade_rom_probe
     src/fightcade/fightcadelauncher.cpp
     src/fightcade/romlibrary.cpp
     src/fightcade/protocol.cpp
+    src/fightcade/userstatus.cpp
 )
 target_include_directories(deckade_rom_probe PRIVATE src)
 target_link_libraries(deckade_rom_probe PRIVATE
@@ -153,6 +158,20 @@ target_link_libraries(deckade_rom_probe PRIVATE
     Qt6::Gui
     Qt6::Network
 )
+
+enable_testing()
+
+add_executable(deckade_protocol_tests
+    tests/protocol_tests.cpp
+    src/fightcade/protocol.cpp
+    src/fightcade/userstatus.cpp
+)
+target_include_directories(deckade_protocol_tests PRIVATE src)
+target_compile_definitions(deckade_protocol_tests PRIVATE
+    DECKADE_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
+)
+target_link_libraries(deckade_protocol_tests PRIVATE Qt6::Core)
+add_test(NAME deckade_protocol_tests COMMAND deckade_protocol_tests)
 
 # Ship the native runtimes and their build notes alongside the app.
 install(DIRECTORY runtime/ DESTINATION share/deckade/runtime USE_SOURCE_PERMISSIONS)

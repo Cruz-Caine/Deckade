@@ -14,6 +14,19 @@ inline constexpr auto WebSocketUrl = "wss://ggs.fightcade.com/ws/";
 inline constexpr auto UserAgent = "Fightcade2-WIN32-v2.1.45";
 
 QString previewUrl(const QString &gameId, const QString &channelName);
+QString findLauncherToken(const QJsonValue &value);
+bool isAutologinResponse(const QJsonObject &payload);
+QVariantMap normalizeMatchStart(const QJsonObject &payload);
+bool isChallengeWarning(const QJsonObject &payload, const QString &request);
+QString challengeWarningMessage(const QJsonObject &payload);
+
+QString quarkServed(const QString &gameId, const QString &quarkId, int playerId,
+                    int port, int delay, int ranked);
+QString quarkStream(const QString &gameId, const QString &quarkId, int port);
+QString quarkTraining(const QString &gameId, const QString &quarkId, int playerId,
+                      int port, int delay);
+QString quarkDirect(const QString &gameId, int localPort, const QString &host,
+                    int remotePort, int playerId, int delay, int ranked);
 QString avatarUrl(const QString &gravatarHash);
 
 QVariantMap normalizeChannel(const QJsonObject &object);

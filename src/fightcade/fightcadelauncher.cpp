@@ -183,13 +183,13 @@ QString discoverRuntimeRoot()
 
 QString uriForMatch(const QVariantMap &match)
 {
-    return QStringLiteral("quark:served,%1,%2.%3,%4,%5,%6")
-        .arg(match.value(QStringLiteral("gameId")).toString(),
-             match.value(QStringLiteral("quarkId")).toString())
-        .arg(match.value(QStringLiteral("playerId")).toInt())
-        .arg(match.value(QStringLiteral("port")).toInt())
-        .arg(match.value(QStringLiteral("delay")).toInt())
-        .arg(match.value(QStringLiteral("ranked")).toInt());
+    return FightcadeProtocol::quarkServed(
+        match.value(QStringLiteral("gameId")).toString(),
+        match.value(QStringLiteral("quarkId")).toString(),
+        match.value(QStringLiteral("playerId")).toInt(),
+        match.value(QStringLiteral("port")).toInt(),
+        match.value(QStringLiteral("delay")).toInt(),
+        match.value(QStringLiteral("ranked")).toInt());
 }
 
 } // namespace
@@ -880,10 +880,10 @@ bool FightcadeLauncher::launchSpectate(const QVariantMap &match)
         }
         return launchOfficialHelper(officialSpectateUri(match), emulator);
     }
-    const QString command = QStringLiteral("quark:stream,%1,%2.2,%3")
-                                .arg(gameId,
-                                     match.value(QStringLiteral("quarkId")).toString(),
-                                     QString::number(match.value(QStringLiteral("port")).toInt()));
+    const QString command = FightcadeProtocol::quarkStream(
+        gameId,
+        match.value(QStringLiteral("quarkId")).toString() + QStringLiteral(".2"),
+        match.value(QStringLiteral("port")).toInt());
     QStringList arguments;
     if (emulator == QStringLiteral("fbneo")) {
         arguments << QStringLiteral("-joy") << command;

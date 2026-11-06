@@ -173,6 +173,115 @@ QString previewUrl(const QString &gameId, const QString &channelName)
     return QStringLiteral("%1/static/previews/%2.png").arg(QLatin1String(WebUrl), QUrl::toPercentEncoding(source));
 }
 
+QString findLauncherToken(const QJsonValue &value)
+{
+    if (value.isObject()) {
+        const QJsonObject object = value.toObject();
+        const QString direct = stringValue(object.value(QStringLiteral("token")));
+        if (!direct.isEmpty()) return direct;
+        for (auto it = object.constBegin(); it != object.constEnd(); ++it) {
+            const QString nested = findLauncherToken(it.value());
+            if (!nested.isEmpty()) return nested;
+        }
+    } else if (value.isArray()) {
+        for (const QJsonValue &entry : value.toArray()) {
+            const QString nested = findLauncherToken(entry);
+            if (!nested.isEmpty()) return nested;
+        }
+    }
+    return {};
+}
+
+bool isAutologinResponse(const QJsonObject &payload)
+{
+    return stringValue(payload.value(QStringLiteral("req"))).compare(QStringLiteral("autologin"),
+                                                                     Qt::CaseInsensitive) == 0
+        || (intValue(payload.value(QStringLiteral("requestIdx"))) == -1
+            && payload.value(QStringLiteral("user")).isObject());
+}
+
+QVariantMap normalizeMatchStart(const QJsonObject &payload)
+{
+    const QString channelName = stringValue(payload.value(QStringLiteral("channelname")));
+    const QString gameId = stringValue(payload.value(QStringLiteral("gameid")));
+    const QString quarkId = stringValue(payload.value(QStringLiteral("quarkid")));
+    if (channelName.isEmpty() || gameId.isEmpty() || quarkId.isEmpty()) return {};
+    return {
+        {"channelName", channelName},
+        {"gameId", gameId},
+        {"emulator", stringValue(payload.value(QStringLiteral("emulator")))},
+        {"quarkId", quarkId},
+        {"playerId", intValue(payload.value(QStringLiteral("playerid")))},
+        {"port", intValue(payload.value(QStringLiteral("port")))},
+        {"ranked", intValue(payload.value(QStringLiteral("ranked")))},
+        {"delay", intValue(payload.value(QStringLiteral("delay")))},
+        {"token", stringValue(payload.value(QStringLiteral("token")))},
+        {"opponent", stringValue(payload.value(QStringLiteral("username")))}
+    };
+}
+
+QString challengeWarningMessage(const QJsonObject &payload)
+{
+    const QStringList keys = {
+        QStringLiteral("error"), QStringLiteral("err"), QStringLiteral("msg"),
+        QStringLiteral("message"), QStringLiteral("response"), QStringLiteral("reason"),
+        QStringLiteral("warning"), QStringLiteral("chat"), QStringLiteral("text")
+    };
+    for (const QString &key : keys) {
+        const QString message = stringValue(payload.value(key)).trimmed();
+        if (!message.isEmpty()) return message;
+    }
+    return {};
+}
+
+bool isChallengeWarning(const QJsonObject &payload, const QString &request)
+{
+    const QString normalizedRequest = request.toLower();
+    const QString message = challengeWarningMessage(payload).toLower();
+    if (message.isEmpty()) return false;
+    const QStringList words = {
+        QStringLiteral("challenge"), QStringLiteral("invite"), QStringLiteral("restrict"),
+        QStringLiteral("cannot"), QStringLiteral("can't"), QStringLiteral("cant"),
+        QStringLiteral("ping"), QStringLiteral("latency"), QStringLiteral("wifi"),
+        QStringLiteral("wi-fi"), QStringLiteral("region"), QStringLiteral("location"),
+        QStringLiteral("country"), QStringLiteral("distance"),
+        QStringLiteral("broken or incomplete")
+    };
+    bool looksLikeWarning = false;
+    for (const QString &word : words) {
+        if (message.contains(word)) { looksLikeWarning = true; break; }
+    }
+    if (normalizedRequest == QStringLiteral("broken")) return looksLikeWarning;
+    return (normalizedRequest == QStringLiteral("challenge")
+            || normalizedRequest == QStringLiteral("accept")) && looksLikeWarning;
+}
+
+QString quarkServed(const QString &gameId, const QString &quarkId, int playerId,
+                    int port, int delay, int ranked)
+{
+    return QStringLiteral("quark:served,%1,%2.%3,%4,%5,%6")
+        .arg(gameId, quarkId).arg(playerId).arg(port).arg(delay).arg(ranked);
+}
+
+QString quarkStream(const QString &gameId, const QString &quarkId, int port)
+{
+    return QStringLiteral("quark:stream,%1,%2,%3").arg(gameId, quarkId).arg(port);
+}
+
+QString quarkTraining(const QString &gameId, const QString &quarkId, int playerId,
+                      int port, int delay)
+{
+    return QStringLiteral("quark:training,%1,%2.%3,%4,%5")
+        .arg(gameId, quarkId).arg(playerId).arg(port).arg(delay);
+}
+
+QString quarkDirect(const QString &gameId, int localPort, const QString &host,
+                    int remotePort, int playerId, int delay, int ranked)
+{
+    return QStringLiteral("quark:direct,%1,%2,%3,%4,%5,%6,%7")
+        .arg(gameId).arg(localPort).arg(host).arg(remotePort).arg(playerId).arg(delay).arg(ranked);
+}
+
 QString avatarUrl(const QString &gravatarHash)
 {
     if (gravatarHash.trimmed().isEmpty()) {
@@ -215,23 +324,42 @@ QVariantMap normalizeChannel(const QJsonObject &object)
 QVariantList normalizeChannelList(const QJsonObject &payload)
 {
     QJsonArray channels;
-    collectChannels(payload.value(QStringLiteral("channels")), channels);
-    collectChannels(payload.value(QStringLiteral("results")), channels);
+    auto appendDirect = [&channels](const QJsonValue &value) {
+        const QJsonObject object = value.toObject();
+        if (object.contains(QStringLiteral("name")) || object.contains(QStringLiteral("channelname"))) {
+            channels.append(object);
+        }
+    };
+
+    const QJsonValue topChannels = payload.value(QStringLiteral("channels"));
+    if (topChannels.isArray()) {
+        for (const QJsonValue &value : topChannels.toArray()) appendDirect(value);
+    }
+    const QJsonValue results = payload.value(QStringLiteral("results"));
+    if (results.isArray()) {
+        for (const QJsonValue &value : results.toArray()) {
+            const QJsonObject entry = value.toObject();
+            if (entry.contains(QStringLiteral("channels"))) {
+                for (const QJsonValue &channel : entry.value(QStringLiteral("channels")).toArray()) {
+                    appendDirect(channel);
+                }
+            } else {
+                appendDirect(value);
+            }
+        }
+    }
 
     QVariantList result;
     QSet<QString> seen;
     for (const QJsonValue &value : std::as_const(channels)) {
         const QVariantMap channel = normalizeChannel(value.toObject());
         const QString name = channel.value(QStringLiteral("name")).toString();
-        if (name.isEmpty() || seen.contains(name)) {
-            continue;
-        }
+        if (name.isEmpty() || seen.contains(name)) continue;
         seen.insert(name);
         result.append(channel);
     }
     return result;
 }
-
 QVariantList normalizeWelcome(const QJsonObject &payload)
 {
     QVariantList sections;
@@ -244,10 +372,12 @@ QVariantList normalizeWelcome(const QJsonObject &payload)
         }
 
         QVariantList channels;
+        const bool favoriteSection = title.contains(QStringLiteral("favorite"), Qt::CaseInsensitive);
         const QJsonArray rawChannels = section.value(QStringLiteral("channels")).toArray();
         for (const QJsonValue &channelValue : rawChannels) {
-            const QVariantMap channel = normalizeChannel(channelValue.toObject());
+            QVariantMap channel = normalizeChannel(channelValue.toObject());
             if (!channel.isEmpty()) {
+                if (favoriteSection) channel.insert(QStringLiteral("isFavorite"), true);
                 channels.append(channel);
             }
         }
@@ -311,8 +441,37 @@ QVariantMap normalizeJoinedChannel(const QJsonObject &payload)
         channel.insert(QStringLiteral("playerCount"), users.size());
     }
 
-    channel.insert(QStringLiteral("users"), users);
-    channel.insert(QStringLiteral("quarks"), normalizeQuarks(payload.value(QStringLiteral("quarks")).toArray()));
+    QVariantList quarks = normalizeQuarks(payload.value(QStringLiteral("quarks")).toArray());
+    QVariantList enrichedUsers = users;
+    const QString joinedGameId = channel.value(QStringLiteral("gameId")).toString();
+    for (const QVariant &quarkValue : std::as_const(quarks)) {
+        const QVariantMap quark = quarkValue.toMap();
+        const QString quarkId = quark.value(QStringLiteral("quarkId")).toString();
+        const int port = quark.value(QStringLiteral("port")).toInt();
+        if (quarkId.isEmpty() || port < 0) continue;
+        const QVariantMap stream{
+            {"gameID", joinedGameId}, {"quarkID", quarkId}, {"port", port}
+        };
+        for (const QVariant &playerValue : quark.value(QStringLiteral("players")).toList()) {
+            const QString player = playerValue.toString();
+            for (int i = 0; i < enrichedUsers.size(); ++i) {
+                QVariantMap user = enrichedUsers.at(i).toMap();
+                if (user.value(QStringLiteral("name")).toString() != player) continue;
+                if (user.value(QStringLiteral("playing")).toMap().isEmpty()) {
+                    user.insert(QStringLiteral("playing"), QVariantMap{
+                        {"channelName", channel.value(QStringLiteral("name"))},
+                        {"gameId", joinedGameId},
+                        {"quarkId", quarkId},
+                        {"port", port}
+                    });
+                }
+                user.insert(QStringLiteral("stream"), stream);
+                enrichedUsers[i] = user;
+            }
+        }
+    }
+    channel.insert(QStringLiteral("users"), enrichedUsers);
+    channel.insert(QStringLiteral("quarks"), quarks);
     channel.insert(QStringLiteral("motd"), plainText(firstString(payload, {"motd", "welcome", "message", "html"})));
     channel.insert(QStringLiteral("events"), normalizeEvents(payload.value(QStringLiteral("events")).toArray()));
     return channel;
@@ -376,7 +535,10 @@ QVariantMap normalizeSessionUser(const QJsonObject &object)
         {"settings", QVariantMap{
             {"ranked", settingsObject.isEmpty() ? firstBool(object, {"ranked"}) : boolValue(settingsObject.value(QStringLiteral("ranked")))},
             {"delay", firstInt(object, {"delay"}, -1)},
-            {"autoAfk", object.value(QStringLiteral("auto_afk")).isUndefined() ? true : boolValue(object.value(QStringLiteral("auto_afk")))},
+            {"autoAfk", settingsObject.contains(QStringLiteral("auto_afk"))
+                 ? boolValue(settingsObject.value(QStringLiteral("auto_afk")))
+                 : (object.value(QStringLiteral("auto_afk")).isUndefined()
+                        ? true : boolValue(object.value(QStringLiteral("auto_afk"))))},
             {"chatMuted", firstBool(object, {"chat_muted"})},
             {"preventBadChallenges", firstBool(object, {"prevent_bad_challenges"})},
             {"preventWifiChallenges", firstBool(object, {"prevent_wifi_challenges"})},
@@ -406,11 +568,14 @@ QVariantMap normalizeUser(const QJsonObject &object, const QString &channelName)
                                            : boolValue(settings.value(QStringLiteral("ranked")));
 
     const QJsonValue playingValue = object.value(QStringLiteral("playing"));
-    const bool isPlaying = playingValue.isBool()
-        ? playingValue.toBool()
-        : playingValue.isObject()
-          ? !playingValue.toObject().isEmpty()
-          : boolValue(playingValue);
+    const bool hasExplicitPlaying = object.contains(QStringLiteral("playing"));
+    const bool isPlaying = hasExplicitPlaying
+        ? (playingValue.isBool()
+               ? playingValue.toBool()
+               : playingValue.isObject()
+                     ? !playingValue.toObject().isEmpty()
+                     : boolValue(playingValue))
+        : !object.value(QStringLiteral("game")).toObject().isEmpty();
     const QVariantMap playing = isPlaying
         ? normalizePlaying(object.value(QStringLiteral("game")).toObject(), channelName)
         : QVariantMap{};
@@ -422,11 +587,17 @@ QVariantMap normalizeUser(const QJsonObject &object, const QString &channelName)
         {"ping", firstInt(object, {"ping"}, -1)},
         {"virtualPing", firstInt(object, {"vping", "virtualPing"}, -1)},
         {"rank", firstInt(object, {"rank"}, 0)},
+        {"rankedSetting", firstInt(object, {"ranked"}, 0)},
+        {"matchCount", firstInt(object, {"matches", "match_count", "matchcount", "num_matches"}, 0)},
+        {"region", firstString(object, {"region"})},
         {"away", firstBool(object, {"away"})},
         {"channelAway", firstBool(object, {"channel_away"})},
         {"isWifi", firstBool(object, {"wlan"})},
         {"isProxy", firstBool(object, {"proxy"})},
+        {"preventsBadChallenges", firstBool(object, {"prevent_bad_challenges"})},
+        {"preventsWifiChallenges", firstBool(object, {"prevent_wifi_challenges"})},
         {"settings", QVariantMap{{"ranked", ranked}}},
+        {"stream", QVariantMap{}},
         {"playing", playing}
     };
 
