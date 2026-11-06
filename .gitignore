@@ -1,0 +1,26 @@
+# Test credentials and local environment
+.env
+.env.*
+!.env.example
+
+# Build output
+build/
+out/
+dist/
+.tsbuild/
+
+# Local runtime builds and binaries
+.runtime-src/
+runtime/bin/
+runtime/work/
+
+# Logs and local state
+*.log
+logs/
+.DS_Store
+
+# Local bundled Qt runtime artifacts
+lib/
+build-appimage/
+AppDir/
+.appimage-tools/

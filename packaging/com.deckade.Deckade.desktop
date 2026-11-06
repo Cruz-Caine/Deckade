@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Deckade
+Comment=Controller-first Fightcade frontend
+Exec=Deckade
+Icon=com.deckade.Deckade
+Terminal=false
+Categories=Game;Emulator;ArcadeGame;
+Keywords=fightcade;arcade;netplay;steamdeck;controller;
+StartupWMClass=Deckade

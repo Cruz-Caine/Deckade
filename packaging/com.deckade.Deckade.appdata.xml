@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.deckade.Deckade</id>
+  <metadata_license>MIT</metadata_license>
+  <name>Deckade</name>
+  <summary>Controller-first Fightcade frontend for Linux and Steam Deck</summary>
+  <description>
+    <p>
+      Deckade is a native Qt 6 client for Fightcade. It provides a big-picture,
+      controller-friendly lobby and launches native FBNeo, Snes9x, and Flycast
+      runtimes without Wine or an embedded browser.
+    </p>
+    <p>
+      Deckade does not include game ROMs or BIOS files. It can download ROMs
+      from the same metadata sources Fightcade uses.
+    </p>
+  </description>
+  <launchable type="desktop-id">com.deckade.Deckade.desktop</launchable>
+  <url type="homepage">https://github.com/Cruz-Caine/Deckade</url>
+  <url type="bugtracker">https://github.com/Cruz-Caine/Deckade/issues</url>
+  <developer id="com.deckade">
+    <name>Deckade contributors</name>
+  </developer>
+  <project_license>MIT</project_license>
+  <categories>
+    <category>Game</category>
+    <category>Emulator</category>
+  </categories>
+  <releases>
+    <release version="0.1.0" date="2026-11-06"/>
+  </releases>
+  <content_rating type="oars-1.1"/>
+</component>

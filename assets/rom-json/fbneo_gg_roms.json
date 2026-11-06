@@ -1,0 +1,3419 @@
+{
+  "5in1fun": {
+    "download": "https://fightcade.download/fbneo/gamegear/5in1fun.zip"
+  },
+  "aaharima": {
+    "download": "https://fightcade.download/fbneo/gamegear/aaharima.zip"
+  },
+  "aerialasj": {
+    "download": "https://fightcade.download/fbneo/gamegear/aerialasj.zip",
+    "require": [
+      "aerialas"
+    ]
+  },
+  "aerialas": {
+    "download": "https://fightcade.download/fbneo/gamegear/aerialas.zip"
+  },
+  "alexkidd": {
+    "download": "https://fightcade.download/fbneo/gamegear/alexkidd.zip"
+  },
+  "alien3": {
+    "download": "https://fightcade.download/fbneo/gamegear/alien3.zip"
+  },
+  "alien3j": {
+    "download": "https://fightcade.download/fbneo/gamegear/alien3j.zip",
+    "require": [
+      "alien3"
+    ]
+  },
+  "aliensyn": {
+    "download": "https://fightcade.download/fbneo/gamegear/aliensyn.zip"
+  },
+  "aliensynj": {
+    "download": "https://fightcade.download/fbneo/gamegear/aliensynj.zip",
+    "require": [
+      "aliensyn"
+    ]
+  },
+  "agassi": {
+    "download": "https://fightcade.download/fbneo/gamegear/agassi.zip"
+  },
+  "arcadecl": {
+    "download": "https://fightcade.download/fbneo/gamegear/arcadecl.zip"
+  },
+  "archrivl": {
+    "download": "https://fightcade.download/fbneo/gamegear/archrivl.zip"
+  },
+  "arena": {
+    "download": "https://fightcade.download/fbneo/gamegear/arena.zip"
+  },
+  "arliel": {
+    "download": "https://fightcade.download/fbneo/gamegear/arliel.zip",
+    "require": [
+      "crystalw"
+    ]
+  },
+  "astergre": {
+    "download": "https://fightcade.download/fbneo/gamegear/astergre.zip"
+  },
+  "astergrep3": {
+    "download": "https://fightcade.download/fbneo/gamegear/astergrep3.zip",
+    "require": [
+      "astergre"
+    ]
+  },
+  "astergrep5": {
+    "download": "https://fightcade.download/fbneo/gamegear/astergrep5.zip",
+    "require": [
+      "astergre"
+    ]
+  },
+  "astergrep4": {
+    "download": "https://fightcade.download/fbneo/gamegear/astergrep4.zip",
+    "require": [
+      "astergre"
+    ]
+  },
+  "astergrep2": {
+    "download": "https://fightcade.download/fbneo/gamegear/astergrep2.zip",
+    "require": [
+      "astergre"
+    ]
+  },
+  "astergrep1": {
+    "download": "https://fightcade.download/fbneo/gamegear/astergrep1.zip",
+    "require": [
+      "astergre"
+    ]
+  },
+  "astergreu": {
+    "download": "https://fightcade.download/fbneo/gamegear/astergreu.zip",
+    "require": [
+      "astergre"
+    ]
+  },
+  "astermis": {
+    "download": "https://fightcade.download/fbneo/gamegear/astermis.zip"
+  },
+  "axbattlrp": {
+    "download": "https://fightcade.download/fbneo/gamegear/axbattlrp.zip",
+    "require": [
+      "axbattlr"
+    ]
+  },
+  "axbattlr": {
+    "download": "https://fightcade.download/fbneo/gamegear/axbattlr.zip"
+  },
+  "axbattlrj": {
+    "download": "https://fightcade.download/fbneo/gamegear/axbattlrj.zip",
+    "require": [
+      "axbattlr"
+    ]
+  },
+  "smgp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/smgp2.zip"
+  },
+  "smgp2p": {
+    "download": "https://fightcade.download/fbneo/gamegear/smgp2p.zip",
+    "require": [
+      "smgp2"
+    ]
+  },
+  "smgp2j": {
+    "download": "https://fightcade.download/fbneo/gamegear/smgp2j.zip",
+    "require": [
+      "smgp2"
+    ]
+  },
+  "bakubaku": {
+    "download": "https://fightcade.download/fbneo/gamegear/bakubaku.zip"
+  },
+  "bakubakuu": {
+    "download": "https://fightcade.download/fbneo/gamegear/bakubakuu.zip",
+    "require": [
+      "bakubaku"
+    ]
+  },
+  "bakubakuj": {
+    "download": "https://fightcade.download/fbneo/gamegear/bakubakuj.zip",
+    "require": [
+      "bakubaku"
+    ]
+  },
+  "barbie": {
+    "download": "https://fightcade.download/fbneo/gamegear/barbie.zip"
+  },
+  "batmanf": {
+    "download": "https://fightcade.download/fbneo/gamegear/batmanf.zip"
+  },
+  "batmanrn": {
+    "download": "https://fightcade.download/fbneo/gamegear/batmanrn.zip"
+  },
+  "batterup": {
+    "download": "https://fightcade.download/fbneo/gamegear/batterup.zip"
+  },
+  "bship": {
+    "download": "https://fightcade.download/fbneo/gamegear/bship.zip"
+  },
+  "btoads": {
+    "download": "https://fightcade.download/fbneo/gamegear/btoads.zip"
+  },
+  "btoadsu": {
+    "download": "https://fightcade.download/fbneo/gamegear/btoadsu.zip",
+    "require": [
+      "btoads"
+    ]
+  },
+  "beavis": {
+    "download": "https://fightcade.download/fbneo/gamegear/beavis.zip"
+  },
+  "beavisp": {
+    "download": "https://fightcade.download/fbneo/gamegear/beavisp.zip",
+    "require": [
+      "beavis"
+    ]
+  },
+  "berlin": {
+    "download": "https://fightcade.download/fbneo/gamegear/berlin.zip"
+  },
+  "sailorms": {
+    "download": "https://fightcade.download/fbneo/gamegear/sailorms.zip"
+  },
+  "bonkersp13": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp13.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp12": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp12.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp11": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp11.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp10": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp10.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp09": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp09.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp08": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp08.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "dracula": {
+    "download": "https://fightcade.download/fbneo/gamegear/dracula.zip"
+  },
+  "draculau": {
+    "download": "https://fightcade.download/fbneo/gamegear/draculau.zip",
+    "require": [
+      "dracula"
+    ]
+  },
+  "bublbobl": {
+    "download": "https://fightcade.download/fbneo/gamegear/bublbobl.zip"
+  },
+  "bugsbun": {
+    "download": "https://fightcade.download/fbneo/gamegear/bugsbun.zip"
+  },
+  "bam": {
+    "download": "https://fightcade.download/fbneo/gamegear/bam.zip"
+  },
+  "busterb": {
+    "download": "https://fightcade.download/fbneo/gamegear/busterb.zip"
+  },
+  "busterf": {
+    "download": "https://fightcade.download/fbneo/gamegear/busterf.zip"
+  },
+  "caesars": {
+    "download": "https://fightcade.download/fbneo/gamegear/caesars.zip"
+  },
+  "captaven": {
+    "download": "https://fightcade.download/fbneo/gamegear/captaven.zip"
+  },
+  "carlicen": {
+    "download": "https://fightcade.download/fbneo/gamegear/carlicen.zip"
+  },
+  "casinofn": {
+    "download": "https://fightcade.download/fbneo/gamegear/casinofn.zip"
+  },
+  "castlill": {
+    "download": "https://fightcade.download/fbneo/gamegear/castlill.zip"
+  },
+  "chakan": {
+    "download": "https://fightcade.download/fbneo/gamegear/chakan.zip"
+  },
+  "champhck": {
+    "download": "https://fightcade.download/fbneo/gamegear/champhck.zip"
+  },
+  "cheese": {
+    "download": "https://fightcade.download/fbneo/gamegear/cheese.zip"
+  },
+  "chicagop24": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop24.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop23": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop23.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop22": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop22.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop21": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop21.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop20": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop20.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop19": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop19.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop18": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop18.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop17": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop17.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop16": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop16.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop15": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop15.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop14": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop14.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop13": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop13.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop11": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop11.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop12": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop12.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop10": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop10.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop09": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop09.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop08": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop08.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop07": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop07.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop06": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop06.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop05": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop05.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop04": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop04.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop03": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop03.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop01": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop01.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicagop02": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicagop02.zip",
+    "require": [
+      "chicago"
+    ]
+  },
+  "chicago": {
+    "download": "https://fightcade.download/fbneo/gamegear/chicago.zip"
+  },
+  "choplft3": {
+    "download": "https://fightcade.download/fbneo/gamegear/choplft3.zip"
+  },
+  "chuckrck": {
+    "download": "https://fightcade.download/fbneo/gamegear/chuckrck.zip"
+  },
+  "chuckrckp": {
+    "download": "https://fightcade.download/fbneo/gamegear/chuckrckp.zip",
+    "require": [
+      "chuckrck"
+    ]
+  },
+  "chukrck2": {
+    "download": "https://fightcade.download/fbneo/gamegear/chukrck2.zip"
+  },
+  "chukrck2u": {
+    "download": "https://fightcade.download/fbneo/gamegear/chukrck2u.zip",
+    "require": [
+      "chukrck2"
+    ]
+  },
+  "cj": {
+    "download": "https://fightcade.download/fbneo/gamegear/cj.zip"
+  },
+  "cliffh": {
+    "download": "https://fightcade.download/fbneo/gamegear/cliffh.zip"
+  },
+  "clutchit": {
+    "download": "https://fightcade.download/fbneo/gamegear/clutchit.zip"
+  },
+  "cocakid": {
+    "download": "https://fightcade.download/fbneo/gamegear/cocakid.zip"
+  },
+  "columns": {
+    "download": "https://fightcade.download/fbneo/gamegear/columns.zip"
+  },
+  "columnsj": {
+    "download": "https://fightcade.download/fbneo/gamegear/columnsj.zip",
+    "require": [
+      "columns"
+    ]
+  },
+  "columnsj1": {
+    "download": "https://fightcade.download/fbneo/gamegear/columnsj1.zip",
+    "require": [
+      "columns"
+    ]
+  },
+  "coolspot": {
+    "download": "https://fightcade.download/fbneo/gamegear/coolspot.zip"
+  },
+  "coolspotu": {
+    "download": "https://fightcade.download/fbneo/gamegear/coolspotu.zip",
+    "require": [
+      "coolspot"
+    ]
+  },
+  "cosmic": {
+    "download": "https://fightcade.download/fbneo/gamegear/cosmic.zip"
+  },
+  "crayon": {
+    "download": "https://fightcade.download/fbneo/gamegear/crayon.zip"
+  },
+  "crazyfac": {
+    "download": "https://fightcade.download/fbneo/gamegear/crazyfac.zip"
+  },
+  "crystalw": {
+    "download": "https://fightcade.download/fbneo/gamegear/crystalw.zip"
+  },
+  "cutthr": {
+    "download": "https://fightcade.download/fbneo/gamegear/cutthr.zip"
+  },
+  "cutthrp": {
+    "download": "https://fightcade.download/fbneo/gamegear/cutthrp.zip",
+    "require": [
+      "cutthr"
+    ]
+  },
+  "daffy": {
+    "download": "https://fightcade.download/fbneo/gamegear/daffy.zip"
+  },
+  "deepduck": {
+    "download": "https://fightcade.download/fbneo/gamegear/deepduck.zip"
+  },
+  "defoasis": {
+    "download": "https://fightcade.download/fbneo/gamegear/defoasis.zip"
+  },
+  "defoasisp": {
+    "download": "https://fightcade.download/fbneo/gamegear/defoasisp.zip",
+    "require": [
+      "defoasis"
+    ]
+  },
+  "desert": {
+    "download": "https://fightcade.download/fbneo/gamegear/desert.zip"
+  },
+  "desertu": {
+    "download": "https://fightcade.download/fbneo/gamegear/desertu.zip",
+    "require": [
+      "desert"
+    ]
+  },
+  "dstrike": {
+    "download": "https://fightcade.download/fbneo/gamegear/dstrike.zip"
+  },
+  "dstrikeu": {
+    "download": "https://fightcade.download/fbneo/gamegear/dstrikeu.zip",
+    "require": [
+      "dstrike"
+    ]
+  },
+  "devilish": {
+    "download": "https://fightcade.download/fbneo/gamegear/devilish.zip"
+  },
+  "devilishj": {
+    "download": "https://fightcade.download/fbneo/gamegear/devilishj.zip",
+    "require": [
+      "devilish"
+    ]
+  },
+  "devilishu": {
+    "download": "https://fightcade.download/fbneo/gamegear/devilishu.zip",
+    "require": [
+      "devilish"
+    ]
+  },
+  "aladdin": {
+    "download": "https://fightcade.download/fbneo/gamegear/aladdin.zip"
+  },
+  "aladdinj": {
+    "download": "https://fightcade.download/fbneo/gamegear/aladdinj.zip",
+    "require": [
+      "aladdin"
+    ]
+  },
+  "aladdinp3": {
+    "download": "https://fightcade.download/fbneo/gamegear/aladdinp3.zip",
+    "require": [
+      "aladdin"
+    ]
+  },
+  "aladdinp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/aladdinp2.zip",
+    "require": [
+      "aladdin"
+    ]
+  },
+  "aladdinp1": {
+    "download": "https://fightcade.download/fbneo/gamegear/aladdinp1.zip",
+    "require": [
+      "aladdin"
+    ]
+  },
+  "ariel": {
+    "download": "https://fightcade.download/fbneo/gamegear/ariel.zip"
+  },
+  "bonkers": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkers.zip"
+  },
+  "bonkersp05": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp05.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp04": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp04.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp03": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp03.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp02": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp02.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp01": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp01.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "lionkingp9": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingp9.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lionkingp8": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingp8.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lionkingp7": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingp7.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lionkingp6": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingp6.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lionkingp5": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingp5.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lionkingp4": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingp4.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "bonkersp07": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp07.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "bonkersp06": {
+    "download": "https://fightcade.download/fbneo/gamegear/bonkersp06.zip",
+    "require": [
+      "bonkers"
+    ]
+  },
+  "donald42": {
+    "download": "https://fightcade.download/fbneo/gamegear/donald42.zip",
+    "require": [
+      "deepduck"
+    ]
+  },
+  "donaldld": {
+    "download": "https://fightcade.download/fbneo/gamegear/donaldld.zip",
+    "require": [
+      "luckydim"
+    ]
+  },
+  "donaldmw": {
+    "download": "https://fightcade.download/fbneo/gamegear/donaldmw.zip"
+  },
+  "doraemon": {
+    "download": "https://fightcade.download/fbneo/gamegear/doraemon.zip"
+  },
+  "ddragon": {
+    "download": "https://fightcade.download/fbneo/gamegear/ddragon.zip"
+  },
+  "ddragonp": {
+    "download": "https://fightcade.download/fbneo/gamegear/ddragonp.zip",
+    "require": [
+      "ddragon"
+    ]
+  },
+  "drfrankn": {
+    "download": "https://fightcade.download/fbneo/gamegear/drfrankn.zip"
+  },
+  "drrobotn": {
+    "download": "https://fightcade.download/fbneo/gamegear/drrobotn.zip"
+  },
+  "dragon": {
+    "download": "https://fightcade.download/fbneo/gamegear/dragon.zip"
+  },
+  "dragonu": {
+    "download": "https://fightcade.download/fbneo/gamegear/dragonu.zip",
+    "require": [
+      "dragon"
+    ]
+  },
+  "dcrystal": {
+    "download": "https://fightcade.download/fbneo/gamegear/dcrystal.zip"
+  },
+  "dcrystalj": {
+    "download": "https://fightcade.download/fbneo/gamegear/dcrystalj.zip",
+    "require": [
+      "dcrystal"
+    ]
+  },
+  "dropzone": {
+    "download": "https://fightcade.download/fbneo/gamegear/dropzone.zip"
+  },
+  "dunkkids": {
+    "download": "https://fightcade.download/fbneo/gamegear/dunkkids.zip"
+  },
+  "dhead": {
+    "download": "https://fightcade.download/fbneo/gamegear/dhead.zip"
+  },
+  "dheadj": {
+    "download": "https://fightcade.download/fbneo/gamegear/dheadj.zip",
+    "require": [
+      "dhead"
+    ]
+  },
+  "dheadp3": {
+    "download": "https://fightcade.download/fbneo/gamegear/dheadp3.zip",
+    "require": [
+      "dhead"
+    ]
+  },
+  "dheadp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/dheadp2.zip",
+    "require": [
+      "dhead"
+    ]
+  },
+  "dheadp1": {
+    "download": "https://fightcade.download/fbneo/gamegear/dheadp1.zip",
+    "require": [
+      "dhead"
+    ]
+  },
+  "ejim": {
+    "download": "https://fightcade.download/fbneo/gamegear/ejim.zip"
+  },
+  "ejimu": {
+    "download": "https://fightcade.download/fbneo/gamegear/ejimu.zip",
+    "require": [
+      "ejim"
+    ]
+  },
+  "ecco2": {
+    "download": "https://fightcade.download/fbneo/gamegear/ecco2.zip"
+  },
+  "ecco": {
+    "download": "https://fightcade.download/fbneo/gamegear/ecco.zip"
+  },
+  "eccoj": {
+    "download": "https://fightcade.download/fbneo/gamegear/eccoj.zip",
+    "require": [
+      "ecco"
+    ]
+  },
+  "ecco2j": {
+    "download": "https://fightcade.download/fbneo/gamegear/ecco2j.zip",
+    "require": [
+      "ecco2"
+    ]
+  },
+  "ernieeg": {
+    "download": "https://fightcade.download/fbneo/gamegear/ernieeg.zip"
+  },
+  "eternleg": {
+    "download": "https://fightcade.download/fbneo/gamegear/eternleg.zip"
+  },
+  "evander": {
+    "download": "https://fightcade.download/fbneo/gamegear/evander.zip"
+  },
+  "f15se": {
+    "download": "https://fightcade.download/fbneo/gamegear/f15se.zip"
+  },
+  "f1": {
+    "download": "https://fightcade.download/fbneo/gamegear/f1.zip"
+  },
+  "f1wce": {
+    "download": "https://fightcade.download/fbneo/gamegear/f1wce.zip"
+  },
+  "faceball": {
+    "download": "https://fightcade.download/fbneo/gamegear/faceball.zip"
+  },
+  "factoryp": {
+    "download": "https://fightcade.download/fbneo/gamegear/factoryp.zip"
+  },
+  "fantdizz": {
+    "download": "https://fightcade.download/fbneo/gamegear/fantdizz.zip"
+  },
+  "fantzone": {
+    "download": "https://fightcade.download/fbneo/gamegear/fantzone.zip"
+  },
+  "fantzoneu": {
+    "download": "https://fightcade.download/fbneo/gamegear/fantzoneu.zip",
+    "require": [
+      "fantzone"
+    ]
+  },
+  "fatfursp": {
+    "download": "https://fightcade.download/fbneo/gamegear/fatfursp.zip"
+  },
+  "fatfurspu": {
+    "download": "https://fightcade.download/fbneo/gamegear/fatfurspu.zip",
+    "require": [
+      "fatfursp"
+    ]
+  },
+  "fifa": {
+    "download": "https://fightcade.download/fbneo/gamegear/fifa.zip"
+  },
+  "fifaj": {
+    "download": "https://fightcade.download/fbneo/gamegear/fifaj.zip",
+    "require": [
+      "fifa"
+    ]
+  },
+  "fifa96": {
+    "download": "https://fightcade.download/fbneo/gamegear/fifa96.zip"
+  },
+  "foreman": {
+    "download": "https://fightcade.download/fbneo/gamegear/foreman.zip"
+  },
+  "bighurt": {
+    "download": "https://fightcade.download/fbneo/gamegear/bighurt.zip"
+  },
+  "fray": {
+    "download": "https://fightcade.download/fbneo/gamegear/fray.zip"
+  },
+  "fredcoupj": {
+    "download": "https://fightcade.download/fbneo/gamegear/fredcoupj.zip",
+    "require": [
+      "fredcoup"
+    ]
+  },
+  "fredcoup": {
+    "download": "https://fightcade.download/fbneo/gamegear/fredcoup.zip"
+  },
+  "frogger": {
+    "download": "https://fightcade.download/fbneo/gamegear/frogger.zip"
+  },
+  "slamdunk": {
+    "download": "https://fightcade.download/fbneo/gamegear/slamdunk.zip"
+  },
+  "gloc": {
+    "download": "https://fightcade.download/fbneo/gamegear/gloc.zip"
+  },
+  "glocj1": {
+    "download": "https://fightcade.download/fbneo/gamegear/glocj1.zip",
+    "require": [
+      "gloc"
+    ]
+  },
+  "glocj": {
+    "download": "https://fightcade.download/fbneo/gamegear/glocj.zip",
+    "require": [
+      "gloc"
+    ]
+  },
+  "galaga91": {
+    "download": "https://fightcade.download/fbneo/gamegear/galaga91.zip",
+    "require": [
+      "galaga2"
+    ]
+  },
+  "galaga2": {
+    "download": "https://fightcade.download/fbneo/gamegear/galaga2.zip"
+  },
+  "gamble": {
+    "download": "https://fightcade.download/fbneo/gamegear/gamble.zip"
+  },
+  "gambler": {
+    "download": "https://fightcade.download/fbneo/gamegear/gambler.zip"
+  },
+  "ggorby": {
+    "download": "https://fightcade.download/fbneo/gamegear/ggorby.zip",
+    "require": [
+      "factoryp"
+    ]
+  },
+  "garfield": {
+    "download": "https://fightcade.download/fbneo/gamegear/garfield.zip"
+  },
+  "garousp": {
+    "download": "https://fightcade.download/fbneo/gamegear/garousp.zip",
+    "require": [
+      "fatfursp"
+    ]
+  },
+  "gearstad": {
+    "download": "https://fightcade.download/fbneo/gamegear/gearstad.zip",
+    "require": [
+      "batterup"
+    ]
+  },
+  "gearstah": {
+    "download": "https://fightcade.download/fbneo/gamegear/gearstah.zip"
+  },
+  "gearwork": {
+    "download": "https://fightcade.download/fbneo/gamegear/gearwork.zip"
+  },
+  "georgeko": {
+    "download": "https://fightcade.download/fbneo/gamegear/georgeko.zip"
+  },
+  "ggaleste": {
+    "download": "https://fightcade.download/fbneo/gamegear/ggaleste.zip"
+  },
+  "ggdora": {
+    "download": "https://fightcade.download/fbneo/gamegear/ggdora.zip"
+  },
+  "ggport": {
+    "download": "https://fightcade.download/fbneo/gamegear/ggport.zip"
+  },
+  "ggport1": {
+    "download": "https://fightcade.download/fbneo/gamegear/ggport1.zip"
+  },
+  "godzilla": {
+    "download": "https://fightcade.download/fbneo/gamegear/godzilla.zip"
+  },
+  "gprider": {
+    "download": "https://fightcade.download/fbneo/gamegear/gprider.zip"
+  },
+  "gpriderj": {
+    "download": "https://fightcade.download/fbneo/gamegear/gpriderj.zip",
+    "require": [
+      "gprider"
+    ]
+  },
+  "gpriderp": {
+    "download": "https://fightcade.download/fbneo/gamegear/gpriderp.zip",
+    "require": [
+      "gprider"
+    ]
+  },
+  "greendog": {
+    "download": "https://fightcade.download/fbneo/gamegear/greendog.zip"
+  },
+  "griffin": {
+    "download": "https://fightcade.download/fbneo/gamegear/griffin.zip"
+  },
+  "gunstar": {
+    "download": "https://fightcade.download/fbneo/gamegear/gunstar.zip"
+  },
+  "halleyw": {
+    "download": "https://fightcade.download/fbneo/gamegear/halleyw.zip"
+  },
+  "halleywj": {
+    "download": "https://fightcade.download/fbneo/gamegear/halleywj.zip",
+    "require": [
+      "halleyw"
+    ]
+  },
+  "headbust": {
+    "download": "https://fightcade.download/fbneo/gamegear/headbust.zip"
+  },
+  "heavyw": {
+    "download": "https://fightcade.download/fbneo/gamegear/heavyw.zip"
+  },
+  "homea": {
+    "download": "https://fightcade.download/fbneo/gamegear/homea.zip"
+  },
+  "ddanpei": {
+    "download": "https://fightcade.download/fbneo/gamegear/ddanpei.zip"
+  },
+  "hook": {
+    "download": "https://fightcade.download/fbneo/gamegear/hook.zip"
+  },
+  "hooku": {
+    "download": "https://fightcade.download/fbneo/gamegear/hooku.zip",
+    "require": [
+      "hook"
+    ]
+  },
+  "hurrican": {
+    "download": "https://fightcade.download/fbneo/gamegear/hurrican.zip"
+  },
+  "hyokkohj": {
+    "download": "https://fightcade.download/fbneo/gamegear/hyokkohj.zip"
+  },
+  "hypyak92": {
+    "download": "https://fightcade.download/fbneo/gamegear/hypyak92.zip"
+  },
+  "wakevamp": {
+    "download": "https://fightcade.download/fbneo/gamegear/wakevamp.zip",
+    "require": [
+      "mastdark"
+    ]
+  },
+  "indycrus": {
+    "download": "https://fightcade.download/fbneo/gamegear/indycrus.zip"
+  },
+  "ironman": {
+    "download": "https://fightcade.download/fbneo/gamegear/ironman.zip"
+  },
+  "ironman1": {
+    "download": "https://fightcade.download/fbneo/gamegear/ironman1.zip",
+    "require": [
+      "ironman"
+    ]
+  },
+  "jleagu94": {
+    "download": "https://fightcade.download/fbneo/gamegear/jleagu94.zip"
+  },
+  "jleague": {
+    "download": "https://fightcade.download/fbneo/gamegear/jleague.zip"
+  },
+  "jb007": {
+    "download": "https://fightcade.download/fbneo/gamegear/jb007.zip"
+  },
+  "jpond3": {
+    "download": "https://fightcade.download/fbneo/gamegear/jpond3.zip"
+  },
+  "robocod": {
+    "download": "https://fightcade.download/fbneo/gamegear/robocod.zip"
+  },
+  "robocodu": {
+    "download": "https://fightcade.download/fbneo/gamegear/robocodu.zip",
+    "require": [
+      "robocod"
+    ]
+  },
+  "jangpun2": {
+    "download": "https://fightcade.download/fbneo/gamegear/jangpun2.zip"
+  },
+  "jeopardy": {
+    "download": "https://fightcade.download/fbneo/gamegear/jeopardy.zip"
+  },
+  "jeopards": {
+    "download": "https://fightcade.download/fbneo/gamegear/jeopards.zip"
+  },
+  "joemont": {
+    "download": "https://fightcade.download/fbneo/gamegear/joemont.zip"
+  },
+  "joemontj": {
+    "download": "https://fightcade.download/fbneo/gamegear/joemontj.zip",
+    "require": [
+      "joemont"
+    ]
+  },
+  "striderr": {
+    "download": "https://fightcade.download/fbneo/gamegear/striderr.zip"
+  },
+  "jdredd": {
+    "download": "https://fightcade.download/fbneo/gamegear/jdredd.zip"
+  },
+  "junctionj": {
+    "download": "https://fightcade.download/fbneo/gamegear/junctionj.zip",
+    "require": [
+      "junction"
+    ]
+  },
+  "junction": {
+    "download": "https://fightcade.download/fbneo/gamegear/junction.zip"
+  },
+  "jstrike": {
+    "download": "https://fightcade.download/fbneo/gamegear/jstrike.zip"
+  },
+  "jpark": {
+    "download": "https://fightcade.download/fbneo/gamegear/jpark.zip"
+  },
+  "jparkj": {
+    "download": "https://fightcade.download/fbneo/gamegear/jparkj.zip",
+    "require": [
+      "jpark"
+    ]
+  },
+  "sainttal": {
+    "download": "https://fightcade.download/fbneo/gamegear/sainttal.zip"
+  },
+  "kawasaki": {
+    "download": "https://fightcade.download/fbneo/gamegear/kawasaki.zip"
+  },
+  "yaiba": {
+    "download": "https://fightcade.download/fbneo/gamegear/yaiba.zip"
+  },
+  "kickrush": {
+    "download": "https://fightcade.download/fbneo/gamegear/kickrush.zip",
+    "require": [
+      "tengenwc"
+    ]
+  },
+  "kineticc": {
+    "download": "https://fightcade.download/fbneo/gamegear/kineticc.zip"
+  },
+  "zenki": {
+    "download": "https://fightcade.download/fbneo/gamegear/zenki.zip"
+  },
+  "klax": {
+    "download": "https://fightcade.download/fbneo/gamegear/klax.zip"
+  },
+  "krustyfh": {
+    "download": "https://fightcade.download/fbneo/gamegear/krustyfh.zip"
+  },
+  "kunichan": {
+    "download": "https://fightcade.download/fbneo/gamegear/kunichan.zip"
+  },
+  "kunichn2": {
+    "download": "https://fightcade.download/fbneo/gamegear/kunichn2.zip"
+  },
+  "landill": {
+    "download": "https://fightcade.download/fbneo/gamegear/landill.zip"
+  },
+  "lastact": {
+    "download": "https://fightcade.download/fbneo/gamegear/lastact.zip"
+  },
+  "legndill": {
+    "download": "https://fightcade.download/fbneo/gamegear/legndill.zip"
+  },
+  "legndillp6": {
+    "download": "https://fightcade.download/fbneo/gamegear/legndillp6.zip",
+    "require": [
+      "legndill"
+    ]
+  },
+  "legndillp4": {
+    "download": "https://fightcade.download/fbneo/gamegear/legndillp4.zip",
+    "require": [
+      "legndill"
+    ]
+  },
+  "legndillp5": {
+    "download": "https://fightcade.download/fbneo/gamegear/legndillp5.zip",
+    "require": [
+      "legndill"
+    ]
+  },
+  "legndillp3": {
+    "download": "https://fightcade.download/fbneo/gamegear/legndillp3.zip",
+    "require": [
+      "legndill"
+    ]
+  },
+  "legndillp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/legndillp2.zip",
+    "require": [
+      "legndill"
+    ]
+  },
+  "legndillp1": {
+    "download": "https://fightcade.download/fbneo/gamegear/legndillp1.zip",
+    "require": [
+      "legndill"
+    ]
+  },
+  "lemmings": {
+    "download": "https://fightcade.download/fbneo/gamegear/lemmings.zip"
+  },
+  "lemmingsp": {
+    "download": "https://fightcade.download/fbneo/gamegear/lemmingsp.zip",
+    "require": [
+      "lemmings"
+    ]
+  },
+  "lemming2": {
+    "download": "https://fightcade.download/fbneo/gamegear/lemming2.zip"
+  },
+  "lunare": {
+    "download": "https://fightcade.download/fbneo/gamegear/lunare.zip",
+    "require": [
+      "lunar"
+    ]
+  },
+  "lunar": {
+    "download": "https://fightcade.download/fbneo/gamegear/lunar.zip"
+  },
+  "madden95": {
+    "download": "https://fightcade.download/fbneo/gamegear/madden95.zip"
+  },
+  "madden96": {
+    "download": "https://fightcade.download/fbneo/gamegear/madden96.zip"
+  },
+  "madoumna": {
+    "download": "https://fightcade.download/fbneo/gamegear/madoumna.zip"
+  },
+  "madoumone": {
+    "download": "https://fightcade.download/fbneo/gamegear/madoumone.zip",
+    "require": [
+      "madoumon"
+    ]
+  },
+  "madoumon": {
+    "download": "https://fightcade.download/fbneo/gamegear/madoumon.zip"
+  },
+  "madoumn2": {
+    "download": "https://fightcade.download/fbneo/gamegear/madoumn2.zip"
+  },
+  "madoumn3a": {
+    "download": "https://fightcade.download/fbneo/gamegear/madoumn3a.zip",
+    "require": [
+      "madoumn3"
+    ]
+  },
+  "madoumn3": {
+    "download": "https://fightcade.download/fbneo/gamegear/madoumn3.zip"
+  },
+  "rayearth": {
+    "download": "https://fightcade.download/fbneo/gamegear/rayearth.zip"
+  },
+  "rayeart2": {
+    "download": "https://fightcade.download/fbneo/gamegear/rayeart2.zip"
+  },
+  "magiclpp": {
+    "download": "https://fightcade.download/fbneo/gamegear/magiclpp.zip"
+  },
+  "mtaruru": {
+    "download": "https://fightcade.download/fbneo/gamegear/mtaruru.zip"
+  },
+  "mappy": {
+    "download": "https://fightcade.download/fbneo/gamegear/mappy.zip"
+  },
+  "marble": {
+    "download": "https://fightcade.download/fbneo/gamegear/marble.zip"
+  },
+  "marko": {
+    "download": "https://fightcade.download/fbneo/gamegear/marko.zip"
+  },
+  "mastdark": {
+    "download": "https://fightcade.download/fbneo/gamegear/mastdark.zip"
+  },
+  "megaman": {
+    "download": "https://fightcade.download/fbneo/gamegear/megaman.zip"
+  },
+  "lastbibl": {
+    "download": "https://fightcade.download/fbneo/gamegear/lastbibl.zip"
+  },
+  "lastbibse": {
+    "download": "https://fightcade.download/fbneo/gamegear/lastbibse.zip",
+    "require": [
+      "lastbibs"
+    ]
+  },
+  "lastbibs": {
+    "download": "https://fightcade.download/fbneo/gamegear/lastbibs.zip"
+  },
+  "mickmack": {
+    "download": "https://fightcade.download/fbneo/gamegear/mickmack.zip"
+  },
+  "legndillj": {
+    "download": "https://fightcade.download/fbneo/gamegear/legndillj.zip",
+    "require": [
+      "legndill"
+    ]
+  },
+  "castlillj": {
+    "download": "https://fightcade.download/fbneo/gamegear/castlillj.zip",
+    "require": [
+      "castlill"
+    ]
+  },
+  "landillj": {
+    "download": "https://fightcade.download/fbneo/gamegear/landillj.zip",
+    "require": [
+      "landill"
+    ]
+  },
+  "mickeyuc": {
+    "download": "https://fightcade.download/fbneo/gamegear/mickeyuc.zip"
+  },
+  "micromac": {
+    "download": "https://fightcade.download/fbneo/gamegear/micromac.zip"
+  },
+  "micromc2": {
+    "download": "https://fightcade.download/fbneo/gamegear/micromc2.zip"
+  },
+  "mmpr": {
+    "download": "https://fightcade.download/fbneo/gamegear/mmpr.zip"
+  },
+  "mmprp": {
+    "download": "https://fightcade.download/fbneo/gamegear/mmprp.zip",
+    "require": [
+      "mmpr"
+    ]
+  },
+  "mmprtm": {
+    "download": "https://fightcade.download/fbneo/gamegear/mmprtm.zip"
+  },
+  "mmprtmp": {
+    "download": "https://fightcade.download/fbneo/gamegear/mmprtmp.zip",
+    "require": [
+      "mmprtm"
+    ]
+  },
+  "mlbpa": {
+    "download": "https://fightcade.download/fbneo/gamegear/mlbpa.zip"
+  },
+  "moldoran": {
+    "download": "https://fightcade.download/fbneo/gamegear/moldoran.zip"
+  },
+  "monstwar": {
+    "download": "https://fightcade.download/fbneo/gamegear/monstwar.zip"
+  },
+  "mworld2": {
+    "download": "https://fightcade.download/fbneo/gamegear/mworld2.zip",
+    "require": [
+      "wboydtrp"
+    ]
+  },
+  "mk": {
+    "download": "https://fightcade.download/fbneo/gamegear/mk.zip"
+  },
+  "mkj": {
+    "download": "https://fightcade.download/fbneo/gamegear/mkj.zip",
+    "require": [
+      "mk"
+    ]
+  },
+  "mk3": {
+    "download": "https://fightcade.download/fbneo/gamegear/mk3.zip"
+  },
+  "mk2": {
+    "download": "https://fightcade.download/fbneo/gamegear/mk2.zip"
+  },
+  "mspacman": {
+    "download": "https://fightcade.download/fbneo/gamegear/mspacman.zip"
+  },
+  "nazopuyo1": {
+    "download": "https://fightcade.download/fbneo/gamegear/nazopuyo1.zip",
+    "require": [
+      "nazopuyo"
+    ]
+  },
+  "nazopuyo": {
+    "download": "https://fightcade.download/fbneo/gamegear/nazopuyo.zip"
+  },
+  "nazpuyo2": {
+    "download": "https://fightcade.download/fbneo/gamegear/nazpuyo2.zip"
+  },
+  "nazpyoar": {
+    "download": "https://fightcade.download/fbneo/gamegear/nazpyoar.zip"
+  },
+  "nazpyoarp": {
+    "download": "https://fightcade.download/fbneo/gamegear/nazpyoarp.zip",
+    "require": [
+      "nazpyoar"
+    ]
+  },
+  "nbaactp08": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp08.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp07": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp07.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp06": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp06.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp05": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp05.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp04": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp04.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp03": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp03.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp02": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp02.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp01": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp01.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp30": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp30.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp29": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp29.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp28": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp28.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp27": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp27.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp26": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp26.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp25": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp25.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp24": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp24.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp23": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp23.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp22": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp22.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp21": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp21.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp20": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp20.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp19": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp19.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp17": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp17.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp16": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp16.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp15": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp15.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp14": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp14.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp12": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp12.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp13": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp13.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp11": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp11.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp10": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp10.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp09": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp09.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaactp18": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaactp18.zip",
+    "require": [
+      "nbaact"
+    ]
+  },
+  "nbaact": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbaact.zip"
+  },
+  "nbajam1": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbajam1.zip",
+    "require": [
+      "nbajam"
+    ]
+  },
+  "nbajamj": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbajamj.zip",
+    "require": [
+      "nbajam"
+    ]
+  },
+  "nbajam": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbajam.zip"
+  },
+  "nbajamte": {
+    "download": "https://fightcade.download/fbneo/gamegear/nbajamte.zip"
+  },
+  "nfl95p13": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p13.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p11": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p11.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p12": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p12.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p10": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p10.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p09": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p09.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p08": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p08.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p07": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p07.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p06": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p06.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p05": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p05.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p04": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p04.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p03": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p03.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p01": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p01.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95p02": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95p02.zip",
+    "require": [
+      "nfl95"
+    ]
+  },
+  "nfl95": {
+    "download": "https://fightcade.download/fbneo/gamegear/nfl95.zip"
+  },
+  "nflqb96": {
+    "download": "https://fightcade.download/fbneo/gamegear/nflqb96.zip"
+  },
+  "nflqb": {
+    "download": "https://fightcade.download/fbneo/gamegear/nflqb.zip"
+  },
+  "nhlasp17": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp17.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp16": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp16.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp15": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp15.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp14": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp14.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp13": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp13.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp12": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp12.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp11": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp11.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp10": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp10.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp09": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp09.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp08": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp08.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp07": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp07.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp06": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp06.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp02": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp02.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp05": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp05.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp04": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp04.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp03": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp03.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlasp01": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlasp01.zip",
+    "require": [
+      "nhlas"
+    ]
+  },
+  "nhlas": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhlas.zip"
+  },
+  "nhl": {
+    "download": "https://fightcade.download/fbneo/gamegear/nhl.zip"
+  },
+  "ngaiden": {
+    "download": "https://fightcade.download/fbneo/gamegear/ngaiden.zip"
+  },
+  "ngaidenj": {
+    "download": "https://fightcade.download/fbneo/gamegear/ngaidenj.zip",
+    "require": [
+      "ngaiden"
+    ]
+  },
+  "ninku": {
+    "download": "https://fightcade.download/fbneo/gamegear/ninku.zip"
+  },
+  "ninku2": {
+    "download": "https://fightcade.download/fbneo/gamegear/ninku2.zip"
+  },
+  "ninkug": {
+    "download": "https://fightcade.download/fbneo/gamegear/ninkug.zip"
+  },
+  "nomowsb": {
+    "download": "https://fightcade.download/fbneo/gamegear/nomowsb.zip"
+  },
+  "olympgld": {
+    "download": "https://fightcade.download/fbneo/gamegear/olympgld.zip"
+  },
+  "olympglda": {
+    "download": "https://fightcade.download/fbneo/gamegear/olympglda.zip",
+    "require": [
+      "olympgld"
+    ]
+  },
+  "outrun": {
+    "download": "https://fightcade.download/fbneo/gamegear/outrun.zip"
+  },
+  "outrunj": {
+    "download": "https://fightcade.download/fbneo/gamegear/outrunj.zip",
+    "require": [
+      "outrun"
+    ]
+  },
+  "outrneur": {
+    "download": "https://fightcade.download/fbneo/gamegear/outrneur.zip"
+  },
+  "outrneuru": {
+    "download": "https://fightcade.download/fbneo/gamegear/outrneuru.zip",
+    "require": [
+      "outrneur"
+    ]
+  },
+  "pacattak": {
+    "download": "https://fightcade.download/fbneo/gamegear/pacattak.zip"
+  },
+  "pacintim": {
+    "download": "https://fightcade.download/fbneo/gamegear/pacintim.zip"
+  },
+  "pacmanj": {
+    "download": "https://fightcade.download/fbneo/gamegear/pacmanj.zip",
+    "require": [
+      "pacman"
+    ]
+  },
+  "pacman": {
+    "download": "https://fightcade.download/fbneo/gamegear/pacman.zip"
+  },
+  "panzer": {
+    "download": "https://fightcade.download/fbneo/gamegear/panzer.zip"
+  },
+  "paperboy": {
+    "download": "https://fightcade.download/fbneo/gamegear/paperboy.zip"
+  },
+  "paperbo2": {
+    "download": "https://fightcade.download/fbneo/gamegear/paperbo2.zip"
+  },
+  "pengo": {
+    "download": "https://fightcade.download/fbneo/gamegear/pengo.zip"
+  },
+  "pengoj": {
+    "download": "https://fightcade.download/fbneo/gamegear/pengoj.zip",
+    "require": [
+      "pengo"
+    ]
+  },
+  "inudais": {
+    "download": "https://fightcade.download/fbneo/gamegear/inudais.zip"
+  },
+  "nekodais": {
+    "download": "https://fightcade.download/fbneo/gamegear/nekodais.zip"
+  },
+  "sampras": {
+    "download": "https://fightcade.download/fbneo/gamegear/sampras.zip"
+  },
+  "pga96": {
+    "download": "https://fightcade.download/fbneo/gamegear/pga96.zip"
+  },
+  "pgatourt": {
+    "download": "https://fightcade.download/fbneo/gamegear/pgatourt.zip"
+  },
+  "pgatour": {
+    "download": "https://fightcade.download/fbneo/gamegear/pgatour.zip"
+  },
+  "pgatour2": {
+    "download": "https://fightcade.download/fbneo/gamegear/pgatour2.zip"
+  },
+  "pstaradv": {
+    "download": "https://fightcade.download/fbneo/gamegear/pstaradv.zip"
+  },
+  "pstargdne": {
+    "download": "https://fightcade.download/fbneo/gamegear/pstargdne.zip",
+    "require": [
+      "pstargdn"
+    ]
+  },
+  "pstargdn": {
+    "download": "https://fightcade.download/fbneo/gamegear/pstargdn.zip"
+  },
+  "phantom": {
+    "download": "https://fightcade.download/fbneo/gamegear/phantom.zip"
+  },
+  "pbdreams": {
+    "download": "https://fightcade.download/fbneo/gamegear/pbdreams.zip"
+  },
+  "pocketj": {
+    "download": "https://fightcade.download/fbneo/gamegear/pocketj.zip"
+  },
+  "pokerfbj": {
+    "download": "https://fightcade.download/fbneo/gamegear/pokerfbj.zip"
+  },
+  "pokerfp": {
+    "download": "https://fightcade.download/fbneo/gamegear/pokerfp.zip"
+  },
+  "pokerfs": {
+    "download": "https://fightcade.download/fbneo/gamegear/pokerfs.zip"
+  },
+  "pokerfg": {
+    "download": "https://fightcade.download/fbneo/gamegear/pokerfg.zip"
+  },
+  "popbreak": {
+    "download": "https://fightcade.download/fbneo/gamegear/popbreak.zip"
+  },
+  "popeye": {
+    "download": "https://fightcade.download/fbneo/gamegear/popeye.zip"
+  },
+  "pdrive": {
+    "download": "https://fightcade.download/fbneo/gamegear/pdrive.zip"
+  },
+  "pstrike2": {
+    "download": "https://fightcade.download/fbneo/gamegear/pstrike2.zip"
+  },
+  "predatr2": {
+    "download": "https://fightcade.download/fbneo/gamegear/predatr2.zip"
+  },
+  "primal": {
+    "download": "https://fightcade.download/fbneo/gamegear/primal.zip"
+  },
+  "ppersia": {
+    "download": "https://fightcade.download/fbneo/gamegear/ppersia.zip"
+  },
+  "ppersiau": {
+    "download": "https://fightcade.download/fbneo/gamegear/ppersiau.zip",
+    "require": [
+      "ppersia"
+    ]
+  },
+  "proyak94": {
+    "download": "https://fightcade.download/fbneo/gamegear/proyak94.zip"
+  },
+  "proyakgg": {
+    "download": "https://fightcade.download/fbneo/gamegear/proyakgg.zip"
+  },
+  "psychicw": {
+    "download": "https://fightcade.download/fbneo/gamegear/psychicw.zip"
+  },
+  "psychicwj": {
+    "download": "https://fightcade.download/fbneo/gamegear/psychicwj.zip",
+    "require": [
+      "psychicw"
+    ]
+  },
+  "puttputt": {
+    "download": "https://fightcade.download/fbneo/gamegear/puttputt.zip"
+  },
+  "puttputtj": {
+    "download": "https://fightcade.download/fbneo/gamegear/puttputtj.zip",
+    "require": [
+      "puttputt"
+    ]
+  },
+  "puyopuyo": {
+    "download": "https://fightcade.download/fbneo/gamegear/puyopuyo.zip"
+  },
+  "puyopuy2": {
+    "download": "https://fightcade.download/fbneo/gamegear/puyopuy2.zip"
+  },
+  "tantr": {
+    "download": "https://fightcade.download/fbneo/gamegear/tantr.zip"
+  },
+  "pbobble": {
+    "download": "https://fightcade.download/fbneo/gamegear/pbobble.zip",
+    "require": [
+      "bam"
+    ]
+  },
+  "ichirgg": {
+    "download": "https://fightcade.download/fbneo/gamegear/ichirgg.zip"
+  },
+  "shavnyak": {
+    "download": "https://fightcade.download/fbneo/gamegear/shavnyak.zip"
+  },
+  "rbibb94": {
+    "download": "https://fightcade.download/fbneo/gamegear/rbibb94.zip"
+  },
+  "rcgp": {
+    "download": "https://fightcade.download/fbneo/gamegear/rcgp.zip"
+  },
+  "rastan": {
+    "download": "https://fightcade.download/fbneo/gamegear/rastan.zip"
+  },
+  "revenged": {
+    "download": "https://fightcade.download/fbneo/gamegear/revenged.zip",
+    "require": [
+      "wboy"
+    ]
+  },
+  "riddickj": {
+    "download": "https://fightcade.download/fbneo/gamegear/riddickj.zip",
+    "require": [
+      "riddick"
+    ]
+  },
+  "riddick": {
+    "download": "https://fightcade.download/fbneo/gamegear/riddick.zip"
+  },
+  "riserobo": {
+    "download": "https://fightcade.download/fbneo/gamegear/riserobo.zip"
+  },
+  "ristarp5": {
+    "download": "https://fightcade.download/fbneo/gamegear/ristarp5.zip",
+    "require": [
+      "ristar"
+    ]
+  },
+  "ristarp4": {
+    "download": "https://fightcade.download/fbneo/gamegear/ristarp4.zip",
+    "require": [
+      "ristar"
+    ]
+  },
+  "ristarp3": {
+    "download": "https://fightcade.download/fbneo/gamegear/ristarp3.zip",
+    "require": [
+      "ristar"
+    ]
+  },
+  "ristarp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/ristarp2.zip",
+    "require": [
+      "ristar"
+    ]
+  },
+  "ristarp1": {
+    "download": "https://fightcade.download/fbneo/gamegear/ristarp1.zip",
+    "require": [
+      "ristar"
+    ]
+  },
+  "ristar": {
+    "download": "https://fightcade.download/fbneo/gamegear/ristar.zip"
+  },
+  "roadrash": {
+    "download": "https://fightcade.download/fbneo/gamegear/roadrash.zip"
+  },
+  "roadrashu": {
+    "download": "https://fightcade.download/fbneo/gamegear/roadrashu.zip",
+    "require": [
+      "roadrash"
+    ]
+  },
+  "robocop3": {
+    "download": "https://fightcade.download/fbneo/gamegear/robocop3.zip"
+  },
+  "roboterm": {
+    "download": "https://fightcade.download/fbneo/gamegear/roboterm.zip"
+  },
+  "royalstne": {
+    "download": "https://fightcade.download/fbneo/gamegear/royalstne.zip",
+    "require": [
+      "royalstn"
+    ]
+  },
+  "royalstn": {
+    "download": "https://fightcade.download/fbneo/gamegear/royalstn.zip"
+  },
+  "ryukyu": {
+    "download": "https://fightcade.download/fbneo/gamegear/ryukyu.zip",
+    "require": [
+      "solitarp"
+    ]
+  },
+  "sslucifr": {
+    "download": "https://fightcade.download/fbneo/gamegear/sslucifr.zip"
+  },
+  "samsho": {
+    "download": "https://fightcade.download/fbneo/gamegear/samsho.zip"
+  },
+  "samspir": {
+    "download": "https://fightcade.download/fbneo/gamegear/samspir.zip",
+    "require": [
+      "samsho"
+    ]
+  },
+  "scratchgj": {
+    "download": "https://fightcade.download/fbneo/gamegear/scratchgj.zip",
+    "require": [
+      "scratchg"
+    ]
+  },
+  "scratchg": {
+    "download": "https://fightcade.download/fbneo/gamegear/scratchg.zip"
+  },
+  "sdgundam": {
+    "download": "https://fightcade.download/fbneo/gamegear/sdgundam.zip"
+  },
+  "sega4in1": {
+    "download": "https://fightcade.download/fbneo/gamegear/sega4in1.zip"
+  },
+  "sega4in1p": {
+    "download": "https://fightcade.download/fbneo/gamegear/sega4in1p.zip",
+    "require": [
+      "sega4in1"
+    ]
+  },
+  "sensible": {
+    "download": "https://fightcade.download/fbneo/gamegear/sensible.zip"
+  },
+  "shadam": {
+    "download": "https://fightcade.download/fbneo/gamegear/shadam.zip",
+    "require": [
+      "defoasis"
+    ]
+  },
+  "shangh2a": {
+    "download": "https://fightcade.download/fbneo/gamegear/shangh2a.zip",
+    "require": [
+      "shangh2"
+    ]
+  },
+  "shangh2": {
+    "download": "https://fightcade.download/fbneo/gamegear/shangh2.zip"
+  },
+  "shaqfu": {
+    "download": "https://fightcade.download/fbneo/gamegear/shaqfu.zip"
+  },
+  "shikinjo": {
+    "download": "https://fightcade.download/fbneo/gamegear/shikinjo.zip"
+  },
+  "shinfrcg": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinfrcg.zip"
+  },
+  "shinfrgfe": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinfrgfe.zip",
+    "require": [
+      "shinfrgf"
+    ]
+  },
+  "shinfrgf": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinfrgf.zip"
+  },
+  "shinfrg2": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinfrg2.zip",
+    "require": [
+      "shinfrc2"
+    ]
+  },
+  "shinfrc2": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinfrc2.zip"
+  },
+  "shinfrc2p4": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinfrc2p4.zip",
+    "require": [
+      "shinfrc2"
+    ]
+  },
+  "shinfrc2p3": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinfrc2p3.zip",
+    "require": [
+      "shinfrc2"
+    ]
+  },
+  "shinfrc2p2": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinfrc2p2.zip",
+    "require": [
+      "shinfrc2"
+    ]
+  },
+  "shinfrc2p1": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinfrc2p1.zip",
+    "require": [
+      "shinfrc2"
+    ]
+  },
+  "sidepock": {
+    "download": "https://fightcade.download/fbneo/gamegear/sidepock.zip"
+  },
+  "skweek": {
+    "download": "https://fightcade.download/fbneo/gamegear/skweek.zip",
+    "require": [
+      "slider"
+    ]
+  },
+  "slider": {
+    "download": "https://fightcade.download/fbneo/gamegear/slider.zip"
+  },
+  "smashtv": {
+    "download": "https://fightcade.download/fbneo/gamegear/smashtv.zip"
+  },
+  "solitair": {
+    "download": "https://fightcade.download/fbneo/gamegear/solitair.zip"
+  },
+  "solitarp": {
+    "download": "https://fightcade.download/fbneo/gamegear/solitarp.zip"
+  },
+  "sonictls": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonictls.zip",
+    "require": [
+      "sonicc"
+    ]
+  },
+  "sonictlss": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonictlss.zip",
+    "require": [
+      "sonicc"
+    ]
+  },
+  "sonictl2": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonictl2.zip",
+    "require": [
+      "sonictri"
+    ]
+  },
+  "sonicbls": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicbls.zip"
+  },
+  "sonicblsp6": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicblsp6.zip",
+    "require": [
+      "sonicbls"
+    ]
+  },
+  "sonicblsp5": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicblsp5.zip",
+    "require": [
+      "sonicbls"
+    ]
+  },
+  "sonicblsp4": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicblsp4.zip",
+    "require": [
+      "sonicbls"
+    ]
+  },
+  "sonicblsp3": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicblsp3.zip",
+    "require": [
+      "sonicbls"
+    ]
+  },
+  "sonicblsp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicblsp2.zip",
+    "require": [
+      "sonicbls"
+    ]
+  },
+  "sonicblsp1": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicblsp1.zip",
+    "require": [
+      "sonicbls"
+    ]
+  },
+  "sonicc": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicc.zip"
+  },
+  "sonicdr": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicdr.zip"
+  },
+  "sonicdrs": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicdrs.zip",
+    "require": [
+      "sonicdr"
+    ]
+  },
+  "sonicdr2": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicdr2.zip"
+  },
+  "soniclab": {
+    "download": "https://fightcade.download/fbneo/gamegear/soniclab.zip"
+  },
+  "sspin": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspin.zip"
+  },
+  "sspinp20": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp20.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp19": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp19.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp18": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp18.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp17": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp17.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp16": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp16.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp15": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp15.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp14": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp14.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp13": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp13.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp12": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp12.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp11": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp11.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp10": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp10.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp09": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp09.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp08": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp08.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp07": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp07.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp06": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp06.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp04": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp04.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp03": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp03.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp02": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp02.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp01": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp01.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sspinp05": {
+    "download": "https://fightcade.download/fbneo/gamegear/sspinp05.zip",
+    "require": [
+      "sspin"
+    ]
+  },
+  "sonic": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonic.zip"
+  },
+  "sonicj": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicj.zip",
+    "require": [
+      "sonic"
+    ]
+  },
+  "sonicp": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonicp.zip",
+    "require": [
+      "sonic"
+    ]
+  },
+  "sonictri": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonictri.zip"
+  },
+  "sonictrip": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonictrip.zip",
+    "require": [
+      "sonictri"
+    ]
+  },
+  "sonic2d": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonic2d.zip",
+    "require": [
+      "sonic2"
+    ]
+  },
+  "sonic2": {
+    "download": "https://fightcade.download/fbneo/gamegear/sonic2.zip"
+  },
+  "sokoban": {
+    "download": "https://fightcade.download/fbneo/gamegear/sokoban.zip"
+  },
+  "sharrier": {
+    "download": "https://fightcade.download/fbneo/gamegear/sharrier.zip"
+  },
+  "spidermn": {
+    "download": "https://fightcade.download/fbneo/gamegear/spidermn.zip"
+  },
+  "spidxmen": {
+    "download": "https://fightcade.download/fbneo/gamegear/spidxmen.zip"
+  },
+  "spidking": {
+    "download": "https://fightcade.download/fbneo/gamegear/spidking.zip"
+  },
+  "spirou": {
+    "download": "https://fightcade.download/fbneo/gamegear/spirou.zip"
+  },
+  "sportill": {
+    "download": "https://fightcade.download/fbneo/gamegear/sportill.zip"
+  },
+  "sporttrvp12": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp12.zip",
+    "require": [
+      "sporttrv"
+    ]
+  },
+  "sporttrvp11": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp11.zip",
+    "require": [
+      "sporttrv"
+    ]
+  },
+  "sporttrvp10": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp10.zip",
+    "require": [
+      "sporttrv"
+    ]
+  },
+  "sporttrvp09": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp09.zip",
+    "require": [
+      "sporttrv"
+    ]
+  },
+  "sporttrvp08": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp08.zip",
+    "require": [
+      "sporttrv"
+    ]
+  },
+  "sporttrvp07": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp07.zip",
+    "require": [
+      "sporttrv"
+    ]
+  },
+  "sporttrvp06": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp06.zip",
+    "require": [
+      "sporttrv"
+    ]
+  },
+  "sporttrvp05": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp05.zip",
+    "require": [
+      "sporttrv"
+    ]
+  },
+  "sprtrvcep24": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep24.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep23": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep23.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep22": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep22.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep21": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep21.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep20": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep20.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep19": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep19.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep18": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep18.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep17": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep17.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep16": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep16.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep15": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep15.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep14": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep14.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep13": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep13.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep12": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep12.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep11": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep11.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep10": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep10.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep09": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep09.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep08": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep08.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep07": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep07.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep06": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep06.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep05": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep05.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep04": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep04.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep03": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep03.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sporttrvp04": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp04.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sporttrvp03": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp03.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sporttrvp02": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp02.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep02": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep02.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sprtrvcep01": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvcep01.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sporttrvp01": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrvp01.zip",
+    "require": [
+      "sprtrvce"
+    ]
+  },
+  "sporttrv": {
+    "download": "https://fightcade.download/fbneo/gamegear/sporttrv.zip"
+  },
+  "sprtrvce": {
+    "download": "https://fightcade.download/fbneo/gamegear/sprtrvce.zip"
+  },
+  "stng": {
+    "download": "https://fightcade.download/fbneo/gamegear/stng.zip"
+  },
+  "stgbeyn": {
+    "download": "https://fightcade.download/fbneo/gamegear/stgbeyn.zip"
+  },
+  "starwars": {
+    "download": "https://fightcade.download/fbneo/gamegear/starwars.zip"
+  },
+  "starwarsu": {
+    "download": "https://fightcade.download/fbneo/gamegear/starwarsu.zip",
+    "require": [
+      "starwars"
+    ]
+  },
+  "stargate": {
+    "download": "https://fightcade.download/fbneo/gamegear/stargate.zip"
+  },
+  "sheroa": {
+    "download": "https://fightcade.download/fbneo/gamegear/sheroa.zip",
+    "require": [
+      "shero"
+    ]
+  },
+  "shero": {
+    "download": "https://fightcade.download/fbneo/gamegear/shero.zip"
+  },
+  "sor": {
+    "download": "https://fightcade.download/fbneo/gamegear/sor.zip"
+  },
+  "sor2": {
+    "download": "https://fightcade.download/fbneo/gamegear/sor2.zip"
+  },
+  "striker": {
+    "download": "https://fightcade.download/fbneo/gamegear/striker.zip"
+  },
+  "sbtank": {
+    "download": "https://fightcade.download/fbneo/gamegear/sbtank.zip"
+  },
+  "supercol": {
+    "download": "https://fightcade.download/fbneo/gamegear/supercol.zip"
+  },
+  "supercolj": {
+    "download": "https://fightcade.download/fbneo/gamegear/supercolj.zip",
+    "require": [
+      "supercol"
+    ]
+  },
+  "supercolp7": {
+    "download": "https://fightcade.download/fbneo/gamegear/supercolp7.zip",
+    "require": [
+      "supercol"
+    ]
+  },
+  "supercolp6": {
+    "download": "https://fightcade.download/fbneo/gamegear/supercolp6.zip",
+    "require": [
+      "supercol"
+    ]
+  },
+  "supercolp5": {
+    "download": "https://fightcade.download/fbneo/gamegear/supercolp5.zip",
+    "require": [
+      "supercol"
+    ]
+  },
+  "supercolp4": {
+    "download": "https://fightcade.download/fbneo/gamegear/supercolp4.zip",
+    "require": [
+      "supercol"
+    ]
+  },
+  "supercolp3": {
+    "download": "https://fightcade.download/fbneo/gamegear/supercolp3.zip",
+    "require": [
+      "supercol"
+    ]
+  },
+  "supercolp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/supercolp2.zip",
+    "require": [
+      "supercol"
+    ]
+  },
+  "supercolp1": {
+    "download": "https://fightcade.download/fbneo/gamegear/supercolp1.zip",
+    "require": [
+      "supercol"
+    ]
+  },
+  "supgolfj": {
+    "download": "https://fightcade.download/fbneo/gamegear/supgolfj.zip",
+    "require": [
+      "supgolf"
+    ]
+  },
+  "supgolf": {
+    "download": "https://fightcade.download/fbneo/gamegear/supgolf.zip"
+  },
+  "skickoff": {
+    "download": "https://fightcade.download/fbneo/gamegear/skickoff.zip"
+  },
+  "smomo3": {
+    "download": "https://fightcade.download/fbneo/gamegear/smomo3.zip"
+  },
+  "smgp": {
+    "download": "https://fightcade.download/fbneo/gamegear/smgp.zip"
+  },
+  "smgpj": {
+    "download": "https://fightcade.download/fbneo/gamegear/smgpj.zip",
+    "require": [
+      "smgp"
+    ]
+  },
+  "superoff": {
+    "download": "https://fightcade.download/fbneo/gamegear/superoff.zip"
+  },
+  "suprjedi": {
+    "download": "https://fightcade.download/fbneo/gamegear/suprjedi.zip"
+  },
+  "ssinv": {
+    "download": "https://fightcade.download/fbneo/gamegear/ssinv.zip"
+  },
+  "stetris": {
+    "download": "https://fightcade.download/fbneo/gamegear/stetris.zip"
+  },
+  "superman": {
+    "download": "https://fightcade.download/fbneo/gamegear/superman.zip"
+  },
+  "supermanp": {
+    "download": "https://fightcade.download/fbneo/gamegear/supermanp.zip",
+    "require": [
+      "superman"
+    ]
+  },
+  "surfninj": {
+    "download": "https://fightcade.download/fbneo/gamegear/surfninj.zip"
+  },
+  "sylvane": {
+    "download": "https://fightcade.download/fbneo/gamegear/sylvane.zip",
+    "require": [
+      "sylvan"
+    ]
+  },
+  "sylvan": {
+    "download": "https://fightcade.download/fbneo/gamegear/sylvan.zip"
+  },
+  "t2ag": {
+    "download": "https://fightcade.download/fbneo/gamegear/t2ag.zip"
+  },
+  "t2agj": {
+    "download": "https://fightcade.download/fbneo/gamegear/t2agj.zip",
+    "require": [
+      "t2ag"
+    ]
+  },
+  "tailsadv": {
+    "download": "https://fightcade.download/fbneo/gamegear/tailsadv.zip"
+  },
+  "tailskyp": {
+    "download": "https://fightcade.download/fbneo/gamegear/tailskyp.zip"
+  },
+  "taisnmj": {
+    "download": "https://fightcade.download/fbneo/gamegear/taisnmj.zip"
+  },
+  "taisnmj2": {
+    "download": "https://fightcade.download/fbneo/gamegear/taisnmj2.zip"
+  },
+  "daisenrg": {
+    "download": "https://fightcade.download/fbneo/gamegear/daisenrg.zip"
+  },
+  "chasehqj": {
+    "download": "https://fightcade.download/fbneo/gamegear/chasehqj.zip",
+    "require": [
+      "chasehq"
+    ]
+  },
+  "chasehq": {
+    "download": "https://fightcade.download/fbneo/gamegear/chasehq.zip"
+  },
+  "talespin": {
+    "download": "https://fightcade.download/fbneo/gamegear/talespin.zip"
+  },
+  "tamalymp": {
+    "download": "https://fightcade.download/fbneo/gamegear/tamalymp.zip"
+  },
+  "tarot": {
+    "download": "https://fightcade.download/fbneo/gamegear/tarot.zip"
+  },
+  "tarzan": {
+    "download": "https://fightcade.download/fbneo/gamegear/tarzan.zip"
+  },
+  "proyaktl": {
+    "download": "https://fightcade.download/fbneo/gamegear/proyaktl.zip"
+  },
+  "tazmars": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmars.zip"
+  },
+  "tazmarsp14": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp14.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp13": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp13.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp12": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp12.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp11": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp11.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp10": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp10.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp09": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp09.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp08": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp08.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp07": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp07.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp06": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp06.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp05": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp05.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp04": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp04.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp03": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp03.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp02": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp02.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmarsp01": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmarsp01.zip",
+    "require": [
+      "tazmars"
+    ]
+  },
+  "tazmania": {
+    "download": "https://fightcade.download/fbneo/gamegear/tazmania.zip"
+  },
+  "tempojrp9": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojrp9.zip",
+    "require": [
+      "tempojr"
+    ]
+  },
+  "tempojrp8": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojrp8.zip",
+    "require": [
+      "tempojr"
+    ]
+  },
+  "tempojrp7": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojrp7.zip",
+    "require": [
+      "tempojr"
+    ]
+  },
+  "tempojrp6": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojrp6.zip",
+    "require": [
+      "tempojr"
+    ]
+  },
+  "tempojrp5": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojrp5.zip",
+    "require": [
+      "tempojr"
+    ]
+  },
+  "tempojrp4": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojrp4.zip",
+    "require": [
+      "tempojr"
+    ]
+  },
+  "tempojrp3": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojrp3.zip",
+    "require": [
+      "tempojr"
+    ]
+  },
+  "tempojrp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojrp2.zip",
+    "require": [
+      "tempojr"
+    ]
+  },
+  "tempojrp1": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojrp1.zip",
+    "require": [
+      "tempojr"
+    ]
+  },
+  "tempojr": {
+    "download": "https://fightcade.download/fbneo/gamegear/tempojr.zip"
+  },
+  "tengenwc": {
+    "download": "https://fightcade.download/fbneo/gamegear/tengenwc.zip"
+  },
+  "term2": {
+    "download": "https://fightcade.download/fbneo/gamegear/term2.zip"
+  },
+  "tesserae": {
+    "download": "https://fightcade.download/fbneo/gamegear/tesserae.zip"
+  },
+  "addfam": {
+    "download": "https://fightcade.download/fbneo/gamegear/addfam.zip"
+  },
+  "advbatmr": {
+    "download": "https://fightcade.download/fbneo/gamegear/advbatmr.zip"
+  },
+  "berensp17": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp17.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp16": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp16.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp15": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp15.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp14": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp14.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp13": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp13.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp12": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp12.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp10": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp10.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp11": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp11.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp09": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp09.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp08": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp08.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp07": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp07.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp06": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp06.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp05": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp05.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp04": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp04.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp03": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp03.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp01": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp01.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berensp02": {
+    "download": "https://fightcade.download/fbneo/gamegear/berensp02.zip",
+    "require": [
+      "berens"
+    ]
+  },
+  "berens": {
+    "download": "https://fightcade.download/fbneo/gamegear/berens.zip"
+  },
+  "chessmst": {
+    "download": "https://fightcade.download/fbneo/gamegear/chessmst.zip"
+  },
+  "excdizzy": {
+    "download": "https://fightcade.download/fbneo/gamegear/excdizzy.zip"
+  },
+  "excdizzyp": {
+    "download": "https://fightcade.download/fbneo/gamegear/excdizzyp.zip",
+    "require": [
+      "excdizzy"
+    ]
+  },
+  "shinobi": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinobi.zip"
+  },
+  "shinobij": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinobij.zip",
+    "require": [
+      "shinobi"
+    ]
+  },
+  "shinobi2": {
+    "download": "https://fightcade.download/fbneo/gamegear/shinobi2.zip"
+  },
+  "crashdum": {
+    "download": "https://fightcade.download/fbneo/gamegear/crashdum.zip"
+  },
+  "hulk": {
+    "download": "https://fightcade.download/fbneo/gamegear/hulk.zip"
+  },
+  "itchy": {
+    "download": "https://fightcade.download/fbneo/gamegear/itchy.zip"
+  },
+  "jungle": {
+    "download": "https://fightcade.download/fbneo/gamegear/jungle.zip"
+  },
+  "jungleu": {
+    "download": "https://fightcade.download/fbneo/gamegear/jungleu.zip",
+    "require": [
+      "jungle"
+    ]
+  },
+  "lionking": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionking.zip"
+  },
+  "lionkingj": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingj.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lionkingp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingp2.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lionkingp3": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingp3.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lionkingp1": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingp1.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lionkingu": {
+    "download": "https://fightcade.download/fbneo/gamegear/lionkingu.zip",
+    "require": [
+      "lionking"
+    ]
+  },
+  "lostwrld": {
+    "download": "https://fightcade.download/fbneo/gamegear/lostwrld.zip"
+  },
+  "luckydim": {
+    "download": "https://fightcade.download/fbneo/gamegear/luckydim.zip"
+  },
+  "majors": {
+    "download": "https://fightcade.download/fbneo/gamegear/majors.zip"
+  },
+  "ottifant": {
+    "download": "https://fightcade.download/fbneo/gamegear/ottifant.zip"
+  },
+  "proyak91": {
+    "download": "https://fightcade.download/fbneo/gamegear/proyak91.zip"
+  },
+  "quizgear": {
+    "download": "https://fightcade.download/fbneo/gamegear/quizgear.zip"
+  },
+  "bartvssm": {
+    "download": "https://fightcade.download/fbneo/gamegear/bartvssm.zip"
+  },
+  "bartvswd": {
+    "download": "https://fightcade.download/fbneo/gamegear/bartvswd.zip"
+  },
+  "bartman": {
+    "download": "https://fightcade.download/fbneo/gamegear/bartman.zip"
+  },
+  "smurfs": {
+    "download": "https://fightcade.download/fbneo/gamegear/smurfs.zip"
+  },
+  "smurfs2": {
+    "download": "https://fightcade.download/fbneo/gamegear/smurfs2.zip"
+  },
+  "termntr": {
+    "download": "https://fightcade.download/fbneo/gamegear/termntr.zip"
+  },
+  "tintin": {
+    "download": "https://fightcade.download/fbneo/gamegear/tintin.zip"
+  },
+  "tomjermvj": {
+    "download": "https://fightcade.download/fbneo/gamegear/tomjermvj.zip",
+    "require": [
+      "tomjermv"
+    ]
+  },
+  "tomjermv": {
+    "download": "https://fightcade.download/fbneo/gamegear/tomjermv.zip"
+  },
+  "torarete": {
+    "download": "https://fightcade.download/fbneo/gamegear/torarete.zip"
+  },
+  "truelies": {
+    "download": "https://fightcade.download/fbneo/gamegear/truelies.zip"
+  },
+  "ultsoccr": {
+    "download": "https://fightcade.download/fbneo/gamegear/ultsoccr.zip"
+  },
+  "ustrike": {
+    "download": "https://fightcade.download/fbneo/gamegear/ustrike.zip"
+  },
+  "vampire": {
+    "download": "https://fightcade.download/fbneo/gamegear/vampire.zip",
+    "require": [
+      "mastdark"
+    ]
+  },
+  "vfa": {
+    "download": "https://fightcade.download/fbneo/gamegear/vfa.zip"
+  },
+  "vfmini": {
+    "download": "https://fightcade.download/fbneo/gamegear/vfmini.zip",
+    "require": [
+      "vfa"
+    ]
+  },
+  "vrtroop": {
+    "download": "https://fightcade.download/fbneo/gamegear/vrtroop.zip"
+  },
+  "wagyan": {
+    "download": "https://fightcade.download/fbneo/gamegear/wagyan.zip"
+  },
+  "wagyana": {
+    "download": "https://fightcade.download/fbneo/gamegear/wagyana.zip",
+    "require": [
+      "wagyan"
+    ]
+  },
+  "wheelof": {
+    "download": "https://fightcade.download/fbneo/gamegear/wheelof.zip"
+  },
+  "wildsnake": {
+    "download": "https://fightcade.download/fbneo/gamegear/wildsnake.zip"
+  },
+  "wimbled": {
+    "download": "https://fightcade.download/fbneo/gamegear/wimbled.zip"
+  },
+  "wintol": {
+    "download": "https://fightcade.download/fbneo/gamegear/wintol.zip"
+  },
+  "wintolj": {
+    "download": "https://fightcade.download/fbneo/gamegear/wintolj.zip",
+    "require": [
+      "wintol"
+    ]
+  },
+  "wizard": {
+    "download": "https://fightcade.download/fbneo/gamegear/wizard.zip"
+  },
+  "wolfchld": {
+    "download": "https://fightcade.download/fbneo/gamegear/wolfchld.zip"
+  },
+  "wboy": {
+    "download": "https://fightcade.download/fbneo/gamegear/wboy.zip"
+  },
+  "wboyj": {
+    "download": "https://fightcade.download/fbneo/gamegear/wboyj.zip",
+    "require": [
+      "wboy"
+    ]
+  },
+  "wboydtrp": {
+    "download": "https://fightcade.download/fbneo/gamegear/wboydtrp.zip"
+  },
+  "wboydtrpp": {
+    "download": "https://fightcade.download/fbneo/gamegear/wboydtrpp.zip",
+    "require": [
+      "wboydtrp"
+    ]
+  },
+  "woodypop1": {
+    "download": "https://fightcade.download/fbneo/gamegear/woodypop1.zip",
+    "require": [
+      "woodypop"
+    ]
+  },
+  "woodypop": {
+    "download": "https://fightcade.download/fbneo/gamegear/woodypop.zip"
+  },
+  "wclead": {
+    "download": "https://fightcade.download/fbneo/gamegear/wclead.zip"
+  },
+  "wcup94": {
+    "download": "https://fightcade.download/fbneo/gamegear/wcup94.zip"
+  },
+  "wderby": {
+    "download": "https://fightcade.download/fbneo/gamegear/wderby.zip"
+  },
+  "wwfraw": {
+    "download": "https://fightcade.download/fbneo/gamegear/wwfraw.zip"
+  },
+  "wwfsteel": {
+    "download": "https://fightcade.download/fbneo/gamegear/wwfsteel.zip"
+  },
+  "xmen": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmen.zip"
+  },
+  "xmengl": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmengl.zip"
+  },
+  "xmenglp2": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenglp2.zip",
+    "require": [
+      "xmengl"
+    ]
+  },
+  "xmenglp1": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenglp1.zip",
+    "require": [
+      "xmengl"
+    ]
+  },
+  "xmenglp3": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenglp3.zip",
+    "require": [
+      "xmengl"
+    ]
+  },
+  "xmenmojo": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenmojo.zip"
+  },
+  "xmenmojop7": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenmojop7.zip",
+    "require": [
+      "xmenmojo"
+    ]
+  },
+  "xmenmojop6": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenmojop6.zip",
+    "require": [
+      "xmenmojo"
+    ]
+  },
+  "xmenmojop5": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenmojop5.zip",
+    "require": [
+      "xmenmojo"
+    ]
+  },
+  "xmenmojop4": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenmojop4.zip",
+    "require": [
+      "xmenmojo"
+    ]
+  },
+  "xmenmojop3": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenmojop3.zip",
+    "require": [
+      "xmenmojo"
+    ]
+  },
+  "xmenmojop2": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenmojop2.zip",
+    "require": [
+      "xmenmojo"
+    ]
+  },
+  "xmenmojop1": {
+    "download": "https://fightcade.download/fbneo/gamegear/xmenmojop1.zip",
+    "require": [
+      "xmenmojo"
+    ]
+  },
+  "yogibear": {
+    "download": "https://fightcade.download/fbneo/gamegear/yogibear.zip"
+  },
+  "yuyu": {
+    "download": "https://fightcade.download/fbneo/gamegear/yuyu.zip"
+  },
+  "yuyu2": {
+    "download": "https://fightcade.download/fbneo/gamegear/yuyu2.zip"
+  },
+  "zangear": {
+    "download": "https://fightcade.download/fbneo/gamegear/zangear.zip"
+  },
+  "zool": {
+    "download": "https://fightcade.download/fbneo/gamegear/zool.zip"
+  },
+  "zoolu": {
+    "download": "https://fightcade.download/fbneo/gamegear/zoolu.zip",
+    "require": [
+      "zool"
+    ]
+  },
+  "zoolj": {
+    "download": "https://fightcade.download/fbneo/gamegear/zoolj.zip",
+    "require": [
+      "zool"
+    ]
+  },
+  "zoop": {
+    "download": "https://fightcade.download/fbneo/gamegear/zoop.zip"
+  },
+  "zoopp": {
+    "download": "https://fightcade.download/fbneo/gamegear/zoopp.zip",
+    "require": [
+      "zoop"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "runtimes": {
+    "fbneo": {
+      "name": "FBNeo",
+      "binary": "bin/deckade-fbneo",
+      "status": "ready",
+      "capabilities": ["match", "spectate", "training", "solo"],
+      "systems": ["Arcade", "Neo Geo", "CPS1/2/3", "Sega", "NES", "SNES", "PC Engine", "ColecoVision", "SG-1000", "MSX"]
+    },
+    "snes9x": {
+      "name": "Snes9x",
+      "binary": "bin/deckade-snes9x",
+      "status": "experimental",
+      "capabilities": ["match", "spectate", "training", "solo"],
+      "systems": ["SNES"]
+    },
+    "flycast": {
+      "name": "Flycast",
+      "binary": "official-fcade-helper",
+      "status": "ready-via-official-helper",
+      "capabilities": ["match", "spectate", "training", "solo"],
+      "systems": ["Dreamcast", "Naomi", "Atomiswave"]
+    },
+    "ggpofba": {
+      "name": "GGPOFBA",
+      "binary": "bin/deckade-ggpofba",
+      "status": "unsupported",
+      "capabilities": [],
+      "systems": ["Fightcade 1 legacy"]
+    }
+  },
+  "romMetadata": "assets/rom-json"
+}

@@ -1,0 +1,1319 @@
+{
+  "2010": {
+    "download": "https://fightcade.download/fbneo/coleco/2010.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "2010p1": {
+    "download": "https://fightcade.download/fbneo/coleco/2010p1.zip",
+    "require": [
+      "2010"
+    ]
+  },
+  "2010p": {
+    "download": "https://fightcade.download/fbneo/coleco/2010p.zip",
+    "require": [
+      "2010"
+    ]
+  },
+  "alcazar": {
+    "download": "https://fightcade.download/fbneo/coleco/alcazar.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "alphazoo": {
+    "download": "https://fightcade.download/fbneo/coleco/alphazoo.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "amazing": {
+    "download": "https://fightcade.download/fbneo/coleco/amazing.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "antarct": {
+    "download": "https://fightcade.download/fbneo/coleco/antarct.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "aquatack": {
+    "download": "https://fightcade.download/fbneo/coleco/aquatack.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "aquatacka": {
+    "download": "https://fightcade.download/fbneo/coleco/aquatacka.zip",
+    "require": [
+      "aquatack"
+    ]
+  },
+  "artduel": {
+    "download": "https://fightcade.download/fbneo/coleco/artduel.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "bcquest": {
+    "download": "https://fightcade.download/fbneo/coleco/bcquest.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "bcquest2": {
+    "download": "https://fightcade.download/fbneo/coleco/bcquest2.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "bcquest2ca": {
+    "download": "https://fightcade.download/fbneo/coleco/bcquest2ca.zip",
+    "require": [
+      "bcquest2"
+    ]
+  },
+  "beamridr": {
+    "download": "https://fightcade.download/fbneo/coleco/beamridr.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "blockrun": {
+    "download": "https://fightcade.download/fbneo/coleco/blockrun.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "bdash": {
+    "download": "https://fightcade.download/fbneo/coleco/bdash.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "boxxle": {
+    "download": "https://fightcade.download/fbneo/coleco/boxxle.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "brainstr": {
+    "download": "https://fightcade.download/fbneo/coleco/brainstr.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "buckrogsgm": {
+    "download": "https://fightcade.download/fbneo/coleco/buckrogsgm.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "buckrog": {
+    "download": "https://fightcade.download/fbneo/coleco/buckrog.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "bnj": {
+    "download": "https://fightcade.download/fbneo/coleco/bnj.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "btime": {
+    "download": "https://fightcade.download/fbneo/coleco/btime.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "btimem": {
+    "download": "https://fightcade.download/fbneo/coleco/btimem.zip",
+    "require": [
+      "btime"
+    ]
+  },
+  "cabbshow": {
+    "download": "https://fightcade.download/fbneo/coleco/cabbshow.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "cabbage": {
+    "download": "https://fightcade.download/fbneo/coleco/cabbage.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "cabbagep1": {
+    "download": "https://fightcade.download/fbneo/coleco/cabbagep1.zip",
+    "require": [
+      "cabbage"
+    ]
+  },
+  "cabbagep2": {
+    "download": "https://fightcade.download/fbneo/coleco/cabbagep2.zip",
+    "require": [
+      "cabbage"
+    ]
+  },
+  "campaign": {
+    "download": "https://fightcade.download/fbneo/coleco/campaign.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "carnival": {
+    "download": "https://fightcade.download/fbneo/coleco/carnival.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "castelo": {
+    "download": "https://fightcade.download/fbneo/coleco/castelo.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "cbsmon": {
+    "download": "https://fightcade.download/fbneo/coleco/cbsmon.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "centiped": {
+    "download": "https://fightcade.download/fbneo/coleco/centiped.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "choplift": {
+    "download": "https://fightcade.download/fbneo/coleco/choplift.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "chucknor": {
+    "download": "https://fightcade.download/fbneo/coleco/chucknor.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "coldblood": {
+    "download": "https://fightcade.download/fbneo/coleco/coldblood.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "cvjoytest": {
+    "download": "https://fightcade.download/fbneo/coleco/cvjoytest.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "sgmtest": {
+    "download": "https://fightcade.download/fbneo/coleco/sgmtest.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "congo": {
+    "download": "https://fightcade.download/fbneo/coleco/congo.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "cavenger": {
+    "download": "https://fightcade.download/fbneo/coleco/cavenger.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "cavengera": {
+    "download": "https://fightcade.download/fbneo/coleco/cavengera.zip",
+    "require": [
+      "cavenger"
+    ]
+  },
+  "ccrisis": {
+    "download": "https://fightcade.download/fbneo/coleco/ccrisis.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "dncfntsy": {
+    "download": "https://fightcade.download/fbneo/coleco/dncfntsy.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "decathln": {
+    "download": "https://fightcade.download/fbneo/coleco/decathln.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "defender": {
+    "download": "https://fightcade.download/fbneo/coleco/defender.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "destruct": {
+    "download": "https://fightcade.download/fbneo/coleco/destruct.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "digdug": {
+    "download": "https://fightcade.download/fbneo/coleco/digdug.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "digger": {
+    "download": "https://fightcade.download/fbneo/coleco/digger.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "dkong": {
+    "download": "https://fightcade.download/fbneo/coleco/dkong.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "dkonga": {
+    "download": "https://fightcade.download/fbneo/coleco/dkonga.zip",
+    "require": [
+      "dkong"
+    ]
+  },
+  "dkongjr": {
+    "download": "https://fightcade.download/fbneo/coleco/dkongjr.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "drseuss": {
+    "download": "https://fightcade.download/fbneo/coleco/drseuss.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "dlair": {
+    "download": "https://fightcade.download/fbneo/coleco/dlair.zip",
+    "require": [
+      "dlairsgm"
+    ]
+  },
+  "dlairsgm": {
+    "download": "https://fightcade.download/fbneo/coleco/dlairsgm.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "drgnfire": {
+    "download": "https://fightcade.download/fbneo/coleco/drgnfire.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mindmstr": {
+    "download": "https://fightcade.download/fbneo/coleco/mindmstr.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "evolutio": {
+    "download": "https://fightcade.download/fbneo/coleco/evolutio.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "facemakr": {
+    "download": "https://fightcade.download/fbneo/coleco/facemakr.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "fallguy": {
+    "download": "https://fightcade.download/fbneo/coleco/fallguy.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "fathom": {
+    "download": "https://fightcade.download/fbneo/coleco/fathom.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "finaltst": {
+    "download": "https://fightcade.download/fbneo/coleco/finaltst.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "flipslip": {
+    "download": "https://fightcade.download/fbneo/coleco/flipslip.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "fortune": {
+    "download": "https://fightcade.download/fbneo/coleco/fortune.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "fracfevr": {
+    "download": "https://fightcade.download/fbneo/coleco/fracfevr.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "ffreddy": {
+    "download": "https://fightcade.download/fbneo/coleco/ffreddy.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "frenzy": {
+    "download": "https://fightcade.download/fbneo/coleco/frenzy.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "frenzya": {
+    "download": "https://fightcade.download/fbneo/coleco/frenzya.zip",
+    "require": [
+      "frenzy"
+    ]
+  },
+  "frenzya2": {
+    "download": "https://fightcade.download/fbneo/coleco/frenzya2.zip",
+    "require": [
+      "frenzy"
+    ]
+  },
+  "frogger": {
+    "download": "https://fightcade.download/fbneo/coleco/frogger.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "frogger2": {
+    "download": "https://fightcade.download/fbneo/coleco/frogger2.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "frontlin": {
+    "download": "https://fightcade.download/fbneo/coleco/frontlin.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "frontlina": {
+    "download": "https://fightcade.download/fbneo/coleco/frontlina.zip",
+    "require": [
+      "frontlin"
+    ]
+  },
+  "frostbite": {
+    "download": "https://fightcade.download/fbneo/coleco/frostbite.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "galaxian": {
+    "download": "https://fightcade.download/fbneo/coleco/galaxian.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "galaxiana": {
+    "download": "https://fightcade.download/fbneo/coleco/galaxiana.zip",
+    "require": [
+      "galaxian"
+    ]
+  },
+  "apshai": {
+    "download": "https://fightcade.download/fbneo/coleco/apshai.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "gorf": {
+    "download": "https://fightcade.download/fbneo/coleco/gorf.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "gustbust": {
+    "download": "https://fightcade.download/fbneo/coleco/gustbust.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "gyruss": {
+    "download": "https://fightcade.download/fbneo/coleco/gyruss.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "hero": {
+    "download": "https://fightcade.download/fbneo/coleco/hero.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "illusion": {
+    "download": "https://fightcade.download/fbneo/coleco/illusion.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "onlyrock": {
+    "download": "https://fightcade.download/fbneo/coleco/onlyrock.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "jbond": {
+    "download": "https://fightcade.download/fbneo/coleco/jbond.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "joust": {
+    "download": "https://fightcade.download/fbneo/coleco/joust.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "jukebox": {
+    "download": "https://fightcade.download/fbneo/coleco/jukebox.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "jmpmanjr": {
+    "download": "https://fightcade.download/fbneo/coleco/jmpmanjr.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "jmpmanjra": {
+    "download": "https://fightcade.download/fbneo/coleco/jmpmanjra.zip",
+    "require": [
+      "jmpmanjr"
+    ]
+  },
+  "jungleh": {
+    "download": "https://fightcade.download/fbneo/coleco/jungleh.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "kaboom": {
+    "download": "https://fightcade.download/fbneo/coleco/kaboom.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "kubjpok": {
+    "download": "https://fightcade.download/fbneo/coleco/kubjpok.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "keykaper": {
+    "download": "https://fightcade.download/fbneo/coleco/keykaper.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "ladybug": {
+    "download": "https://fightcade.download/fbneo/coleco/ladybug.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "leeper": {
+    "download": "https://fightcade.download/fbneo/coleco/leeper.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "linklogc": {
+    "download": "https://fightcade.download/fbneo/coleco/linklogc.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "logiclvl": {
+    "download": "https://fightcade.download/fbneo/coleco/logiclvl.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "looping": {
+    "download": "https://fightcade.download/fbneo/coleco/looping.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mash": {
+    "download": "https://fightcade.download/fbneo/coleco/mash.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mecha8": {
+    "download": "https://fightcade.download/fbneo/coleco/mecha8.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mecha9": {
+    "download": "https://fightcade.download/fbneo/coleco/mecha9.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "memmanor": {
+    "download": "https://fightcade.download/fbneo/coleco/memmanor.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "meteosho": {
+    "download": "https://fightcade.download/fbneo/coleco/meteosho.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mine2049": {
+    "download": "https://fightcade.download/fbneo/coleco/mine2049.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mine2049a": {
+    "download": "https://fightcade.download/fbneo/coleco/mine2049a.zip",
+    "require": [
+      "mine2049"
+    ]
+  },
+  "moduleman": {
+    "download": "https://fightcade.download/fbneo/coleco/moduleman.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "monkey": {
+    "download": "https://fightcade.download/fbneo/coleco/monkey.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "montezum": {
+    "download": "https://fightcade.download/fbneo/coleco/montezum.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "moonswpr": {
+    "download": "https://fightcade.download/fbneo/coleco/moonswpr.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "moonswpra": {
+    "download": "https://fightcade.download/fbneo/coleco/moonswpra.zip",
+    "require": [
+      "moonswpr"
+    ]
+  },
+  "mtcracer": {
+    "download": "https://fightcade.download/fbneo/coleco/mtcracer.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mtcracera": {
+    "download": "https://fightcade.download/fbneo/coleco/mtcracera.zip",
+    "require": [
+      "mtcracer"
+    ]
+  },
+  "mking": {
+    "download": "https://fightcade.download/fbneo/coleco/mking.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mkinga": {
+    "download": "https://fightcade.download/fbneo/coleco/mkinga.zip",
+    "require": [
+      "mking"
+    ]
+  },
+  "mtrap": {
+    "download": "https://fightcade.download/fbneo/coleco/mtrap.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mtrapa": {
+    "download": "https://fightcade.download/fbneo/coleco/mtrapa.zip",
+    "require": [
+      "mtrap"
+    ]
+  },
+  "mrdo": {
+    "download": "https://fightcade.download/fbneo/coleco/mrdo.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "mrdoa": {
+    "download": "https://fightcade.download/fbneo/coleco/mrdoa.zip",
+    "require": [
+      "mrdo"
+    ]
+  },
+  "docastle": {
+    "download": "https://fightcade.download/fbneo/coleco/docastle.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "musicbox": {
+    "download": "https://fightcade.download/fbneo/coleco/musicbox.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "novablst": {
+    "download": "https://fightcade.download/fbneo/coleco/novablst.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "numbump": {
+    "download": "https://fightcade.download/fbneo/coleco/numbump.zip",
+    "require": [
+      "amazing"
+    ]
+  },
+  "oilswell": {
+    "download": "https://fightcade.download/fbneo/coleco/oilswell.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "oilswella": {
+    "download": "https://fightcade.download/fbneo/coleco/oilswella.zip",
+    "require": [
+      "oilswell"
+    ]
+  },
+  "omegrace": {
+    "download": "https://fightcade.download/fbneo/coleco/omegrace.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "1on1": {
+    "download": "https://fightcade.download/fbneo/coleco/1on1.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "orbit": {
+    "download": "https://fightcade.download/fbneo/coleco/orbit.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "pacmancol": {
+    "download": "https://fightcade.download/fbneo/coleco/pacmancol.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "pacman": {
+    "download": "https://fightcade.download/fbneo/coleco/pacman.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "pepper2": {
+    "download": "https://fightcade.download/fbneo/coleco/pepper2.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "pitfall2": {
+    "download": "https://fightcade.download/fbneo/coleco/pitfall2.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "pitfall": {
+    "download": "https://fightcade.download/fbneo/coleco/pitfall.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "pitstop": {
+    "download": "https://fightcade.download/fbneo/coleco/pitstop.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "pitstopa": {
+    "download": "https://fightcade.download/fbneo/coleco/pitstopa.zip",
+    "require": [
+      "pitstop"
+    ]
+  },
+  "popeye": {
+    "download": "https://fightcade.download/fbneo/coleco/popeye.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "popeyea": {
+    "download": "https://fightcade.download/fbneo/coleco/popeyea.zip",
+    "require": [
+      "popeye"
+    ]
+  },
+  "porkys": {
+    "download": "https://fightcade.download/fbneo/coleco/porkys.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "power": {
+    "download": "https://fightcade.download/fbneo/coleco/power.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "pquest": {
+    "download": "https://fightcade.download/fbneo/coleco/pquest.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "qbert": {
+    "download": "https://fightcade.download/fbneo/coleco/qbert.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "qberta": {
+    "download": "https://fightcade.download/fbneo/coleco/qberta.zip",
+    "require": [
+      "qbert"
+    ]
+  },
+  "qbertqub": {
+    "download": "https://fightcade.download/fbneo/coleco/qbertqub.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "quintana": {
+    "download": "https://fightcade.download/fbneo/coleco/quintana.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "quintanaa": {
+    "download": "https://fightcade.download/fbneo/coleco/quintanaa.zip",
+    "require": [
+      "quintana"
+    ]
+  },
+  "questgc": {
+    "download": "https://fightcade.download/fbneo/coleco/questgc.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "riveraid": {
+    "download": "https://fightcade.download/fbneo/coleco/riveraid.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "robinh": {
+    "download": "https://fightcade.download/fbneo/coleco/robinh.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "robinha": {
+    "download": "https://fightcade.download/fbneo/coleco/robinha.zip",
+    "require": [
+      "robinh"
+    ]
+  },
+  "rocnrope": {
+    "download": "https://fightcade.download/fbneo/coleco/rocnrope.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "rockbolt": {
+    "download": "https://fightcade.download/fbneo/coleco/rockbolt.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "rockbolta": {
+    "download": "https://fightcade.download/fbneo/coleco/rockbolta.zip",
+    "require": [
+      "rockbolt"
+    ]
+  },
+  "rocky": {
+    "download": "https://fightcade.download/fbneo/coleco/rocky.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "rollover": {
+    "download": "https://fightcade.download/fbneo/coleco/rollover.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "sammylf": {
+    "download": "https://fightcade.download/fbneo/coleco/sammylf.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "sammylfa": {
+    "download": "https://fightcade.download/fbneo/coleco/sammylfa.zip",
+    "require": [
+      "sammylf"
+    ]
+  },
+  "secalpha": {
+    "download": "https://fightcade.download/fbneo/coleco/secalpha.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "sewersam": {
+    "download": "https://fightcade.download/fbneo/coleco/sewersam.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "lancelot": {
+    "download": "https://fightcade.download/fbneo/coleco/lancelot.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "skiing": {
+    "download": "https://fightcade.download/fbneo/coleco/skiing.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "slither": {
+    "download": "https://fightcade.download/fbneo/coleco/slither.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "danslither": {
+    "download": "https://fightcade.download/fbneo/coleco/danslither.zip",
+    "require": [
+      "slither"
+    ]
+  },
+  "slurpy": {
+    "download": "https://fightcade.download/fbneo/coleco/slurpy.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "smurfpnt": {
+    "download": "https://fightcade.download/fbneo/coleco/smurfpnt.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "smurfply": {
+    "download": "https://fightcade.download/fbneo/coleco/smurfply.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "smurf": {
+    "download": "https://fightcade.download/fbneo/coleco/smurf.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "smurfa": {
+    "download": "https://fightcade.download/fbneo/coleco/smurfa.zip",
+    "require": [
+      "smurf"
+    ]
+  },
+  "spacfury": {
+    "download": "https://fightcade.download/fbneo/coleco/spacfury.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "panic": {
+    "download": "https://fightcade.download/fbneo/coleco/panic.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "spectron": {
+    "download": "https://fightcade.download/fbneo/coleco/spectron.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "spyhunt": {
+    "download": "https://fightcade.download/fbneo/coleco/spyhunt.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "spyhuntp1": {
+    "download": "https://fightcade.download/fbneo/coleco/spyhuntp1.zip",
+    "require": [
+      "spyhunt"
+    ]
+  },
+  "spyhuntp": {
+    "download": "https://fightcade.download/fbneo/coleco/spyhuntp.zip",
+    "require": [
+      "spyhunt"
+    ]
+  },
+  "squishem": {
+    "download": "https://fightcade.download/fbneo/coleco/squishem.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "starfortress": {
+    "download": "https://fightcade.download/fbneo/coleco/starfortress.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "startrek": {
+    "download": "https://fightcade.download/fbneo/coleco/startrek.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "starwars": {
+    "download": "https://fightcade.download/fbneo/coleco/starwars.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "steam": {
+    "download": "https://fightcade.download/fbneo/coleco/steam.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "strikeit": {
+    "download": "https://fightcade.download/fbneo/coleco/strikeit.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "subroc": {
+    "download": "https://fightcade.download/fbneo/coleco/subroc.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "sabaseb": {
+    "download": "https://fightcade.download/fbneo/coleco/sabaseb.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "safootb": {
+    "download": "https://fightcade.download/fbneo/coleco/safootb.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "saftsocc": {
+    "download": "https://fightcade.download/fbneo/coleco/saftsocc.zip",
+    "require": [
+      "sasoccer"
+    ]
+  },
+  "sasoccer": {
+    "download": "https://fightcade.download/fbneo/coleco/sasoccer.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "scobra": {
+    "download": "https://fightcade.download/fbneo/coleco/scobra.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "scobraa": {
+    "download": "https://fightcade.download/fbneo/coleco/scobraa.zip",
+    "require": [
+      "scobra"
+    ]
+  },
+  "suprtest": {
+    "download": "https://fightcade.download/fbneo/coleco/suprtest.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "sprcross": {
+    "download": "https://fightcade.download/fbneo/coleco/sprcross.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "sprcrossa": {
+    "download": "https://fightcade.download/fbneo/coleco/sprcrossa.zip",
+    "require": [
+      "sprcross"
+    ]
+  },
+  "superdk": {
+    "download": "https://fightcade.download/fbneo/coleco/superdk.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "suprdkjr": {
+    "download": "https://fightcade.download/fbneo/coleco/suprdkjr.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "ssketch": {
+    "download": "https://fightcade.download/fbneo/coleco/ssketch.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "sword": {
+    "download": "https://fightcade.download/fbneo/coleco/sword.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "tankwars": {
+    "download": "https://fightcade.download/fbneo/coleco/tankwars.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "tapper": {
+    "download": "https://fightcade.download/fbneo/coleco/tapper.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "tarzan": {
+    "download": "https://fightcade.download/fbneo/coleco/tarzan.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "telly": {
+    "download": "https://fightcade.download/fbneo/coleco/telly.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "bbears": {
+    "download": "https://fightcade.download/fbneo/coleco/bbears.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "dambust": {
+    "download": "https://fightcade.download/fbneo/coleco/dambust.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "hazzard": {
+    "download": "https://fightcade.download/fbneo/coleco/hazzard.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "yolk": {
+    "download": "https://fightcade.download/fbneo/coleco/yolk.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "threshld": {
+    "download": "https://fightcade.download/fbneo/coleco/threshld.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "timeplt": {
+    "download": "https://fightcade.download/fbneo/coleco/timeplt.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "tomarc": {
+    "download": "https://fightcade.download/fbneo/coleco/tomarc.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "ttennis": {
+    "download": "https://fightcade.download/fbneo/coleco/ttennis.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "tunnels": {
+    "download": "https://fightcade.download/fbneo/coleco/tunnels.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "turbo": {
+    "download": "https://fightcade.download/fbneo/coleco/turbo.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "tutankhm": {
+    "download": "https://fightcade.download/fbneo/coleco/tutankhm.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "tutankhma": {
+    "download": "https://fightcade.download/fbneo/coleco/tutankhma.zip",
+    "require": [
+      "tutankhm"
+    ]
+  },
+  "upndown": {
+    "download": "https://fightcade.download/fbneo/coleco/upndown.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "venture": {
+    "download": "https://fightcade.download/fbneo/coleco/venture.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "victory": {
+    "download": "https://fightcade.download/fbneo/coleco/victory.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "hustler": {
+    "download": "https://fightcade.download/fbneo/coleco/hustler.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "hustler1": {
+    "download": "https://fightcade.download/fbneo/coleco/hustler1.zip",
+    "require": [
+      "hustler"
+    ]
+  },
+  "wargames": {
+    "download": "https://fightcade.download/fbneo/coleco/wargames.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "wargamesp": {
+    "download": "https://fightcade.download/fbneo/coleco/wargamesp.zip",
+    "require": [
+      "wargames"
+    ]
+  },
+  "warroom": {
+    "download": "https://fightcade.download/fbneo/coleco/warroom.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "wingwar": {
+    "download": "https://fightcade.download/fbneo/coleco/wingwar.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "wizmath": {
+    "download": "https://fightcade.download/fbneo/coleco/wizmath.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "wordfeud": {
+    "download": "https://fightcade.download/fbneo/coleco/wordfeud.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "zaxxon": {
+    "download": "https://fightcade.download/fbneo/coleco/zaxxon.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "zaxxonsgm": {
+    "download": "https://fightcade.download/fbneo/coleco/zaxxonsgm.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "zenji": {
+    "download": "https://fightcade.download/fbneo/coleco/zenji.zip",
+    "require": [
+      "coleco"
+    ]
+  },
+  "coleco": {
+    "download": "https://fightcade.download/fbneo/coleco/coleco.zip"
+  }
+}

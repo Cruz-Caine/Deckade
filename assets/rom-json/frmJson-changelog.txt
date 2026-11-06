@@ -1,0 +1,149 @@
+FRM JSON PACK - 20 APR 2023 (V11)
+Sorry for the huge delay, was a little bit busy but I'm back with some fixes:
+
+Arcade (fixes):
+dinore,mslug3lw
+
+Arcade (new):
+ffightaec2,kf2k2ps2b,kof98eck20,mslug5d,samsh5pf,teot,avengrgsbh,captre,dinoares,dinocunp,dinocx3,dinohced,dinombull,dinopuni,dinox5,fatfurspbs,fatfury3bh,ffightaemgc,jurass99p,kf2k3ps2sp,kof2000otc,kof2001ru,kof2k2plus,kof2kxxx,kof96rss,kof97evn,kof97inv,kof98bc2nd,kof98bc2k2,magdrop3te,sailormnrot,sfa2uhc,sfiii3ws,sfiii4fs,sfiiibh,sfpp,umk3p,xmcotan,xmvsfcph
+
+Genesis (new):
+sor2fnr,fightvengt,punisor,sonic3kbrc,sor2cc,sor2em,sor2ffc20,sor2tncha,sor2tnwoa,sor2tww,sor2wof1k,tmnttsorp,insanepain,tmntsrr
+
+NES (new):
+smbtwopla,ducktales2tp,kartfighter,skartfighter,hackmatch,nekkestrbasen,tetristpg,famista93e,tetristpn
+
+SMS (new):
+alexkidd3f
+
+SMS (fixes):
+voyage
+
+Arcade (fixes):
+dinore,mslug3lw
+
+Arcade (new):
+ffightaec2,kf2k2ps2b,kof98eck20,mslug5d,samsh5pf,teot,avengrgsbh,captre,dinoares,dinocunp,dinocx3,dinohced,dinombull,dinopuni,dinox5,fatfurspbs,fatfury3bh,ffightaemgc,jurass99p,kf2k3ps2sp,kof2000otc,kof2001ru,kof2k2plus,kof2kxxx,kof96rss,kof97evn,kof97inv,kof98bc2nd,kof98bc2k2,magdrop3te,sailormnrot,sfa2uhc,sfiii3ws,sfiii4fs,sfiiibh,sfpp,umk3p,xmcotan,xmvsfcph
+
+Genesis (new):
+sor2fnr,fightvengt,punisor,sonic3kbrc,sor2cc,sor2em,sor2ffc20,sor2tncha,sor2tnwoa,sor2tww,sor2wof1k,tmnttsorp,insanepain,tmntsrr
+
+NES (new):
+smbtwopla,ducktales2tp,kartfighter,skartfighter,hackmatch,nekkestrbasen,tetristpg,famista93e,tetristpn
+
+SMS (new):
+alexkidd3f
+
+SMS (fixes):
+voyage
+
+SNES (fixes):
+zenprow,7thsaga,2020bb,acenerae,actrais2j,actrais2u,aerofgt,airdiverj,airdivr2,ajmajonm,andrindy,aokiden,aressh3,astobelx,avspu,ballz3d,barbiesm,barbvac,barkleyu,basload2,bassmc,batblaz,batlcars,batlsoc2,bdodge2,bikedais,bingbing,bluecrys,bof,bofja,brainlrd,brandish,brawlbrou,bretthu,buckrog,bugsbrabu,capcomss,cdalecup,chesterw,contraspd,crayon,ctribe,ctsuba4,daibakjd,daikokaia,daimono2,daimonoga,ddragon5u,deaddanc,dennisu,dmasteru,dokap321a,dolkusay,doraemn3,doraemona,dquest5,dquest12,dreambas,dstall2,ejimu,elfaria,elnard,esbua,estpoli2,exhaust2,f1roc2,fatfury2u,fatfuryu,ffant2a,ffant3a,ffant4ja,ffant5j,ffant6j,ffantmqa,ffantmqj,ffight2u,fghthist,finalstr,firembmn1,fireprw3a,fireprwsa,flashbj,forms95,frontmisa,garou2a,garoua,garousp,gbattle3,gbattle4,genchohi,ggoemkirb,ggoemon2,ggoemon3a,gindamapa,giseiha,gndmxdim,gogoack2,gouketsu,guts,haristad,haristd2,haruaug2,hiryukgf,hiryukhv,homeimpr,itadaki2,jbsuperb,jikkscr2a,jlexct94a,jlexct95,jlprime2,jlssocr,juteisen,karatebu,kawanus2,kidkleet,kingarth,kirbybow,kishinko,koryuki,kotm2j,lastbib3,libertyj,lobo,lockon,lordmonaa,madara2,madoum,majtnseib,mbomber,megamnxua,metalmaru,mickeym2,militia,mjtaika2a,mku,momodhap,monopol2,moritas2,moritash,mother2,mspacmanu,naruhodo,nbaliv96u,nflpro94,niceshot,ninjawaru,pachimo2,pacman2u,paladin,pga96ua,pgaua,picrosv1a,picrosv4a,pinkie,pocky2u,populus2j,powerhir,powyak2b,prinmak,ranmabak,ranmahb2,riserobou,robotrek,rockmans,rockmnx2,rockmnx3,rocko,rokudena,roman3k3,runsaberu,ryukokena,sailormn,sailorsbze,sailorsf,samshou,samspir,sangoku3a,sangoku4a,sanspo,sbm2,sbombmn3j,sdgungx,sf2tua,sf2u,sfamist5,sgenjin,shinmt2b,shodaneka,shotok94,shotoku2,shounin,shushoku,sjinsei2a,sjinsei3a,sjinseia,skeiba2,slamdnk2,slamdunk,slammastu,slayers,sloopzj,smetroidu,smkartu,spleagu3,spleagu4,spleague,spuyopb,srobotex,ssf2u,sshogi2,starocn,street95,super3db,supermjte,superozup,supf1c2,supf1cg,suprinin,suzuka8,tactsocr,taikoris,targa,tecmosbw,teiketsua,tengaim0,tg3kj,tg3ku,tmnttfce,tophant,topman2,ultfight,umizurim,vgundam,votoms,wagyanp,wayneg,winpost2,wizardr6,xak,yokoms2,yokozunaa,ys4
+
+There were some updates to hacks and other stuff (mostly thanks to tobemorecrazy)
+............................................................................................................
+FRM JSON PACK - 20 Aug 2022 (V10)
+- Fixed incorrect NES rom identifiers in fbneo_nes_roms.json. NES downloads should now work properly (Thanks nooksookhao)
+- Fixed ultra clay fighter (Thanks tobemorecrazy)
+
+............................................................................................................
+FRM JSON PACK - 06/21/2022 (V9)
+We are back again
+- New server (Thanks @noksookhao!)
+
+............................................................................................................
+FRM JSON PACK - 01/04/2022 (V8)
+- Fixed puyofev chd files and puyoda save state on flycast (Thanks Xkower8181)
+- Fixed monkeyba (Thanks Xkower8181)
+- Updated some fbneo hacks: msvsfbh, mvscbh, sfa3sp2, mshbh, vampjbh, vsavae, xmcotabh (thanks Tobemorecrazy)
+
+............................................................................................................
+FRM JSON PACK - 11/02/2021 (V7)
+Now the json file downloads the save files for flycast games (around 46 games are in the list) straight from the
+github flycast community save file github repository (https://github.com/blueminder/flycast-netplay-savestates) (thanks blueminder)
+
+I also found out that the order you put them in the required array DOES matter lol. Save states werent being downloaded on the /data/
+folder the first time you booted the game if you listed a CHD file before the save state requirement. It seems to be a FRM bug.
+
+Added Vigilante 8 2nd offense to flycast games too.
+
+............................................................................................................
+FRM JSON Pack - 10/31/2021 (v6)
+Added a ton of missing games after I managed to automate the process of checking for missing games
+
+(NEW) Flycast games:
+flycast_anmlbskt, flycast_basschal, flycast_blokpong, flycast_claychal, flycast_dirtypig, flycast_rangrmsn, flycast_salmankt, flycast_sprtshot, flycast_sushibar, flycast_vfurlong, flycast_waidrive, flycast_dc_ready2rumbleboxing, flycast_dc_sonicadventure2, flycast_dc_spf2x, flycast_dc_thps2, flycast_dc_totd_usa, flycast_dc_vonot, flycast_dc_ready2rumbleboxing_r2, flycast_dragntr3, flycast_manicpnc, flycast_mushi2k4, flycast_mushi2k5, flycast_mushik4e, flycast_mushike, flycast_samba, flycast_shaktam, flycast_shaktmsp, flycast_shors2k1, flycast_shors2k2, flycast_shorse, flycast_shorsep, flycast_tduno, flycast_vtennis, flycast_quizqgd, flycast_mvsc2_ratio_v3
+
+(NEW) FBNeo games:
+ssf2tnl, xmcotabh, nbamht, vsavae, mshbh, wwfmania, nbahangt, openice, hsf2pp, wwfmanac, msvsfbh, mvscbh, vampjbh, sfa3sp2, jojobanrb, mslug2ct, mslug5x, mslugxeb, mslugxsrf, kof97ae, ddsoma4ppdec, spf2xpri, mslug4lw, mslug2r, mslug3c, mslug5mg, mslug5c, mslugxlb, brkrevext
+
+Still missing games, Contact me on twitter (@lofi1048) if you have these roms:
+
+FBNEO:
+kof97t    -> The King of Fighters '97 Random Select Optimized Edition (Hack)
+mslug2fm  -> Metal Slug 2 [Mslug2fm Ver.2 Fightcade 2] [Hack]
+marmatcp  -> Martial Masters (V104, 102, 102, USA) - Community Patch [HACK]
+striv     -> Super Triv [No sound] (unsupported by fbneo????)
+jojobanrc -> JoJo's Bizarre Adventure: Heritage for the Future (Roman Cancel Edition 2021)
+jojobanch -> JoJo's Bizarre Adventure: Heritage for the Future (Alessi/Child Mode 2019)
+mslug3eb  -> Metal Slug 3 [Green Blue] [Hack]
+mslug4c   -> Metal Slug 4 [Enemy Reset] [Hack]
+mslugxc2  -> Metal Slug X [Enemy Remastered] [Hack]
+wc90      -> World Cup '90 (World)
+
+FLYCAST:
+Faster Than Speed (Flycast) (ATOMISWAVE)      -> flycast_ftspeed
+Maximum Speed (Flycast) (ATOMISWAVE)	      -> flycast_maxspeed
+Dragon Treasure (Flycast) (NAOMI)	      -> flycast_dragntr
+Dragon Treasure 2 (Flycast) (NAOMI)	      -> flycast_dragntr2
+Sega Yonin Uchi Mahjong MJ (Flycast) (NAOMI)  -> flycast_mj1
+Shootout Pool Prize (Flycast) (NAOMI)	      -> flycast_shootpl
+Star Horse Progress Returns (Flycast) (NAOMI) -> flycast_shorsepr
+
+We're still missing 99 games in total (plus the ones that are there but dont work lol):
+fbneo arcade : 1
+flycast      : 5
+ggpofba fc1  : 46
+snes9x       : 45
+fbneo msx    : 1
+fbneo cv     : 1
+
+............................................................................................................
+
+FRM JSON Pack - 9/7/2021 (v5)
+Biggest Update ever, after a few days of non-stop working, all games were reuploaded to a better server
+(thanks tobemorecrazy!) and some json files even made from scratch
+
+- All games were reuploaded
+- Quicker downloads
+- All flycast naomi and atomiswave games should work
+- Preemptive support for upcoming external save states (Getting ready for Flycast GGPO)
+- NES roms will be fixed in a future update (thats on frm side)
+
+I also made a ko-fi page if for some reason you want to support me, although I encourage you to
+support the fightcade devs, flyinghead (flycast dev) and blueminder (flycast-dojo dev) first!
+
+https://ko-fi.com/lofi1048
+
+Please report the games that arent working through a dm on twitter (@lofi1048)
+I need to figure out a better way to keep track of this lol.
+
+............................................................................................................
+
+FRM JSON Pack - 2/15/2021 (v4)
+
+- Fixed some SNES games:
+	- samshou.zip
+	- samspir.zip
+	- sf2tua.zip
+	- sf2u.zip
+	- ssf2u.zip
+
+- Added the latest version of SF2MIX directly from their download link, it should always grab the latest rom
+
+- Added sfa3aism.zip, a sfa3 hack that is A-ISM locked, its not yet supported by FC2 as of this release.
+  but maybe in the next fc2 updates it will be added as a room.
+
+Shoutouts to tobemorecrazy and o-range for testing some corrupted games.
+
+............................................................................................................
