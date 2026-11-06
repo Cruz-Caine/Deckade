@@ -124,6 +124,18 @@ ApplicationWindow {
         }
     }
 
+    function appendSystemMessage(channelName, text) {
+        if (!channelName || !text) return
+        appendMessage(channelName, {
+            id: Date.now() + Math.random(),
+            channelName: channelName,
+            username: "system",
+            text: text,
+            kind: "system",
+            timestamp: Date.now()
+        })
+    }
+
     function replaceChannel(name, updater) {
         var list = joinedChannels.slice()
         var found = null
@@ -868,7 +880,11 @@ ApplicationWindow {
             root.outgoingChallenges = root.outgoingChallenges.filter(function(item) {
                 return !(item.challenger === challenge.challenger && item.challengeId === challenge.challengeId)
             })
-            if (wasOutgoing) root.notify("Challenge to " + challenge.challenger + " canceled.", "info")
+            if (wasOutgoing) {
+                root.notify("Challenge to " + challenge.challenger + " canceled.", "info")
+                root.appendSystemMessage(challenge.channelName,
+                    "Challenge to " + challenge.challenger + " was canceled.")
+            }
             if (root.challengeIncoming && root.activeIncoming
                 && root.activeIncoming.challenger === challenge.challenger
                 && root.activeIncoming.challengeId === challenge.challengeId) {
@@ -884,16 +900,22 @@ ApplicationWindow {
                 return !(item.challenger === challenge.challenger && item.challengeId === challenge.challengeId)
             })
             root.notify(challenge.challenger + " declined the challenge.", "warning")
+            root.appendSystemMessage(challenge.channelName,
+                challenge.challenger + " declined the challenge.")
         }
         function onChallengeAccepted(challenge) {
             root.outgoingChallenges = root.outgoingChallenges.filter(function(item) {
                 return !(item.challenger === challenge.challenger && item.challengeId === challenge.challengeId)
             })
             root.notify(challenge.challenger + " accepted. Starting match...", "info")
+            root.appendSystemMessage(challenge.channelName,
+                challenge.challenger + " accepted the challenge.")
         }
         function onChallengeSent(challenge) {
             root.outgoingChallenges = root.outgoingChallenges.concat([challenge])
             root.notify("Challenge sent to " + challenge.challenger + " — waiting for a response.", "info")
+            root.appendSystemMessage(challenge.channelName,
+                "Challenge sent to " + challenge.challenger + ". Waiting for a response...")
         }
         function onChallengeFailed(channelName, message) { root.notify(message, "error") }
         function onMatchStarted(match) {
