@@ -548,6 +548,12 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
     } else {
         environment.remove(QStringLiteral("MACADE_SINGLE_PLAYER_INPUT"));
     }
+    // Keep native GGPO/Quark diagnostics when a match does not reach video.
+    const QString logDir = QDir(workDir).filePath(QStringLiteral("logs"));
+    QDir().mkpath(logDir);
+    environment.insert(QStringLiteral("quark.log"), QStringLiteral("1"));
+    environment.insert(QStringLiteral("quark.log.timestamps"), QStringLiteral("1"));
+    environment.insert(QStringLiteral("MACADE_QUARK_LOG_DIR"), logDir);
     environment.insert(QStringLiteral("DECKADE_P1_JOYSTICK_INDEX"),
                        QString::number(m_settings->controllerIndex()));
     const QString profilePath = controllerProfilePath(gameId);
@@ -584,6 +590,7 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
         setRunning(false);
     });
 
+    qInfo().noquote() << "Launching" << executable << arguments.join(' ');
     m_lastError.clear();
     m_process->start();
     if (!m_process->waitForStarted(2500)) {
@@ -720,8 +727,6 @@ bool FightcadeLauncher::launchDirectFlycast(const QString &gameId, bool training
         setRunning(false);
     });
 
-    m_lastError.clear();
-    m_process->start();
     if (!m_process->waitForStarted(2500)) {
         setError(QStringLiteral("Could not start Flycast: %1").arg(m_process->errorString()));
         m_process->deleteLater();

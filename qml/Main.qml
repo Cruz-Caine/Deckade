@@ -932,7 +932,12 @@ ApplicationWindow {
             })
         }
         function onQuarkStats(channelName, quarkId, spectators) {
-            root.replaceChannel(channelName, function(channel) {
+            // Update the live-match metadata in place. Replacing the channel
+            // object here made the player ListView re-evaluate its model every
+            // couple of seconds and jump back to the top.
+            for (var c = 0; c < root.joinedChannels.length; ++c) {
+                var channel = root.joinedChannels[c]
+                if (channel.name !== channelName) continue
                 var quarks = (channel.quarks ?? []).slice()
                 for (var i = 0; i < quarks.length; ++i) {
                     if (quarks[i].quarkId === quarkId) {
@@ -940,7 +945,11 @@ ApplicationWindow {
                     }
                 }
                 channel.quarks = quarks
-            })
+                if (root.currentChannel && root.currentChannel.name === channelName) {
+                    root.currentChannel.quarks = quarks
+                }
+                break
+            }
         }
         function onNotice(level, message) { root.notify(message, level) }
         function onRateLimited(until) { root.notify("Fightcade rate limit active. Try again in a moment.", "warning") }

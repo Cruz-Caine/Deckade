@@ -13,6 +13,8 @@ Item {
     property var outgoingChallenges: []
     property bool launching: false
     property bool favorite: false
+    property string playerSearch: ""
+    property var visibleUsers: []
 
     signal sendChat(string text)
     signal challengePlayer(var player)
@@ -110,6 +112,24 @@ Item {
         return users
     }
 
+    function refreshVisibleUsers() {
+        const query = playerSearch.trim().toLowerCase()
+        var users = sortedUsers()
+        if (query.length > 0) {
+            users = users.filter(function(player) {
+                return (player.name ?? "").toLowerCase().indexOf(query) !== -1
+            })
+        }
+        visibleUsers = users
+    }
+
+    onChannelChanged: refreshVisibleUsers()
+    onPlayerSearchChanged: {
+        refreshVisibleUsers()
+        playerList.positionViewAtBeginning()
+    }
+    Component.onCompleted: refreshVisibleUsers()
+
     function liveMatches() {
         return (screen.channel.quarks ?? []).slice(0, 5)
     }
@@ -133,8 +153,8 @@ Item {
 
     function focusDefault() {
         Qt.callLater(function() {
-            if (usersList.count > 0 && usersList.itemAtIndex(0)) {
-                focusController.focusItem(usersList.itemAtIndex(0))
+            if (playerList.count > 0 && playerList.itemAtIndex(0)) {
+                focusController.focusItem(playerList.itemAtIndex(0))
             } else if (chatInput) {
                 chatInput.forceActiveFocus(Qt.OtherFocusReason)
                 focusController.focusItem(chatInput)
@@ -219,7 +239,7 @@ Item {
                     Row {
                         spacing: 14
                         Pill {
-                            text: String(screen.sortedUsers().filter(function(u) { return !u.away && !u.channelAway }).length) + " ONLINE"
+                            text: String(screen.visibleUsers.filter(function(u) { return !u.away && !u.channelAway }).length) + " ONLINE"
                             dot: true
                             foreground: theme.green
                             fill: "#0b1512"
@@ -308,21 +328,40 @@ Item {
                             }
                             Item { width: parent.width - 110; height: 1 }
                             Text {
-                                text: screen.sortedUsers().length + " IN ROOM"
+                                text: screen.visibleUsers.length + " / " + screen.sortedUsers().length
                                 color: theme.textFaint
                                 font.family: theme.bodyFamily
                                 font.pixelSize: 10
                             }
                         }
 
-                        ListView {
-                            id: usersList
+                        DeckField {
+                            id: playerSearchField
                             width: parent.width
-                            height: parent.height - 30
+                            height: 36
+                            font.pixelSize: 14
+                            placeholderText: "Search players"
+                            text: screen.playerSearch
+                            onTextChanged: screen.playerSearch = text
+                        }
+
+                        ListView {
+                            id: playerList
+                            width: parent.width
+                            height: parent.height - 70
                             clip: true
                             spacing: 1
-                            model: screen.sortedUsers()
+                            model: screen.visibleUsers
                             boundsBehavior: Flickable.StopAtBounds
+                            property real stableY: 0
+
+                            onMovementEnded: stableY = contentY
+                            onModelChanged: {
+                                const target = stableY
+                                Qt.callLater(function() {
+                                    contentY = Math.min(target, Math.max(0, contentHeight - height))
+                                })
+                            }
 
                             delegate: PlayerRow {
                                 width: ListView.view.width

@@ -810,6 +810,8 @@ void FightcadeClient::handleEvent(const QJsonObject &payload)
         return;
     }
     if (request == QStringLiteral("challenge")) {
+        qInfo().noquote() << "Fightcade incoming challenge" << stringValue(payload.value(QStringLiteral("username")))
+                          << "channel=" << channelName;
         emit challengeReceived(challengeMap(payload, QStringLiteral("incoming")));
         return;
     }
@@ -822,11 +824,16 @@ void FightcadeClient::handleEvent(const QJsonObject &payload)
         return;
     }
     if (request == QStringLiteral("accept")) {
+        qInfo().noquote() << "Fightcade challenge accepted by" << stringValue(payload.value(QStringLiteral("username")));
         emit challengeAccepted(challengeMap(payload, QStringLiteral("outgoing")));
         return;
     }
     if (request == QStringLiteral("start")) {
         const QVariantMap match = normalizeMatchStart(payload);
+        qInfo().noquote() << "Fightcade match start" << match.value("gameId").toString()
+                          << "quark=" << match.value("quarkId").toString()
+                          << "player=" << match.value("playerId").toInt()
+                          << "port=" << match.value("port").toInt();
         if (!match.isEmpty()) emit matchStarted(match);
         return;
     }
