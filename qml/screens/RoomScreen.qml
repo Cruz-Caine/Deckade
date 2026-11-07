@@ -29,7 +29,6 @@ Item {
     signal testRequested()
     signal trainingRequested()
     signal favoriteRequested(bool favorite)
-    signal controlsRequested()
     signal acceptChallenge(var challenge)
     signal declineChallenge(var challenge)
     signal cancelChallenge(var challenge)
@@ -333,13 +332,6 @@ Item {
                         compact: true
                         width: 130
                         onClicked: screen.favoriteRequested(!screen.favorite)
-                    }
-                    AppButton {
-                        visible: (screen.channel.emulator ?? "").toLowerCase() === "fbneo"
-                        text: "CONTROLS"
-                        compact: true
-                        width: 118
-                        onClicked: screen.controlsRequested()
                     }
                     AppButton {
                         visible: screen.channel.supportsTraining === true

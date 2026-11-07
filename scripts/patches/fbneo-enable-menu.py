@@ -10,6 +10,10 @@ old = '''\tif (usemenu)
 \t\treturn 1;
 #endif
 \t}
+\telse if (dat)
 '''
-if old in s:
-    p.write_text(s.replace(old, '', 1))
+new = '''\tif (dat)
+'''
+if old not in s:
+    raise SystemExit('FBNeo command-line block not found')
+p.write_text(s.replace(old, new, 1))

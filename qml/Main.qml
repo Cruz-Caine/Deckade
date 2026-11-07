@@ -222,13 +222,6 @@ ApplicationWindow {
         client.joinChannel(name, false)
     }
 
-    function openControls() {
-        if (!currentChannel) return
-        screen = "controls"
-        focusController.activeGroup = "main"
-        Qt.callLater(function() { controlsScreen.focusDefault() })
-    }
-
     function leaveRoom() {
         if (!currentChannel) return
         var name = currentChannel.name
@@ -1299,7 +1292,6 @@ ApplicationWindow {
                             onTestRequested: function() { root.startTestGame() }
                             onTrainingRequested: function() { root.startTraining() }
                             onFavoriteRequested: function(favorite) { if (root.currentChannel) root.toggleFavorite(root.currentChannel.name, favorite) }
-                            onControlsRequested: function() { root.openControls() }
                             onCopyRequested: function(text) { appController.copyToClipboard(text); root.notify("Copied " + text, "info") }
                             onFriendToggleRequested: function(player) { friendsStore.toggleFriend(player.name ?? "") }
                             onAutoMatchToggleRequested: function() { root.toggleAutoMatch() }
