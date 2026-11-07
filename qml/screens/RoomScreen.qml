@@ -394,7 +394,9 @@ Item {
                             }
                             Item { width: parent.width - 110; height: 1 }
                             Text {
-                                text: screen.visibleUsers.length + " / " + screen.sortedUsers().length
+                                text: screen.playerSearch.length > 0
+                                      ? screen.visibleUsers.length + " / " + screen.sortedUsers().length
+                                      : String(screen.sortedUsers().length) + " IN ROOM"
                                 color: theme.textFaint
                                 font.family: theme.bodyFamily
                                 font.pixelSize: 10
