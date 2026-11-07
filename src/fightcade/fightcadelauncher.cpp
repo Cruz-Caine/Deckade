@@ -510,6 +510,12 @@ bool copyTrainingMode(const QString &source, const QString &target)
                     // The training script calls gd.* directly; Lua's require()
                     // does not create that global on all Lua 5.1 builds.
                     data.replace("require \"gd\"", "gd = require \"gd\"");
+                    // Enable the usual training HUD/damage readout by default.
+                    data.replace("comboenabled = false", "comboenabled = true");
+                    data.replace("p1healthenabled = false", "p1healthenabled = true");
+                    data.replace("p2healthenabled = false", "p2healthenabled = true");
+                    data.replace("p1meterenabled = false", "p1meterenabled = true");
+                    data.replace("p2meterenabled = false", "p2meterenabled = true");
                     changed = changed || data != disabled;
                 }
                 if (changed && file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
