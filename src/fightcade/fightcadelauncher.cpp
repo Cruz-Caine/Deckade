@@ -516,6 +516,10 @@ bool copyTrainingMode(const QString &source, const QString &target)
                     data.replace("p2healthenabled = false", "p2healthenabled = true");
                     data.replace("p1meterenabled = false", "p1meterenabled = true");
                     data.replace("p2meterenabled = false", "p2meterenabled = true");
+                    // KOF and several drivers ship incompatible hitbox maps that
+                    // render as a blue/white grid. Keep hitboxes opt-in via the
+                    // training menu instead of enabling them by default.
+                    data.replace("hitbox = {\n\t\tenabled = true", "hitbox = {\n\t\tenabled = false");
                     changed = changed || data != disabled;
                 }
                 if (changed && file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {

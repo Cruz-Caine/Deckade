@@ -122,12 +122,6 @@ Item {
     }
 
     function refreshVisibleUsers() {
-        const active = screen.Window.window ? screen.Window.window.activeFocusItem : null
-        if (active && active.player && active.player.name) {
-            focusedPlayerName = active.player.name
-        } else if (active) {
-            focusedPlayerName = ""
-        }
         const query = playerSearch.trim().toLowerCase()
         var users = sortedUsers()
         if (friendsOnly) {
@@ -441,6 +435,9 @@ Item {
                             boundsBehavior: Flickable.StopAtBounds
                             property real stableY: 0
 
+                            onMovementStarted: {
+                                if (!screen.preservingPlayerFocus) screen.focusedPlayerName = ""
+                            }
                             onMovementEnded: stableY = contentY
                             onModelChanged: {
                                 const target = stableY

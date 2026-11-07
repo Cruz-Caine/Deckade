@@ -53,6 +53,17 @@ It covers lobby users/playing state, challenge warnings, welcome sections,
 preview URLs, quark routes, ROM metadata, and the launcher-status hash. The
 GUI/netplay loopback test is separate: `./tests/quark_loopback.sh sfiii3nr1`.
 
+## Runtime game matrix
+
+For a black-box emulator check across every locally available FBNeo ROM:
+
+```sh
+./tests/game_matrix.sh
+```
+
+It checks launch, a non-blank frame, and training-mode Lua startup. See
+`docs/TESTING.md` for the optional environment variables.
+
 ## Local match test
 
 A second Fightcade account is not required to test the native netplay path. The
