@@ -189,6 +189,8 @@ if 'MacadeLoadTrainingState' not in qtext:
     q.write_text(qtext)
 TRAININGSTATE
 
+python3 "$ROOT/scripts/patches/fbneo-enable-menu.py"
+
 python3 "$ROOT/scripts/patches/fbneo-frame-dump.py"
 
 python3 "$ROOT/scripts/patches/fbneo-controller-fixes.py"
