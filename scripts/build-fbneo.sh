@@ -133,6 +133,32 @@ if old not in s:
 p.write_text(s.replace(old, new, 1))
 PYPATCH
 
+python3 - <<'P2PATCH'
+from pathlib import Path
+p = Path('src/macade/macade_gamepad.cpp')
+s = p.read_text()
+old = """bool MacadeGamepadPlayerOneOnly()
+{
+    // A network route always uses its existing P1 input bank/GGPO side routing,
+    // even if a caller accidentally supplies the local-only environment flag.
+    if (kNetGame || kNetSpectator) return false;
+    const char* mode = getenv("MACADE_SINGLE_PLAYER_INPUT");
+    return mode && !strcmp(mode, "1");
+}"""
+new = """bool MacadeGamepadPlayerOneOnly()
+{
+    // Training and single-player both run through the local training route but
+    // are still kNetGame sessions in FBNeo. The environment flag is the reliable
+    // distinction; network matches never set it.
+    if (kNetSpectator) return false;
+    const char* mode = getenv("MACADE_SINGLE_PLAYER_INPUT");
+    return mode && !strcmp(mode, "1");
+}"""
+if old not in s:
+    raise SystemExit('MacadeGamepadPlayerOneOnly block missing')
+p.write_text(s.replace(old, new, 1))
+P2PATCH
+
 python3 "$ROOT/scripts/patches/fbneo-controller-fixes.py"
 
 # The macOS embedded video/input bridge is intentionally inert on Linux.
