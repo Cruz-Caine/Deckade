@@ -527,9 +527,13 @@ bool copyTrainingMode(const QString &source, const QString &target)
     return QFileInfo(target).isDir();
 }
 
-QString findSavestateDirectory(const QString &romRoot, const QString &installPath)
+QString findSavestateDirectory(const QString &romRoot, const QString &installPath,
+                               const QString &runtimeRoot)
 {
     QStringList candidates;
+    if (!runtimeRoot.isEmpty()) {
+        candidates << QDir(runtimeRoot).filePath(QStringLiteral("fbneo/savestates"));
+    }
     if (!romRoot.isEmpty()) {
         const QDir rom(romRoot);
         candidates << rom.filePath(QStringLiteral("../../config/fcadefbneo/savestates"))
@@ -569,7 +573,10 @@ bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QStr
     QDir().mkpath(QDir(workDir).filePath(QStringLiteral("savestates")));
 
     if (emulator == QStringLiteral("fbneo")) {
-        const QString trainingSource = QDir(romRoot).filePath(QStringLiteral("../../fbneo-training-mode"));
+        QString trainingSource = QDir(m_runtimeRoot).filePath(QStringLiteral("fbneo/fbneo-training-mode"));
+        if (!QFileInfo(trainingSource).isDir()) {
+            trainingSource = QDir(romRoot).filePath(QStringLiteral("../../fbneo-training-mode"));
+        }
         const QString trainingLink = QDir(workDir).filePath(QStringLiteral("fbneo-training-mode"));
         if (QFileInfo(trainingSource).isDir()) {
             if (QFileInfo(trainingLink).isSymLink()) {
@@ -585,7 +592,8 @@ bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QStr
         }
 
         const QString savestateSource = findSavestateDirectory(
-            romRoot, m_installMethod == QStringLiteral("native") ? m_installPath : QString());
+            romRoot, m_installMethod == QStringLiteral("native") ? m_installPath : QString(),
+            m_runtimeRoot);
         const QString savestateLink = QDir(workDir).filePath(QStringLiteral("savestates"));
         if (!savestateSource.isEmpty()) {
             const QFileInfo linkInfo(savestateLink);

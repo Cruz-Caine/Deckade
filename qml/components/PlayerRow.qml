@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 
 Focusable {
     id: root
@@ -11,8 +12,8 @@ Focusable {
     signal copyRequested(string name)
     signal friendToggleRequested(var player)
 
-    implicitHeight: 64
-    ringRadius: 10
+    implicitHeight: 58
+    ringRadius: 9
     onActivated: root.challengeRequested(root.player)
     onSecondaryActivated: root.friendToggleRequested(root.player)
 
@@ -27,84 +28,86 @@ Focusable {
 
     function rankText() {
         var rank = root.player.rank ?? 0
-        if (rank <= 0) return "—"
+        if (rank <= 0) return ""
         if (rank === 1) return "E"
         if (rank === 2) return "D"
         if (rank === 3) return "C"
         if (rank === 4) return "B"
         if (rank === 5) return "A"
+        if (rank >= 6) return "S"
         return String(rank)
+    }
+
+    function countryFlag() {
+        var code = (root.player.country?.code ?? "").toUpperCase()
+        if (code.length !== 2) return "·"
+        return String.fromCodePoint(0x1F1E6 + code.charCodeAt(0) - 65,
+                                    0x1F1E6 + code.charCodeAt(1) - 65)
     }
 
     function statusText() {
         if (root.player.playing && root.player.playing.quarkId) return "PLAYING"
-        if (root.player.away) return "AWAY"
+        if (root.player.away || root.player.channelAway) return "AWAY"
         return "READY"
     }
 
     Rectangle {
         anchors.fill: parent
-        radius: 10
+        radius: 9
         color: root.activeFocus ? theme.panelHover : "transparent"
+        border.width: root.activeFocus ? 1 : 0
+        border.color: theme.accent
         Behavior on color { ColorAnimation { duration: settings.reduceMotion ? 0 : 90 } }
     }
 
     Row {
         anchors.fill: parent
-        anchors.leftMargin: 8
-        anchors.rightMargin: 10
-        spacing: 10
+        anchors.leftMargin: 10
+        anchors.rightMargin: 8
+        spacing: 8
 
-        Avatar {
-            size: 40
-            hash: root.player.gravatar ?? ""
-            name: root.player.name ?? ""
-            online: !(root.player.away === true)
+        Text {
+            text: root.countryFlag()
+            width: 22
+            horizontalAlignment: Text.AlignHCenter
             anchors.verticalCenter: parent.verticalCenter
+            font.pixelSize: 15
+            color: theme.textMuted
         }
 
         Column {
-            width: Math.max(100, parent.width - 160)
+            width: Math.max(70, parent.width - 142)
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 2
+            spacing: 1
 
             Text {
                 width: parent.width
                 text: root.player.name ?? ""
-                color: theme.text
+                color: root.isLocal ? theme.gold
+                     : (root.player.playing?.quarkId ? theme.textMuted : theme.text)
                 font.family: theme.displayFamily
                 font.weight: Font.DemiBold
-                font.pixelSize: 17
+                font.pixelSize: 16
                 elide: Text.ElideRight
             }
 
             Row {
                 spacing: 7
                 Text {
-                    text: "RANK " + root.rankText()
-                    color: theme.gold
-                    font.family: theme.bodyFamily
-                    font.weight: Font.DemiBold
-                    font.pixelSize: 10
-                    font.letterSpacing: 0.8
-                }
-                Text {
                     text: root.statusText()
                     color: root.statusText() === "READY" ? theme.green
                          : root.statusText() === "PLAYING" ? theme.cyan : theme.textFaint
                     font.family: theme.bodyFamily
                     font.weight: Font.DemiBold
-                    font.pixelSize: 10
+                    font.pixelSize: 9
                     font.letterSpacing: 0.8
                 }
                 Text {
-                    visible: root.isFriend
-                    text: "★ FRIEND"
-                    color: theme.gold
+                    visible: (root.player.matchCount ?? 0) > 0
+                    text: (root.player.matchCount ?? 0) + " MATCHES"
+                    color: theme.textFaint
                     font.family: theme.bodyFamily
-                    font.weight: Font.DemiBold
-                    font.pixelSize: 10
-                    font.letterSpacing: 0.8
+                    font.pixelSize: 9
                 }
                 Text {
                     visible: root.isLocal
@@ -112,37 +115,29 @@ Focusable {
                     color: theme.cyan
                     font.family: theme.bodyFamily
                     font.weight: Font.DemiBold
-                    font.pixelSize: 10
-                    font.letterSpacing: 0.8
+                    font.pixelSize: 9
                 }
                 Text {
-                    visible: (root.player.country?.code ?? "").length > 0
-                    text: (root.player.country?.code ?? "").toUpperCase()
-                    color: theme.textFaint
+                    visible: root.isFriend
+                    text: "★ FRIEND"
+                    color: theme.gold
                     font.family: theme.bodyFamily
-                    font.pixelSize: 10
-                }
-                Text {
-                    visible: (root.player.region ?? "").length > 0
-                    text: root.player.region ?? ""
-                    color: theme.textFaint
-                    font.family: theme.bodyFamily
-                    font.pixelSize: 10
-                    elide: Text.ElideRight
-                    width: Math.min(90, implicitWidth)
+                    font.weight: Font.DemiBold
+                    font.pixelSize: 9
                 }
             }
         }
 
+        Item { width: 1; height: 1 }
+
         Row {
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 4
-
+            spacing: 3
             Repeater {
                 model: 4
                 Rectangle {
-                    width: 5
-                    height: 9 + index * 4
+                    width: 4
+                    height: 8 + index * 3
                     radius: 2
                     color: index < root.pingQuality() ? theme.green : theme.border
                     anchors.verticalCenter: parent.verticalCenter
@@ -151,12 +146,34 @@ Focusable {
         }
 
         Text {
+            visible: root.rankText().length > 0
+            text: root.rankText()
+            width: 20
+            height: 19
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            color: theme.gold
+            font.family: theme.displayFamily
+            font.weight: Font.Bold
+            font.pixelSize: 11
             anchors.verticalCenter: parent.verticalCenter
-            text: root.player.playing?.quarkId ? "▶" : root.player.away ? "◌" : "＋"
+            Rectangle {
+                anchors.fill: parent
+                z: -1
+                radius: 4
+                color: "#1c180d"
+                border.width: 1
+                border.color: "#5b4720"
+            }
+        }
+
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.player.playing?.quarkId ? "▶" : "＋"
             color: root.player.playing?.quarkId ? theme.cyan : theme.textFaint
             font.family: theme.bodyFamily
-            font.pixelSize: 18
-            width: 20
+            font.pixelSize: 15
+            width: 16
             horizontalAlignment: Text.AlignRight
         }
     }
@@ -167,6 +184,6 @@ Focusable {
         anchors.bottom: parent.bottom
         height: 1
         color: theme.border
-        opacity: 0.45
+        opacity: 0.35
     }
 }
