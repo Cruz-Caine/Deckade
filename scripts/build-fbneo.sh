@@ -159,6 +159,36 @@ if old not in s:
 p.write_text(s.replace(old, new, 1))
 P2PATCH
 
+python3 - <<'TRAININGSTATE'
+from pathlib import Path
+p = Path('src/burner/sdl/main.cpp')
+s = p.read_text()
+if 'DECKADE training savestate' not in s:
+    s = s.replace('#include "burner.h"', '#include "burner.h"\n\nextern bool MacadeLoadTrainingState(const char *name); // DECKADE training savestate', 1)
+    old = """	if (!DrvInit(gameToRun, 0))
+	{
+		MediaInit();
+		if (bMacadeTrainingLaunch) FBA_LoadLuaCode("fbneo-training-mode/fbneo-training-mode.lua");"""
+    new = """	if (!DrvInit(gameToRun, 0))
+	{
+		MediaInit();
+		if (bMacadeTrainingLaunch) {
+			// Fightcade training opens on the same character-select state as
+			// the online client rather than replaying the full boot sequence.
+			MacadeLoadTrainingState(BurnDrvGetTextA(DRV_NAME));
+			FBA_LoadLuaCode("fbneo-training-mode/fbneo-training-mode.lua");
+		}"""
+    if old not in s:
+        raise SystemExit('DoGame training block missing')
+    p.write_text(s.replace(old, new, 1))
+
+q = Path('src/burner/sdl/fbn_quark_sdl.cpp')
+qtext = q.read_text()
+if 'MacadeLoadTrainingState' not in qtext:
+    qtext = qtext.replace('} // namespace\n', '} // namespace\n\nbool MacadeLoadTrainingState(const char *name) { return load_fightcade_state(name); }\n', 1)
+    q.write_text(qtext)
+TRAININGSTATE
+
 python3 "$ROOT/scripts/patches/fbneo-controller-fixes.py"
 
 # The macOS embedded video/input bridge is intentionally inert on Linux.
