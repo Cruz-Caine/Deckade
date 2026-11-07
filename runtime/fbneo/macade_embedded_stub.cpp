@@ -29,6 +29,9 @@ int gSystemFrames = 0;
 int gConnectionPhase = 0;
 int gScore1 = -1;
 int gScore2 = -1;
+int gRank1 = -1;
+int gRank2 = -1;
+int gRanked = 0;
 int gSpectators = 0;
 int gPing = 0;
 int gDelay = 0;
@@ -45,6 +48,18 @@ std::string cleanName(const char *name)
         return {};
     }
     return value;
+}
+
+std::string rankText(int rank)
+{
+    if (rank <= 0) return {};
+    if (rank == 1) return "E";
+    if (rank == 2) return "D";
+    if (rank == 3) return "C";
+    if (rank == 4) return "B";
+    if (rank == 5) return "A";
+    if (rank >= 6) return "S";
+    return std::to_string(rank);
 }
 
 std::string matchTitle()
@@ -72,8 +87,8 @@ void drawOverlay(SDL_Renderer *renderer)
     if (title.empty() && gSystemFrames <= 0 && gChat.empty()) return;
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 155);
-    SDL_Rect bar{0, 0, width, 28};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 190);
+    SDL_Rect bar{0, 0, width, 26};
     SDL_RenderFillRect(renderer, &bar);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 115);
     SDL_Rect footer{0, height - 24, width, 24};
@@ -81,14 +96,27 @@ void drawOverlay(SDL_Renderer *renderer)
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
     if (!title.empty()) {
-        inprint_shadowed(renderer, title.c_str(), 8, 6);
-    }
-
-    if (gScore1 >= 0 && gScore2 >= 0) {
-        char score[64];
-        std::snprintf(score, sizeof(score), "%d - %d", gScore1, gScore2);
-        const int scoreWidth = static_cast<int>(std::strlen(score)) * 6;
-        inprint_shadowed(renderer, score, static_cast<Uint32>(std::max(8, (width - scoreWidth) / 2)), 6);
+        const std::string p1 = cleanName(gPlayer1.c_str());
+        const std::string p2 = cleanName(gPlayer2.c_str());
+        const std::string r1 = rankText(gRank1);
+        const std::string r2 = rankText(gRank2);
+        const std::string score1 = gScore1 >= 0 ? std::to_string(gScore1) : "0";
+        const std::string score2 = gScore2 >= 0 ? std::to_string(gScore2) : "0";
+        std::string left = p1;
+        if (!r1.empty()) left += " [" + r1 + "]";
+        left += "  " + score1;
+        std::string right = score2;
+        if (!r2.empty()) right += " [" + r2 + "]";
+        right += "  " + p2;
+        const std::string center = gRanked > 1 ? ("FT" + std::to_string(gRanked)) : "VS";
+        const int leftWidth = static_cast<int>(left.size()) * 6;
+        const int rightWidth = static_cast<int>(right.size()) * 6;
+        const int centerWidth = static_cast<int>(center.size()) * 6;
+        inprint_shadowed(renderer, left.c_str(), 8, 5);
+        inprint_shadowed(renderer, center.c_str(),
+                         static_cast<Uint32>(std::max(8, (width - centerWidth) / 2)), 5);
+        inprint_shadowed(renderer, right.c_str(),
+                         static_cast<Uint32>(std::max(8, width - rightWidth - 10)), 5);
     }
 
     std::string right;
@@ -143,14 +171,28 @@ void MacadeEmbeddedSetOverlaySystemMessage(const char *message, int frames)
 void MacadeEmbeddedSetOverlayGameInfo(const char *player1, const char *player2, int spectator, int ranked, int player)
 {
     (void)spectator;
-    (void)ranked;
     (void)player;
-    // Local direct/quark-loopback runs have no Fightcade server to supply
-    // names. Allow the launcher/test harness to pass display names explicitly.
-    const char *override1 = std::getenv("DECKADE_OVERLAY_P1");
-    const char *override2 = std::getenv("DECKADE_OVERLAY_P2");
-    gPlayer1 = override1 && *override1 ? override1 : (player1 ? player1 : "");
-    gPlayer2 = override2 && *override2 ? override2 : (player2 ? player2 : "");
+    gRanked = ranked;
+    // Names arrive as "name#rank,score" from the Fightcade match-info event.
+    auto assign = [](std::string &target, int &rank, const char *value, const char *overrideValue) {
+        target = overrideValue && *overrideValue ? overrideValue : (value ? value : "");
+        rank = -1;
+        const size_t hash = target.find('#');
+        if (hash != std::string::npos) {
+            const std::string meta = target.substr(hash + 1);
+            target.erase(hash);
+            const size_t comma = meta.find(',');
+            if (comma != std::string::npos) {
+                rank = std::atoi(meta.substr(0, comma).c_str());
+                const int score = std::atoi(meta.substr(comma + 1).c_str());
+                if (score > 0) {
+                    if (&rank == &gRank1) gScore1 = score; else gScore2 = score;
+                }
+            }
+        }
+    };
+    assign(gPlayer1, gRank1, player1, std::getenv("DECKADE_OVERLAY_P1"));
+    assign(gPlayer2, gRank2, player2, std::getenv("DECKADE_OVERLAY_P2"));
 }
 
 void MacadeEmbeddedSetOverlayScores(int score1, int score2)
