@@ -81,7 +81,7 @@ Item {
 
             Text {
                 anchors.centerIn: parent
-                text: "PRESS A BUTTON, D-PAD DIRECTION, OR MOVE A STICK  ·  B TO CANCEL"
+                text: "PRESS A BUTTON, D-PAD DIRECTION, OR MOVE A STICK  ·  START/MENU TO CANCEL"
                 color: theme.accent
                 font.family: theme.displayFamily
                 font.weight: Font.DemiBold

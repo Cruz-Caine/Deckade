@@ -808,6 +808,10 @@ ApplicationWindow {
             if (root.gamepadAllowed()) root.openKeyboard()
         }
         function onMenuPressed() {
+            if (controllerProfile.capturing) {
+                controllerProfile.cancelCapture()
+                return
+            }
             if (root.gamepadAllowed()) root.switchScreen("settings")
         }
         function onTabLeftPressed() {
