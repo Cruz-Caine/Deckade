@@ -75,6 +75,9 @@ ApplicationWindow {
     }
 
     function gamepadAllowed() {
+        // While a native emulator is running, every gamepad event belongs to
+        // the emulator. Never let the launcher act on the same press again.
+        if (launcher.running) return false
         if (controllerProfile.capturing) return false
         return Date.now() >= root.suppressGamepadUntil
     }
