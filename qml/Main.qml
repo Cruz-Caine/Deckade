@@ -75,6 +75,7 @@ ApplicationWindow {
     }
 
     function gamepadAllowed() {
+        if (controllerProfile.capturing) return false
         return Date.now() >= root.suppressGamepadUntil
     }
 

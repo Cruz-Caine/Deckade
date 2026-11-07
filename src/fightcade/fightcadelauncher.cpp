@@ -433,6 +433,27 @@ bool FightcadeLauncher::hasLocalRom(const QString &emulator, const QString &game
     return !findRomFile(gameId, romPathFor(normalizedEmulator(emulator))).isEmpty();
 }
 
+QString findSavestateDirectory(const QString &romRoot, const QString &installPath)
+{
+    QStringList candidates;
+    if (!romRoot.isEmpty()) {
+        const QDir rom(romRoot);
+        candidates << rom.filePath(QStringLiteral("../../config/fcadefbneo/savestates"))
+                   << rom.filePath(QStringLiteral("../savestates"))
+                   << rom.filePath(QStringLiteral("savestates"));
+    }
+    if (!installPath.isEmpty()) {
+        const QDir install(installPath);
+        candidates << install.filePath(QStringLiteral("data/config/fcadefbneo/savestates"))
+                   << install.filePath(QStringLiteral("emulator/fbneo/savestates"))
+                   << install.filePath(QStringLiteral("savestates"));
+    }
+    for (const QString &candidate : std::as_const(candidates)) {
+        if (QFileInfo(candidate).isDir()) return QDir(candidate).absolutePath();
+    }
+    return {};
+}
+
 bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QString &gameId)
 {
     const QString dataRoot = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
@@ -461,6 +482,24 @@ bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QStr
                 QFile::remove(trainingLink);
             }
             QFile::link(trainingSource, trainingLink);
+        }
+
+        const QString savestateSource = findSavestateDirectory(
+            romRoot, m_installMethod == QStringLiteral("native") ? m_installPath : QString());
+        const QString savestateLink = QDir(workDir).filePath(QStringLiteral("savestates"));
+        if (!savestateSource.isEmpty()) {
+            const QFileInfo linkInfo(savestateLink);
+            if (linkInfo.isSymLink() || QFile::exists(savestateLink)) {
+                if (linkInfo.isSymLink() || QFileInfo(savestateLink).isFile()) {
+                    QFile::remove(savestateLink);
+                } else if (QDir(savestateLink).isEmpty()) {
+                    QDir().rmdir(savestateLink);
+                }
+            }
+            if (!QFileInfo::exists(savestateLink)) {
+                QFile::link(savestateSource, savestateLink);
+                qInfo().noquote() << "Using Fightcade savestates:" << savestateSource;
+            }
         }
 
         const QString configDir = QDir(dataDir).filePath(QStringLiteral("fbneo/config"));
