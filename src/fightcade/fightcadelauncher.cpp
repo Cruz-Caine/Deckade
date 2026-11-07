@@ -719,10 +719,16 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
     environment.insert(QStringLiteral("MACADE_QUARK_LOG_DIR"), logDir);
     environment.insert(QStringLiteral("DECKADE_P1_JOYSTICK_INDEX"),
                        QString::number(m_settings->controllerIndex()));
-    const QString profilePath = controllerProfilePath(gameId);
-    if (QFile::exists(profilePath)) {
-        normalizeControllerProfile(profilePath);
-        environment.insert(QStringLiteral("MACADE_GAMEPAD_PROFILE_PATH"), profilePath);
+    // FBNeo's SDL input layer owns in-game controller mapping. Do not inject
+    // Deckade's legacy per-game profile here: having both mapping systems live
+    // caused duplicate/overridden bindings. The app still uses its own gamepad
+    // input for UI navigation.
+    if (emulator != QStringLiteral("fbneo")) {
+        const QString profilePath = controllerProfilePath(gameId);
+        if (QFile::exists(profilePath)) {
+            normalizeControllerProfile(profilePath);
+            environment.insert(QStringLiteral("MACADE_GAMEPAD_PROFILE_PATH"), profilePath);
+        }
     }
     for (auto it = extraEnvironment.constBegin(); it != extraEnvironment.constEnd(); ++it) {
         environment.insert(it.key(), it.value().toString());
