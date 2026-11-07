@@ -32,10 +32,11 @@ QString hexString(const QByteArray &text)
 
 QString directionName(int bit)
 {
-    if (bit == 1) return QStringLiteral("D-pad Left");
-    if (bit == 2) return QStringLiteral("D-pad Right");
-    if (bit == 4) return QStringLiteral("D-pad Up");
-    if (bit == 8) return QStringLiteral("D-pad Down");
+    // These are literal SDL_HAT_* bits: UP=1, RIGHT=2, DOWN=4, LEFT=8.
+    if (bit == SDL_HAT_UP) return QStringLiteral("D-pad Up");
+    if (bit == SDL_HAT_RIGHT) return QStringLiteral("D-pad Right");
+    if (bit == SDL_HAT_DOWN) return QStringLiteral("D-pad Down");
+    if (bit == SDL_HAT_LEFT) return QStringLiteral("D-pad Left");
     return QStringLiteral("Hat");
 }
 } // namespace
@@ -176,6 +177,13 @@ void ControllerProfile::parseProfile()
             action->kind = kind;
             action->controlIndex = controlIndex;
             action->direction = direction;
+            if (kind == QStringLiteral("h")) {
+                const QString title = action->title.toLower();
+                if (title.contains(QStringLiteral("up"))) action->direction = SDL_HAT_UP;
+                else if (title.contains(QStringLiteral("down"))) action->direction = SDL_HAT_DOWN;
+                else if (title.contains(QStringLiteral("left"))) action->direction = SDL_HAT_LEFT;
+                else if (title.contains(QStringLiteral("right"))) action->direction = SDL_HAT_RIGHT;
+            }
         }
     }
 }
@@ -318,10 +326,10 @@ void ControllerProfile::prepareCapture(int inputIndex)
                 if (hat != 0) {
                     kind = QStringLiteral("h");
                     controlIndex = 0;
-                    if (hat & SDL_HAT_LEFT) direction = 1;
-                    else if (hat & SDL_HAT_RIGHT) direction = 2;
-                    else if (hat & SDL_HAT_UP) direction = 4;
-                    else if (hat & SDL_HAT_DOWN) direction = 8;
+                    if (hat & SDL_HAT_UP) direction = SDL_HAT_UP;
+                    else if (hat & SDL_HAT_RIGHT) direction = SDL_HAT_RIGHT;
+                    else if (hat & SDL_HAT_DOWN) direction = SDL_HAT_DOWN;
+                    else if (hat & SDL_HAT_LEFT) direction = SDL_HAT_LEFT;
                 }
                 m_initialHat = hat;
             }

@@ -433,6 +433,94 @@ bool FightcadeLauncher::hasLocalRom(const QString &emulator, const QString &game
     return !findRomFile(gameId, romPathFor(normalizedEmulator(emulator))).isEmpty();
 }
 
+void normalizeControllerProfile(const QString &path)
+{
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
+    const QStringList lines = QString::fromUtf8(file.readAll()).split(QLatin1Char('\n'));
+    file.close();
+    QStringList output;
+    bool changed = false;
+    for (const QString &line : lines) {
+        const QStringList fields = line.split(QRegularExpression(QStringLiteral("\\s+")), Qt::SkipEmptyParts);
+        if (fields.size() < 8 || fields.at(0) == QStringLiteral("MACADE_GAMEPADS")) {
+            output.append(line);
+            continue;
+        }
+        QStringList next = fields;
+        const QString info = QString::fromLatin1(QByteArray::fromHex(fields.at(4).toLatin1())).toLower();
+        int direction = fields.at(7).toInt();
+        if (fields.at(5) == QStringLiteral("h")) {
+            if (info.contains(QStringLiteral("up"))) direction = 1;
+            else if (info.contains(QStringLiteral("down"))) direction = 4;
+            else if (info.contains(QStringLiteral("left"))) direction = 8;
+            else if (info.contains(QStringLiteral("right"))) direction = 2;
+        }
+        if (next.at(7).toInt() != direction) {
+            next[7] = QString::number(direction);
+            changed = true;
+        }
+        output.append(next.join(QLatin1Char(' ')));
+    }
+    if (!changed) return;
+    QFile out(path);
+    if (out.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+        out.write(output.join(QLatin1Char('\n')).toUtf8());
+        out.write("\n");
+    }
+}
+
+bool copyTrainingMode(const QString &source, const QString &target)
+{
+    QDir().mkpath(target);
+    QDirIterator it(source, QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot,
+                    QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        const QString path = it.next();
+        const QString relative = QDir(source).relativeFilePath(path);
+        const QString destination = QDir(target).filePath(relative);
+        if (QFileInfo(path).isDir()) {
+            QDir().mkpath(destination);
+            continue;
+        }
+        QDir().mkpath(QFileInfo(destination).absolutePath());
+        QFile::copy(path, destination);
+        if (destination.endsWith(QStringLiteral(".lua"), Qt::CaseInsensitive)) {
+            QFile file(destination);
+            if (file.open(QIODevice::ReadOnly)) {
+                QByteArray data = file.readAll();
+                file.close();
+                // The Windows training-mode scripts use backslash separators
+                // in dofile/resource paths. Normalize only path prefixes; a
+                // blanket backslash replacement corrupts Lua escapes.
+                bool changed = false;
+                for (const QString &prefix : {QStringLiteral("inputs"), QStringLiteral("resources"),
+                                              QStringLiteral("hitboxes"), QStringLiteral("games"),
+                                              QStringLiteral("addon")}) {
+                    const QByteArray from = prefix.toUtf8() + "\\\\";
+                    const QByteArray to = prefix.toUtf8() + "/";
+                    if (data.contains(from)) {
+                        data.replace(from, to);
+                        changed = true;
+                    }
+                }
+                if (destination.endsWith(QStringLiteral("fbneo-training-mode.lua"))) {
+                    const QByteArray disabled = data;
+                    data.replace("DISABLE_SCROLLING_INPUT = false", "DISABLE_SCROLLING_INPUT = true");
+                    // The training script calls gd.* directly; Lua's require()
+                    // does not create that global on all Lua 5.1 builds.
+                    data.replace("require \"gd\"", "gd = require \"gd\"");
+                    changed = changed || data != disabled;
+                }
+                if (changed && file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+                    file.write(data);
+                }
+            }
+        }
+    }
+    return QFileInfo(target).isDir();
+}
+
 QString findSavestateDirectory(const QString &romRoot, const QString &installPath)
 {
     QStringList candidates;
@@ -478,10 +566,16 @@ bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QStr
         const QString trainingSource = QDir(romRoot).filePath(QStringLiteral("../../fbneo-training-mode"));
         const QString trainingLink = QDir(workDir).filePath(QStringLiteral("fbneo-training-mode"));
         if (QFileInfo(trainingSource).isDir()) {
-            if (QFileInfo(trainingLink).isSymLink() || QFile::exists(trainingLink)) {
+            if (QFileInfo(trainingLink).isSymLink()) {
                 QFile::remove(trainingLink);
             }
-            QFile::link(trainingSource, trainingLink);
+            if (QFileInfo(trainingLink).isDir()) {
+                QDir(trainingLink).removeRecursively();
+            }
+            if (!copyTrainingMode(trainingSource, trainingLink)) {
+                qWarning() << "Could not copy Fightcade training mode; falling back to source link";
+                QFile::link(trainingSource, trainingLink);
+            }
         }
 
         const QString savestateSource = findSavestateDirectory(
@@ -589,6 +683,16 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
     } else {
         environment.remove(QStringLiteral("MACADE_SINGLE_PLAYER_INPUT"));
     }
+    // FBNeo's training-mode Lua requires the Lua-GD module. The module is
+    // loaded with a relative ./?.so path after FBNeo changes into the training
+    // script directory, so expose the runtime workdir explicitly.
+    const QString luaGd = QDir(m_runtimeRoot).filePath(QStringLiteral("fbneo/gd.so"));
+    const QString luaGdTarget = QDir(workDir).filePath(QStringLiteral("gd.so"));
+    if (QFileInfo::exists(luaGd) && !QFileInfo::exists(luaGdTarget)) {
+        QFile::copy(luaGd, luaGdTarget);
+    }
+    environment.insert(QStringLiteral("LUA_CPATH"),
+                       QDir(workDir).filePath(QStringLiteral("?.so")) + QLatin1Char(';'));
     // Keep native GGPO/Quark diagnostics when a match does not reach video.
     const QString logDir = QDir(workDir).filePath(QStringLiteral("logs"));
     QDir().mkpath(logDir);
@@ -599,6 +703,7 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
                        QString::number(m_settings->controllerIndex()));
     const QString profilePath = controllerProfilePath(gameId);
     if (QFile::exists(profilePath)) {
+        normalizeControllerProfile(profilePath);
         environment.insert(QStringLiteral("MACADE_GAMEPAD_PROFILE_PATH"), profilePath);
     }
     for (auto it = extraEnvironment.constBegin(); it != extraEnvironment.constEnd(); ++it) {
