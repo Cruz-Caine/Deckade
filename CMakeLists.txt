@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(Deckade VERSION 0.2.4 LANGUAGES CXX)
+project(Deckade VERSION 0.2.5 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -90,6 +90,8 @@ file(GLOB_RECURSE DECKADE_ASSETS CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/*.svg"
     "${CMAKE_CURRENT_SOURCE_DIR}/assets/*.svg"
     "${CMAKE_CURRENT_SOURCE_DIR}/assets/*.png"
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/flags/*.png"
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/ranks/*.png"
     "${CMAKE_CURRENT_SOURCE_DIR}/assets/rom-json/*.json"
     "${CMAKE_CURRENT_SOURCE_DIR}/assets/rom-json/*.txt"
 )

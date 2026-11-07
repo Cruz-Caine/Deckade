@@ -38,12 +38,7 @@ Focusable {
         return String(rank)
     }
 
-    function countryFlag() {
-        var code = (root.player.country?.code ?? "").toUpperCase()
-        if (code.length !== 2) return "·"
-        return String.fromCodePoint(0x1F1E6 + code.charCodeAt(0) - 65,
-                                    0x1F1E6 + code.charCodeAt(1) - 65)
-    }
+
 
     function statusText() {
         if (root.player.playing && root.player.playing.quarkId) return "PLAYING"
@@ -66,13 +61,14 @@ Focusable {
         anchors.rightMargin: 8
         spacing: 8
 
-        Text {
-            text: root.countryFlag()
+        Image {
             width: 22
-            horizontalAlignment: Text.AlignHCenter
+            height: 15
             anchors.verticalCenter: parent.verticalCenter
-            font.pixelSize: 15
-            color: theme.textMuted
+            source: "qrc:/assets/flags/" + ((root.player.country?.code ?? "unknown").toLowerCase()) + ".png"
+            fillMode: Image.Stretch
+            asynchronous: true
+            cache: true
         }
 
         Column {
@@ -145,25 +141,25 @@ Focusable {
             }
         }
 
-        Text {
-            visible: root.rankText().length > 0
-            text: root.rankText()
-            width: 20
-            height: 19
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            color: theme.gold
-            font.family: theme.displayFamily
-            font.weight: Font.Bold
-            font.pixelSize: 11
+        Item {
+            width: 24
+            height: 20
             anchors.verticalCenter: parent.verticalCenter
-            Rectangle {
+            Image {
+                visible: (root.player.rank ?? 0) > 0
                 anchors.fill: parent
-                z: -1
-                radius: 4
-                color: "#1c180d"
-                border.width: 1
-                border.color: "#5b4720"
+                source: "qrc:/assets/ranks/rank" + (root.player.rank ?? 0) + ".png"
+                fillMode: Image.PreserveAspectFit
+                asynchronous: true
+                cache: true
+            }
+            Text {
+                visible: !((root.player.rank ?? 0) > 0)
+                anchors.centerIn: parent
+                text: "—"
+                color: theme.textFaint
+                font.family: theme.bodyFamily
+                font.pixelSize: 10
             }
         }
 
