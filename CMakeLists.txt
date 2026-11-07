@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(Deckade VERSION 0.1.3 LANGUAGES CXX)
+project(Deckade VERSION 0.1.4 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -46,6 +46,8 @@ set(DECKADE_SOURCES
     src/fightcade/controllerprofile.h
     src/fightcade/protocol.cpp
     src/fightcade/protocol.h
+    src/fightcade/netplayproxy.cpp
+    src/fightcade/netplayproxy.h
     src/fightcade/userstatus.cpp
     src/fightcade/userstatus.h
 )
@@ -137,11 +139,13 @@ add_executable(deckade_launcher_smoke
     src/core/settingsstore.cpp
     src/fightcade/fightcadelauncher.cpp
     src/fightcade/protocol.cpp
+    src/fightcade/netplayproxy.cpp
 )
 target_include_directories(deckade_launcher_smoke PRIVATE src)
 target_link_libraries(deckade_launcher_smoke PRIVATE
     Qt6::Core
     Qt6::Gui
+    Qt6::Network
 )
 
 add_executable(deckade_rom_probe
@@ -150,6 +154,7 @@ add_executable(deckade_rom_probe
     src/fightcade/fightcadelauncher.cpp
     src/fightcade/romlibrary.cpp
     src/fightcade/protocol.cpp
+    src/fightcade/netplayproxy.cpp
     src/fightcade/userstatus.cpp
 )
 target_include_directories(deckade_rom_probe PRIVATE src)
@@ -172,6 +177,22 @@ target_compile_definitions(deckade_protocol_tests PRIVATE
 )
 target_link_libraries(deckade_protocol_tests PRIVATE Qt6::Core)
 add_test(NAME deckade_protocol_tests COMMAND deckade_protocol_tests)
+
+add_executable(deckade_netplay_tests
+    tests/netplay_tests.cpp
+    src/fightcade/netplayprotocol.cpp
+)
+target_include_directories(deckade_netplay_tests PRIVATE src)
+target_link_libraries(deckade_netplay_tests PRIVATE Qt6::Core)
+add_test(NAME deckade_netplay_tests COMMAND deckade_netplay_tests)
+
+add_executable(deckade_netplay_proxy_tests
+    tests/netplay_proxy_tests.cpp
+    src/fightcade/netplayproxy.cpp
+)
+target_include_directories(deckade_netplay_proxy_tests PRIVATE src)
+target_link_libraries(deckade_netplay_proxy_tests PRIVATE Qt6::Core Qt6::Network)
+add_test(NAME deckade_netplay_proxy_tests COMMAND deckade_netplay_proxy_tests)
 
 # Ship the native runtimes and their build notes alongside the app.
 install(DIRECTORY runtime/ DESTINATION share/deckade/runtime USE_SOURCE_PERMISSIONS)

@@ -111,6 +111,15 @@ Focusable {
                     font.family: theme.bodyFamily
                     font.pixelSize: 10
                 }
+                Text {
+                    visible: (root.player.region ?? "").length > 0
+                    text: root.player.region ?? ""
+                    color: theme.textFaint
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 10
+                    elide: Text.ElideRight
+                    width: Math.min(90, implicitWidth)
+                }
             }
         }
 

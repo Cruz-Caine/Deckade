@@ -123,7 +123,10 @@ Item {
         visibleUsers = users
     }
 
-    onChannelChanged: refreshVisibleUsers()
+    onChannelChanged: {
+        playerSearch = ""
+        refreshVisibleUsers()
+    }
     onPlayerSearchChanged: {
         refreshVisibleUsers()
         playerList.positionViewAtBeginning()
@@ -361,6 +364,23 @@ Item {
                                 Qt.callLater(function() {
                                     contentY = Math.min(target, Math.max(0, contentHeight - height))
                                 })
+                            }
+
+                            ScrollBar.vertical: ScrollBar {
+                                id: playerScrollBar
+                                policy: ScrollBar.AlwaysOn
+                                width: 10
+                                contentItem: Rectangle {
+                                    implicitWidth: 6
+                                    radius: 3
+                                    color: playerScrollBar.pressed ? theme.accent
+                                         : playerScrollBar.hovered ? theme.borderStrong : theme.border
+                                }
+                                background: Rectangle {
+                                    implicitWidth: 6
+                                    radius: 3
+                                    color: "#0a0f16"
+                                }
                             }
 
                             delegate: PlayerRow {

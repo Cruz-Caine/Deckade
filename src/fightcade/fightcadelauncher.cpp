@@ -2,6 +2,7 @@
 
 #include "../core/settingsstore.h"
 #include "protocol.h"
+#include "netplayproxy.h"
 #include "controllerprofile.h"
 
 #include <QCoreApplication>
@@ -502,7 +503,8 @@ bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QStr
 }
 
 bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList &arguments,
-                                      const QString &gameId, bool singlePlayer)
+                                      const QString &gameId, bool singlePlayer,
+                                      const QVariantMap &extraEnvironment)
 {
     if (m_running) {
         setError(QStringLiteral("An emulator is already running."));
@@ -560,6 +562,9 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
     if (QFile::exists(profilePath)) {
         environment.insert(QStringLiteral("MACADE_GAMEPAD_PROFILE_PATH"), profilePath);
     }
+    for (auto it = extraEnvironment.constBegin(); it != extraEnvironment.constEnd(); ++it) {
+        environment.insert(it.key(), it.value().toString());
+    }
     m_process->setProcessEnvironment(environment);
     m_process->setProcessChannelMode(QProcess::MergedChannels);
 
@@ -574,6 +579,11 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
     connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, [this](int exitCode, QProcess::ExitStatus status) {
                 qInfo() << "Emulator exited" << exitCode << status;
+                if (m_netplayProxy) {
+                    m_netplayProxy->stop();
+                    m_netplayProxy->deleteLater();
+                    m_netplayProxy = nullptr;
+                }
                 if (m_process) {
                     m_process->deleteLater();
                     m_process = nullptr;
@@ -586,6 +596,11 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
             m_process->deleteLater();
             m_process = nullptr;
         }
+        if (m_netplayProxy) {
+            m_netplayProxy->stop();
+            m_netplayProxy->deleteLater();
+            m_netplayProxy = nullptr;
+        }
         Q_UNUSED(error)
         setRunning(false);
     });
@@ -597,6 +612,11 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
         setError(QStringLiteral("Could not start %1: %2").arg(runtimeName(emulator), m_process->errorString()));
         m_process->deleteLater();
         m_process = nullptr;
+        if (m_netplayProxy) {
+            m_netplayProxy->stop();
+            m_netplayProxy->deleteLater();
+            m_netplayProxy = nullptr;
+        }
         return false;
     }
 
@@ -855,6 +875,23 @@ bool FightcadeLauncher::launchMatch(const QVariantMap &match)
         }
         return launchOfficialHelper(officialMatchUri(match), emulator);
     }
+    QVariantMap proxyEnvironment;
+    if (emulator == QStringLiteral("fbneo")) {
+        if (m_netplayProxy) {
+            m_netplayProxy->stop();
+            m_netplayProxy->deleteLater();
+            m_netplayProxy = nullptr;
+        }
+        m_netplayProxy = new NetplayProxy(match, this);
+        if (m_netplayProxy->prepare()) {
+            proxyEnvironment = m_netplayProxy->environment();
+            qInfo().noquote() << "Netplay proxy ready, log:" << m_netplayProxy->logPath();
+        } else {
+            qWarning().noquote() << "Netplay proxy unavailable; using native direct route";
+            m_netplayProxy->deleteLater();
+            m_netplayProxy = nullptr;
+        }
+    }
     QStringList arguments;
     if (emulator == QStringLiteral("fbneo")) {
         arguments << QStringLiteral("-joy") << uriForMatch(match);
@@ -869,7 +906,7 @@ bool FightcadeLauncher::launchMatch(const QVariantMap &match)
         setError(QStringLiteral("No native runtime is available for %1 yet.").arg(runtimeName(emulator)));
         return false;
     }
-    return launchRuntime(emulator, arguments, gameId, false);
+    return launchRuntime(emulator, arguments, gameId, false, proxyEnvironment);
 }
 
 bool FightcadeLauncher::launchSpectate(const QVariantMap &match)
@@ -958,6 +995,11 @@ bool FightcadeLauncher::launchTraining(const QString &emulatorName, const QStrin
 
 void FightcadeLauncher::killEmulator()
 {
+    if (m_netplayProxy) {
+        m_netplayProxy->stop();
+        m_netplayProxy->deleteLater();
+        m_netplayProxy = nullptr;
+    }
     if (m_externalHelper) {
         m_externalMonitor.stop();
         m_externalHelper = false;

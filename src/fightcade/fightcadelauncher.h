@@ -9,6 +9,7 @@
 #include <QVariantMap>
 
 class SettingsStore;
+class NetplayProxy;
 
 class FightcadeLauncher : public QObject
 {
@@ -64,7 +65,8 @@ private:
     QString runtimeExecutable(const QString &emulator) const;
     QString runtimeName(const QString &emulator) const;
     bool launchRuntime(const QString &emulator, const QStringList &arguments,
-                       const QString &gameId, bool singlePlayer);
+                       const QString &gameId, bool singlePlayer,
+                       const QVariantMap &extraEnvironment = {});
     bool prepareWorkDirectory(const QString &emulator, const QString &gameId);
     QString findRomFile(const QString &gameId, const QString &romRoot) const;
     QString romPathFor(const QString &emulator) const;
@@ -96,4 +98,5 @@ private:
     bool m_externalHelper = false;
     bool m_running = false;
     QString m_lastError;
+    NetplayProxy *m_netplayProxy = nullptr;
 };
