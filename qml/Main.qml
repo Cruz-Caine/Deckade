@@ -53,6 +53,8 @@ ApplicationWindow {
     property var challengeData: ({})
 
     property bool launching: false
+    property bool autoMatchActive: false
+    property string autoMatchTarget: ""
     property string launchingTitle: ""
     property var pendingChat: null
     property bool virtualKeyboardVisible: false
@@ -288,6 +290,57 @@ ApplicationWindow {
         client.challenge(target.name, currentChannel.name, id, ranked)
     }
 
+    function autoMatchCandidates() {
+        if (!currentChannel) return []
+        var activeNames = (currentChannel.users ?? []).filter(function(player) {
+            return !player.away && !player.channelAway
+                && !(player.playing && player.playing.quarkId)
+                && player.name !== user.name
+                && !incomingChallenges.some(function(challenge) { return challenge.challenger === player.name })
+                && !outgoingChallenges.some(function(challenge) { return challenge.challenger === player.name })
+        })
+        return activeNames
+    }
+
+    function stopAutoMatch(cancelPending) {
+        autoMatchActive = false
+        autoMatchTimer.stop()
+        if (cancelPending && autoMatchTarget.length > 0 && currentChannel) {
+            var pending = outgoingChallenges.find(function(challenge) { return challenge.challenger === autoMatchTarget })
+            if (pending) client.cancelChallenge(pending.challenger, pending.channelName, pending.challengeId)
+        }
+        autoMatchTarget = ""
+    }
+
+    function nextAutoMatch() {
+        if (!autoMatchActive || !currentChannel) {
+            stopAutoMatch(false)
+            return
+        }
+        var candidates = autoMatchCandidates()
+        if (candidates.length === 0) {
+            stopAutoMatch(false)
+            notify("Auto-match found no available players.", "warning")
+            return
+        }
+        var target = candidates[0]
+        autoMatchTarget = target.name
+        var ranked = (currentChannel.isRanked && (user.settings?.ranked ?? false)) ? 3 : 0
+        sendChallenge(target, ranked)
+        autoMatchTimer.restart()
+    }
+
+    function toggleAutoMatch() {
+        if (autoMatchActive) {
+            stopAutoMatch(true)
+            notify("Auto-match canceled.", "info")
+        } else {
+            autoMatchActive = true
+            notify("Auto-match looking for an opponent...", "info")
+            nextAutoMatch()
+        }
+    }
+
     function openChallengeForPlayer(player) {
         if (!currentChannel) return
         if (!player) return
@@ -468,6 +521,16 @@ ApplicationWindow {
             title: currentChannel.title ?? currentChannel.name,
             payload: payload
         })
+    }
+
+    function startChannelTv() {
+        if (!currentChannel) return
+        var quarks = currentChannel.quarks ?? []
+        if (quarks.length === 0) {
+            notify("No live match to watch in this room.", "warning")
+            return
+        }
+        spectateMatch(quarks[0])
     }
 
     function revealItem(item) {
@@ -871,6 +934,10 @@ ApplicationWindow {
             if (!root.challengeDialogVisible) root.openIncomingChallenge(challenge)
         }
         function onChallengeCancelled(challenge) {
+            if (root.autoMatchActive && challenge.challenger === root.autoMatchTarget) {
+                root.autoMatchTarget = ""
+                root.autoMatchTimer.restart()
+            }
             var wasOutgoing = root.outgoingChallenges.some(function(item) {
                 return item.challenger === challenge.challenger && item.challengeId === challenge.challengeId
             })
@@ -896,6 +963,10 @@ ApplicationWindow {
             }
         }
         function onChallengeRejected(challenge) {
+            if (root.autoMatchActive && challenge.challenger === root.autoMatchTarget) {
+                root.autoMatchTarget = ""
+                root.autoMatchTimer.restart()
+            }
             root.outgoingChallenges = root.outgoingChallenges.filter(function(item) {
                 return !(item.challenger === challenge.challenger && item.challengeId === challenge.challengeId)
             })
@@ -904,6 +975,7 @@ ApplicationWindow {
                 challenge.challenger + " declined the challenge.")
         }
         function onChallengeAccepted(challenge) {
+            if (root.autoMatchActive) root.stopAutoMatch(false)
             root.outgoingChallenges = root.outgoingChallenges.filter(function(item) {
                 return !(item.challenger === challenge.challenger && item.challengeId === challenge.challengeId)
             })
@@ -917,8 +989,16 @@ ApplicationWindow {
             root.appendSystemMessage(challenge.channelName,
                 "Challenge sent to " + challenge.challenger + ". Waiting for a response...")
         }
-        function onChallengeFailed(channelName, message) { root.notify(message, "error") }
+        function onChallengeFailed(channelName, message) {
+            if (root.autoMatchActive) {
+                root.autoMatchTarget = ""
+                root.autoMatchTimer.restart()
+            }
+            root.notify(message, "error")
+        }
         function onMatchStarted(match) {
+            if (root.autoMatchActive) root.stopAutoMatch(false)
+            matchHistory.recordMatch(match)
             var channel = root.channelByName(match.channelName) ?? root.currentChannel
             var payload = Object.assign({}, match)
             if (!payload.emulator) payload.emulator = channel?.emulator
@@ -1008,6 +1088,13 @@ ApplicationWindow {
             root.applyWindowMode()
             root.notify(message, "error")
         }
+    }
+
+    Timer {
+        id: autoMatchTimer
+        interval: 12000
+        repeat: false
+        onTriggered: root.nextAutoMatch()
     }
 
     Timer {
@@ -1148,7 +1235,9 @@ ApplicationWindow {
                             joinedChannels: root.joinedChannels
                             user: root.user
                             filters: root.filters
+                            recentMatches: matchHistory.matches
                             onJoinRequested: function(channelName) { root.joinChannel(channelName, false) }
+                            onRecentMatchJoinRequested: function(channelName) { root.joinChannel(channelName, false) }
                             onFavoriteRequested: function(channelName, favorite) { root.toggleFavorite(channelName, favorite) }
                             onBrowseRequested: function() { root.switchScreen("browse") }
                         }
@@ -1191,7 +1280,9 @@ ApplicationWindow {
                             user: root.user
                             incomingChallenges: root.incomingChallenges
                             outgoingChallenges: root.outgoingChallenges
+                            friends: friendsStore.friends
                             launching: root.launching
+                            autoMatchActive: root.autoMatchActive
                             favorite: root.currentChannel ? root.isFavorite(root.currentChannel.name) : false
                             onSendChat: function(text) { root.sendChat(text) }
                             onChallengePlayer: function(player) { root.openChallengeForPlayer(player) }
@@ -1202,6 +1293,9 @@ ApplicationWindow {
                             onFavoriteRequested: function(favorite) { if (root.currentChannel) root.toggleFavorite(root.currentChannel.name, favorite) }
                             onControlsRequested: function() { root.openControls() }
                             onCopyRequested: function(text) { appController.copyToClipboard(text); root.notify("Copied " + text, "info") }
+                            onFriendToggleRequested: function(player) { friendsStore.toggleFriend(player.name ?? "") }
+                            onAutoMatchToggleRequested: function() { root.toggleAutoMatch() }
+                            onChannelTvRequested: function() { root.startChannelTv() }
                             onAcceptChallenge: function(challenge) { root.openIncomingChallenge(challenge) }
                             onDeclineChallenge: function(challenge) {
                                 client.rejectChallenge(challenge.challenger, challenge.channelName, challenge.challengeId)

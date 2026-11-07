@@ -1,4 +1,6 @@
 #include "core/appcontroller.h"
+#include "core/matchhistory.h"
+#include "core/friendsstore.h"
 #include "core/focuscontroller.h"
 #include "core/gamepadmanager.h"
 #include "core/settingsstore.h"
@@ -35,6 +37,8 @@ int main(int argc, char *argv[])
     FightcadeLauncher launcher(&settings);
     RomLibrary roms(&launcher, &settings);
     ControllerProfile controllerProfile(&launcher, &settings);
+    MatchHistory matchHistory;
+    FriendsStore friendsStore;
     AppController appController(&settings, &launcher, &application);
 
     QObject::connect(&client, &FightcadeClient::loggedIn, &settings,
@@ -60,6 +64,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("roms"), &roms);
     engine.rootContext()->setContextProperty(QStringLiteral("controllerProfile"), &controllerProfile);
     engine.rootContext()->setContextProperty(QStringLiteral("appController"), &appController);
+    engine.rootContext()->setContextProperty(QStringLiteral("matchHistory"), &matchHistory);
+    engine.rootContext()->setContextProperty(QStringLiteral("friendsStore"), &friendsStore);
     engine.rootContext()->setContextProperty(QStringLiteral("startWindowed"), startWindowed);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/Main.qml")));

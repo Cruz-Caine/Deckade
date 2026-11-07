@@ -1,4 +1,6 @@
 #include "netplayproxy.h"
+#include "netplaypreflight.h"
+#include "portmapping.h"
 
 #include <QDateTime>
 #include <QDir>
@@ -246,7 +248,28 @@ bool NetplayProxy::prepare()
         log(QStringLiteral("missing quark id"));
         return false;
     }
-    if (!bindSockets() || !registerWithMaster()) {
+    if (!bindSockets()) {
+        closeSockets();
+        return false;
+    }
+    if (qEnvironmentVariableIsEmpty("DECKADE_DISABLE_PREFLIGHT")) {
+        for (const QString &warning : NetplayPreflight::warnings(
+                 m_masterHost, static_cast<quint16>(m_match.value(QStringLiteral("port")).toInt()),
+                 m_local->localPort())) {
+            log(QStringLiteral("preflight warning: %1").arg(warning));
+        }
+    }
+    if (qEnvironmentVariableIsEmpty("DECKADE_DISABLE_PORT_MAPPING")) {
+        const QList<PortMappingResult> mappings = PortMapping::mapUdp(
+            {m_master->localPort(), m_local->localPort(), 6004}, 3600);
+        for (const PortMappingResult &mapping : mappings) {
+            log(QStringLiteral("port mapping port=%1 protocol=%2 mapped=%3 %4")
+                    .arg(mapping.port).arg(mapping.protocol)
+                    .arg(mapping.mapped ? QStringLiteral("yes") : QStringLiteral("no"))
+                    .arg(mapping.message));
+        }
+    }
+    if (!registerWithMaster()) {
         sendUsePorts();
         closeSockets();
         return false;

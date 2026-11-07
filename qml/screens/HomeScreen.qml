@@ -12,8 +12,10 @@ Item {
     property var user: ({})
     property var filters: ({})
     property string userName: ""
+    property var recentMatches: []
 
     signal joinRequested(string channelName)
+    signal recentMatchJoinRequested(string channelName)
     signal favoriteRequested(string channelName, bool favorite)
     signal browseRequested()
 
@@ -339,6 +341,77 @@ Item {
                         favorite: screen.isFavorite(modelData.name)
                         onJoinRequested: screen.joinRequested(modelData.name)
                         onFavoriteRequested: screen.favoriteRequested(modelData.name, !screen.isFavorite(modelData.name))
+                    }
+                }
+            }
+
+            Row {
+                width: parent.width
+                height: 26
+                Text {
+                    text: "RECENT MATCHES"
+                    color: theme.text
+                    font.family: theme.displayFamily
+                    font.weight: Font.Bold
+                    font.pixelSize: 16
+                    font.letterSpacing: 1.8
+                }
+                Item { width: parent.width - 320; height: 1 }
+                Text {
+                    text: screen.recentMatches.length > 0 ? "PRESS A TO RETURN TO ROOM" : ""
+                    color: theme.textFaint
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 10
+                }
+            }
+
+            Column {
+                width: parent.width
+                spacing: 6
+                visible: screen.recentMatches.length > 0
+                Repeater {
+                    model: screen.recentMatches.slice(0, 5)
+                    delegate: Focusable {
+                        id: recentMatch
+                        required property var modelData
+                        width: parent.width
+                        height: 46
+                        ringRadius: 8
+                        onActivated: screen.recentMatchJoinRequested(modelData.channelName ?? "")
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: 8
+                            color: recentMatch.activeFocus ? theme.panelHover : theme.panel
+                            border.width: 1
+                            border.color: recentMatch.activeFocus ? theme.accent : theme.border
+                        }
+                        Row {
+                            anchors.fill: parent
+                            anchors.margins: 8
+                            spacing: 12
+                            Text {
+                                text: "↩"
+                                color: theme.cyan
+                                font.pixelSize: 16
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Text {
+                                width: parent.width - 220
+                                text: (modelData.opponent ?? "") + "  ·  " + (modelData.channelName ?? "")
+                                color: theme.text
+                                elide: Text.ElideRight
+                                font.family: theme.bodyFamily
+                                font.pixelSize: 13
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Text {
+                                text: modelData.ranked > 0 ? ("FT" + modelData.ranked) : "CASUAL"
+                                color: theme.textFaint
+                                font.family: theme.bodyFamily
+                                font.pixelSize: 10
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
                     }
                 }
             }

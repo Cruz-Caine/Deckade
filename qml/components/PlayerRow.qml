@@ -5,14 +5,16 @@ Focusable {
 
     property var player: ({})
     property bool isLocal: false
+    property bool isFriend: false
 
     signal challengeRequested(var player)
     signal copyRequested(string name)
+    signal friendToggleRequested(var player)
 
     implicitHeight: 64
     ringRadius: 10
     onActivated: root.challengeRequested(root.player)
-    onSecondaryActivated: root.copyRequested(root.player.name ?? "")
+    onSecondaryActivated: root.friendToggleRequested(root.player)
 
     function pingQuality() {
         if (root.player.isWifi) return 2
@@ -90,6 +92,15 @@ Focusable {
                     text: root.statusText()
                     color: root.statusText() === "READY" ? theme.green
                          : root.statusText() === "PLAYING" ? theme.cyan : theme.textFaint
+                    font.family: theme.bodyFamily
+                    font.weight: Font.DemiBold
+                    font.pixelSize: 10
+                    font.letterSpacing: 0.8
+                }
+                Text {
+                    visible: root.isFriend
+                    text: "★ FRIEND"
+                    color: theme.gold
                     font.family: theme.bodyFamily
                     font.weight: Font.DemiBold
                     font.pixelSize: 10

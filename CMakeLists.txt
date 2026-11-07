@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(Deckade VERSION 0.1.4 LANGUAGES CXX)
+project(Deckade VERSION 0.1.5 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,6 +36,10 @@ set(DECKADE_SOURCES
     src/core/focuscontroller.h
     src/core/appcontroller.cpp
     src/core/appcontroller.h
+    src/core/matchhistory.cpp
+    src/core/matchhistory.h
+    src/core/friendsstore.cpp
+    src/core/friendsstore.h
     src/fightcade/fightcadeclient.cpp
     src/fightcade/fightcadeclient.h
     src/fightcade/fightcadelauncher.cpp
@@ -48,6 +52,10 @@ set(DECKADE_SOURCES
     src/fightcade/protocol.h
     src/fightcade/netplayproxy.cpp
     src/fightcade/netplayproxy.h
+    src/fightcade/netplaypreflight.cpp
+    src/fightcade/netplaypreflight.h
+    src/fightcade/portmapping.cpp
+    src/fightcade/portmapping.h
     src/fightcade/userstatus.cpp
     src/fightcade/userstatus.h
 )
@@ -140,6 +148,8 @@ add_executable(deckade_launcher_smoke
     src/fightcade/fightcadelauncher.cpp
     src/fightcade/protocol.cpp
     src/fightcade/netplayproxy.cpp
+    src/fightcade/netplaypreflight.cpp
+    src/fightcade/portmapping.cpp
 )
 target_include_directories(deckade_launcher_smoke PRIVATE src)
 target_link_libraries(deckade_launcher_smoke PRIVATE
@@ -155,6 +165,8 @@ add_executable(deckade_rom_probe
     src/fightcade/romlibrary.cpp
     src/fightcade/protocol.cpp
     src/fightcade/netplayproxy.cpp
+    src/fightcade/netplaypreflight.cpp
+    src/fightcade/portmapping.cpp
     src/fightcade/userstatus.cpp
 )
 target_include_directories(deckade_rom_probe PRIVATE src)
@@ -189,10 +201,22 @@ add_test(NAME deckade_netplay_tests COMMAND deckade_netplay_tests)
 add_executable(deckade_netplay_proxy_tests
     tests/netplay_proxy_tests.cpp
     src/fightcade/netplayproxy.cpp
+    src/fightcade/netplaypreflight.cpp
+    src/fightcade/portmapping.cpp
 )
 target_include_directories(deckade_netplay_proxy_tests PRIVATE src)
 target_link_libraries(deckade_netplay_proxy_tests PRIVATE Qt6::Core Qt6::Network)
 add_test(NAME deckade_netplay_proxy_tests COMMAND deckade_netplay_proxy_tests)
+
+add_executable(deckade_social_tests
+    tests/social_tests.cpp
+    src/core/matchhistory.cpp
+    src/core/friendsstore.cpp
+    src/fightcade/netplaypreflight.cpp
+)
+target_include_directories(deckade_social_tests PRIVATE src)
+target_link_libraries(deckade_social_tests PRIVATE Qt6::Core Qt6::Network)
+add_test(NAME deckade_social_tests COMMAND deckade_social_tests)
 
 # Ship the native runtimes and their build notes alongside the app.
 install(DIRECTORY runtime/ DESTINATION share/deckade/runtime USE_SOURCE_PERMISSIONS)

@@ -169,6 +169,8 @@ int main(int argc, char **argv)
     qputenv("DECKADE_PROXY_MASTER_HOST", "127.0.0.1");
     qputenv("DECKADE_PROXY_LOCAL_PORT", QByteArray::number(proxyPort));
     qputenv("DECKADE_PROXY_MASTER_BIND_PORT", QByteArray::number(proxyBindPort));
+    qputenv("DECKADE_DISABLE_PREFLIGHT", "1");
+    qputenv("DECKADE_DISABLE_PORT_MAPPING", "1");
 
     FakeMaster master(masterPort, peerPort);
     FakePeer peer(peerPort);

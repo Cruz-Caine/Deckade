@@ -15,6 +15,12 @@ Item {
     property bool favorite: false
     property string playerSearch: ""
     property var visibleUsers: []
+    property var friends: []
+    property bool friendsOnly: false
+    property string focusedPlayerName: ""
+    property string channelKey: ""
+    property bool preservingPlayerFocus: false
+    property bool autoMatchActive: false
 
     signal sendChat(string text)
     signal challengePlayer(var player)
@@ -28,6 +34,9 @@ Item {
     signal declineChallenge(var challenge)
     signal cancelChallenge(var challenge)
     signal copyRequested(string text)
+    signal friendToggleRequested(var player)
+    signal autoMatchToggleRequested()
+    signal channelTvRequested()
 
     // Keep an outgoing challenge visible until the server reports an accept,
     // reject, cancel, or match start. A transient toast alone leaves the player
@@ -115,23 +124,70 @@ Item {
     function refreshVisibleUsers() {
         const query = playerSearch.trim().toLowerCase()
         var users = sortedUsers()
+        if (friendsOnly) {
+            users = users.filter(function(player) {
+                return screen.friends.some(function(name) {
+                    return name.toLowerCase() === (player.name ?? "").toLowerCase()
+                })
+            })
+        }
         if (query.length > 0) {
             users = users.filter(function(player) {
                 return (player.name ?? "").toLowerCase().indexOf(query) !== -1
             })
         }
+        preservingPlayerFocus = true
         visibleUsers = users
+        Qt.callLater(function() { screen.restorePlayerFocus() })
     }
 
+    function restorePlayerFocus() {
+        if (!focusedPlayerName) {
+            preservingPlayerFocus = false
+            return
+        }
+        var index = visibleUsers.findIndex(function(player) {
+            return (player.name ?? "") === focusedPlayerName
+        })
+        if (index >= 0) {
+            playerList.positionViewAtIndex(index, ListView.Contain)
+            playerList.currentIndex = index
+            Qt.callLater(function() {
+                var item = playerList.itemAtIndex(index)
+                if (item) focusController.focusItem(item)
+                preservingPlayerFocus = false
+            })
+        } else {
+            preservingPlayerFocus = false
+        }
+    }
+
+    onFriendsChanged: refreshVisibleUsers()
+    onFriendsOnlyChanged: refreshVisibleUsers()
+
     onChannelChanged: {
-        playerSearch = ""
+        const nextKey = channel.name ?? ""
+        if (nextKey !== channelKey) {
+            channelKey = nextKey
+            playerSearch = ""
+            focusedPlayerName = ""
+        }
         refreshVisibleUsers()
     }
     onPlayerSearchChanged: {
+        focusedPlayerName = ""
         refreshVisibleUsers()
         playerList.positionViewAtBeginning()
     }
     Component.onCompleted: refreshVisibleUsers()
+
+    Connections {
+        target: focusController
+        function onFocusMoved(item) {
+            if (screen.preservingPlayerFocus || !item) return
+            if (item.player && item.player.name) screen.focusedPlayerName = item.player.name
+        }
+    }
 
     function liveMatches() {
         return (screen.channel.quarks ?? []).slice(0, 5)
@@ -338,6 +394,24 @@ Item {
                             }
                         }
 
+                        AppButton {
+                            width: parent.width
+                            height: 34
+                            compact: true
+                            text: screen.friendsOnly ? "SHOWING FRIENDS" : "FILTER FRIENDS"
+                            selected: screen.friendsOnly
+                            onClicked: screen.friendsOnly = !screen.friendsOnly
+                        }
+
+                        AppButton {
+                            width: parent.width
+                            height: 34
+                            compact: true
+                            primary: screen.autoMatchActive
+                            text: screen.autoMatchActive ? "AUTO MATCHING..." : "AUTO MATCH"
+                            onClicked: screen.autoMatchToggleRequested()
+                        }
+
                         DeckField {
                             id: playerSearchField
                             width: parent.width
@@ -351,7 +425,7 @@ Item {
                         ListView {
                             id: playerList
                             width: parent.width
-                            height: parent.height - 70
+                            height: parent.height - 148
                             clip: true
                             spacing: 1
                             model: screen.visibleUsers
@@ -363,6 +437,7 @@ Item {
                                 const target = stableY
                                 Qt.callLater(function() {
                                     contentY = Math.min(target, Math.max(0, contentHeight - height))
+                                    screen.restorePlayerFocus()
                                 })
                             }
 
@@ -387,8 +462,31 @@ Item {
                                 width: ListView.view.width
                                 player: modelData
                                 isLocal: screen.isLocal(modelData)
+                                isFriend: screen.friends.some(function(name) { return name.toLowerCase() === (modelData.name ?? "").toLowerCase() })
                                 onChallengeRequested: screen.challengePlayer(modelData)
+                                onFriendToggleRequested: screen.friendToggleRequested(modelData)
                                 onCopyRequested: screen.copyRequested(modelData.name ?? "")
+                            }
+                        }
+
+                        // Always-visible custom scrollbar. The attached Qt
+                        // ScrollBar was being clipped by the ListView viewport.
+                        Rectangle {
+                            visible: playerList.visibleArea.heightRatio < 0.999
+                            width: 8
+                            height: playerList.height
+                            radius: 4
+                            color: "#182130"
+                            x: playerList.x + playerList.width - width
+                            y: playerList.y
+                            z: 5
+
+                            Rectangle {
+                                width: parent.width
+                                radius: 3
+                                color: playerList.dragging ? theme.accent : theme.cyan
+                                height: Math.max(24, playerList.visibleArea.heightRatio * parent.height)
+                                y: Math.max(0, playerList.visibleArea.yPosition * parent.height)
                             }
                         }
                     }
@@ -509,6 +607,14 @@ Item {
                             font.weight: Font.DemiBold
                             font.pixelSize: 12
                             font.letterSpacing: 1.5
+                        }
+
+                        AppButton {
+                            width: parent.width
+                            height: 30
+                            compact: true
+                            text: "WATCH TOP MATCH"
+                            onClicked: screen.channelTvRequested()
                         }
 
                         Text {
