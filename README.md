@@ -27,6 +27,24 @@ There is no Electron, no WebView, and no embedded browser. The UI is Qt Quick re
 
 Deckade does not include game ROMs. It can download them from the same third-party hosts Fightcade uses, or use a ROM folder you choose.
 
+## Signing in
+
+Sign in with your Fightcade account. **Remember me** stores the Fightcade
+session cookie (never the password) so Deckade can restore the session on the
+next launch. While the saved session is checked, Deckade shows a dedicated
+"Welcome back" progress screen with a **Use another account** escape hatch
+instead of a login form with dead fields.
+
+For unattended setups, credentials can come from the environment:
+
+```sh
+DECKADE_USERNAME=yourname DECKADE_PASSWORD=yourpass ./Deckade.AppImage
+```
+
+`FIGHTCADE_USERNAME`/`FIGHTCADE_PASSWORD` and `FIGHTCADE_USER`/`FIGHTCADE_PASS`
+are accepted as aliases. Environment credentials take priority over a saved
+session, are read once at startup, and are never written to settings or logs.
+
 ## Controller bindings
 
 Open a room and select **Controls** to edit Player 1 bindings for that game.
@@ -93,6 +111,11 @@ account's joined-room limit (for example, `2 joined · 3 slots`) and blocks new
 joins when the limit is reached. Leaving a room removes it from the local
 remembered list as well as the account session.
 
+The limit is read from the account (`perks.maxNumChannels`); it is not a
+hard-coded three-room cap. If your account is upgraded and the server reports
+more slots, Deckade uses them immediately after the next sign-in, and the
+sidebar keeps all joined rooms scrollable.
+
 ## Controller first
 
 Everything the launcher needs is reachable with a standard gamepad:
@@ -124,10 +147,9 @@ SteamOS and standard Linux distributions.
 - A GPU/display stack supported by Qt 6 and SDL2
 - Qt 6.5+ runtime libraries, including **Qt WebSockets**
 - SDL2
-- An existing **Fightcade Flatpak** or a local Fightcade installation for the official Flycast helper and, optionally, its ROM folder
-- A Fightcade account
+- A Fightcade account — no Fightcade installation is required
 
-For a Steam Deck, the simplest path is the prebuilt **AppImage** from the GitHub Releases page. It bundles Qt 6 and the native runtimes. You still need the Fightcade Flatpak for the official Flycast helper and, optionally, its ROM folder.
+For a Steam Deck, the simplest path is the prebuilt **AppImage** from the GitHub Releases page. It bundles Qt 6 and the native runtimes.
 
 ### Build
 

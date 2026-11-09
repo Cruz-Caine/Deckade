@@ -55,8 +55,8 @@ FocusScope {
 
     Rectangle {
         id: panel
-        width: 700
-        height: root.incoming ? 330 : 430
+        width: Math.min(700, Math.max(360, root.width - 48))
+        height: root.incoming ? 360 : 430
         anchors.centerIn: parent
         radius: 10
         color: theme.backgroundAlt
@@ -99,6 +99,22 @@ FocusScope {
                         font.family: theme.displayFamily
                         font.weight: Font.Bold
                         font.pixelSize: 30
+                        width: parent.width
+                        elide: Text.ElideRight
+                    }
+
+                    Text {
+                        visible: (root.challenge.channelTitle ?? "").length > 0
+                        width: parent.width
+                        text: (root.incoming ? "from #" : "in #")
+                              + (root.challenge.channelName ?? "")
+                              + (root.challenge.channelTitle !== root.challenge.channelName
+                                 ? "  ·  " + root.challenge.channelTitle : "")
+                        color: theme.cyan
+                        font.family: theme.bodyFamily
+                        font.weight: Font.DemiBold
+                        font.pixelSize: 12
+                        elide: Text.ElideRight
                     }
 
                     Text {
@@ -115,7 +131,9 @@ FocusScope {
             }
 
             Grid {
+                id: rankGrid
                 visible: !root.incoming
+                width: parent.width
                 columns: 3
                 spacing: 10
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -126,7 +144,7 @@ FocusScope {
                         { label: "FT3", value: 3 },
                         { label: "FT5", value: 5 },
                         { label: "FT10", value: 10 },
-                        { label: "Ft20", value: 20 },
+                        { label: "FT20", value: 20 },
                         { label: "Unranked", value: 0 }
                     ]
 
@@ -135,7 +153,7 @@ FocusScope {
                         text: modelData.label
                         compact: true
                         primary: modelData.value === root.defaultRanked
-                        width: 190
+                        width: Math.max(110, (rankGrid.width - 20) / 3)
                         navGroup: "modal"
                         onClicked: root.accept(modelData.value)
                     }

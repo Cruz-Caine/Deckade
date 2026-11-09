@@ -263,14 +263,17 @@ Item {
             anchors.margins: 20
             spacing: 14
 
-            Row {
+            // The header stacks the title and the action row so a narrow
+            // window shrinks nothing and nothing overlaps. The action Flow
+            // wraps to a second line instead.
+            Column {
+                id: headerColumn
                 width: parent.width
-                height: 132
+                spacing: 10
 
                 Column {
                     id: titleColumn
-                    width: Math.max(200, parent.width - actionsRow.width - 24)
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width
                     spacing: 5
 
                     Row {
@@ -283,7 +286,8 @@ Item {
                             font.weight: Font.Bold
                             font.pixelSize: 30
                             elide: Text.ElideRight
-                            width: Math.min(implicitWidth, parent.width - rankedPill.width - 8)
+                            width: Math.min(implicitWidth,
+                                parent.width - (rankedPill.visible ? rankedPill.width + 8 : 0))
                         }
                         Pill {
                             id: rankedPill
@@ -330,67 +334,60 @@ Item {
                     }
                 }
 
-                Item {
-                    id: actionsSlot
-                    width: actionsRow.width
-                    height: parent.height
+                Flow {
+                    id: actionsRow
+                    width: parent.width
+                    spacing: 8
+                    layoutDirection: Qt.RightToLeft
 
-                    Row {
-                        id: actionsRow
-                        spacing: 8
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.right
-                        layoutDirection: Qt.RightToLeft
-
-                        AppButton {
-                            text: "Leave"
-                            compact: true
-                            danger: true
-                            width: 92
-                            onClicked: screen.leaveRequested()
-                        }
-                        AppButton {
-                            text: screen.favorite ? "★ FAVORITE" : "☆ FAVORITE"
-                            compact: true
-                            width: 130
-                            onClicked: screen.favoriteRequested(!screen.favorite)
-                        }
-                        AppButton {
-                            visible: screen.channel.supportsTraining === true
-                            text: "Training"
-                            compact: true
-                            width: 112
-                            onClicked: screen.trainingRequested()
-                        }
-                        AppButton {
-                            text: "Controls"
-                            compact: true
-                            onClicked: screen.controlsRequested()
-                        }
-                        AppButton {
-                            visible: screen.files.known === true && !screen.files.ready
-                            text: roms.busy ? "Downloading" : "Download files"
-                            busy: roms.busy
-                            compact: true
-                            onClicked: screen.filesRequested()
-                        }
-                        AppButton {
-                            text: "Test game"
-                            compact: true
-                            width: 120
-                            onClicked: screen.testRequested()
-                        }
+                    AppButton {
+                        text: "Leave"
+                        compact: true
+                        danger: true
+                        width: 92
+                        onClicked: screen.leaveRequested()
+                    }
+                    AppButton {
+                        text: screen.favorite ? "★ FAVORITE" : "☆ FAVORITE"
+                        compact: true
+                        width: 130
+                        onClicked: screen.favoriteRequested(!screen.favorite)
+                    }
+                    AppButton {
+                        visible: screen.channel.supportsTraining === true
+                        text: "Training"
+                        compact: true
+                        width: 112
+                        onClicked: screen.trainingRequested()
+                    }
+                    AppButton {
+                        text: "Controls"
+                        compact: true
+                        onClicked: screen.controlsRequested()
+                    }
+                    AppButton {
+                        visible: screen.files.known === true && !screen.files.ready
+                        text: roms.busy ? "Downloading" : "Download files"
+                        busy: roms.busy
+                        compact: true
+                        onClicked: screen.filesRequested()
+                    }
+                    AppButton {
+                        text: "Test game"
+                        compact: true
+                        width: 120
+                        onClicked: screen.testRequested()
                     }
                 }
             }
 
             Row {
                 width: parent.width
-                height: parent.height - 146
+                height: parent.height - headerColumn.height - 14
                 spacing: 14
 
                 Rectangle {
-                    width: Math.max(250, Math.min(330, parent.width * 0.30))
+                    width: Math.max(240, Math.min(320, parent.width * 0.28))
                     height: parent.height
                     radius: 13
                     color: "#0c111acc"
@@ -526,8 +523,8 @@ Item {
 
                 Rectangle {
                     width: parent.width
-                            - Math.max(250, Math.min(330, parent.width * 0.30))
-                            - Math.max(230, Math.min(300, parent.width * 0.27)) - 28
+                            - Math.max(240, Math.min(320, parent.width * 0.28))
+                            - Math.max(220, Math.min(300, parent.width * 0.25)) - 28
                     height: parent.height
                     radius: 13
                     color: "#0c111acc"
@@ -618,7 +615,7 @@ Item {
                 }
 
                 Rectangle {
-                    width: Math.max(230, Math.min(300, parent.width * 0.27))
+                    width: Math.max(220, Math.min(300, parent.width * 0.25))
                     height: parent.height
                     radius: 13
                     color: "#0c111acc"

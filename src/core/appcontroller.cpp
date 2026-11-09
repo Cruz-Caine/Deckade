@@ -10,6 +10,9 @@
 #include <QQuickWindow>
 #include <QUrl>
 #include <QWindow>
+#include <QtGlobal>
+
+#include <initializer_list>
 
 AppController::AppController(SettingsStore *settings, FightcadeLauncher *launcher,
                              QGuiApplication *application, QObject *parent)
@@ -18,6 +21,23 @@ AppController::AppController(SettingsStore *settings, FightcadeLauncher *launche
     , m_launcher(launcher)
     , m_application(application)
 {
+    // Optional unattended sign-in. Environment credentials are read once at
+    // startup, are never written to settings or logs, and are cleared as soon
+    // as QML takes them for the login request.
+    const auto credential = [](std::initializer_list<const char *> names) {
+        for (const char *name : names) {
+            const QByteArray value = qgetenv(name).trimmed();
+            if (!value.isEmpty()) return QString::fromUtf8(value);
+        }
+        return QString();
+    };
+    m_envUsername = credential({"DECKADE_USERNAME", "FIGHTCADE_USERNAME", "FIGHTCADE_USER"});
+    m_envPassword = credential({"DECKADE_PASSWORD", "FIGHTCADE_PASSWORD", "FIGHTCADE_PASS"});
+    if (m_envUsername.isEmpty() || m_envPassword.isEmpty()) {
+        m_envUsername.clear();
+        m_envPassword.clear();
+    }
+
     connect(m_settings, &SettingsStore::fullscreenChanged, this, &AppController::fullscreenChanged);
 }
 
@@ -43,6 +63,23 @@ bool AppController::fullscreen() const
 void AppController::setFullscreen(bool value)
 {
     m_settings->setFullscreen(value);
+}
+
+bool AppController::hasEnvCredentials() const
+{
+    return !m_envUsername.isEmpty() && !m_envPassword.isEmpty();
+}
+
+QString AppController::envUsername() const
+{
+    return m_envUsername;
+}
+
+QString AppController::takeEnvPassword()
+{
+    const QString password = m_envPassword;
+    m_envPassword.clear();
+    return password;
 }
 
 void AppController::openExternal(const QString &url)

@@ -42,6 +42,8 @@ ApplicationWindow {
     property string loginBusyText: "Signing in"
     property string loginError: ""
     property bool autoLoginAttempt: false
+    property bool envLoginAttempt: false
+    property string restoringName: ""
 
     property var autoJoinNames: []
     property string pendingOpenChannel: ""
@@ -53,6 +55,7 @@ ApplicationWindow {
     property var challengeData: ({})
 
     property bool launching: false
+    property var activeMatch: null
     property bool autoMatchActive: false
     property string autoMatchTarget: ""
     property string launchingTitle: ""
@@ -372,10 +375,14 @@ ApplicationWindow {
         }
         challengeIncoming = false
         challengeTarget = player
-        challengeData = {}
+        challengeData = {
+            channelName: currentChannel?.name ?? "",
+            channelTitle: currentChannel?.title ?? currentChannel?.name ?? "",
+            gameId: currentChannel?.gameId ?? ""
+        }
         challengeDialogVisible = true
         var defaultRanked = (currentChannel.isRanked && (user.settings?.ranked ?? false)) ? 3 : 0
-        challengeDialog.open(false, player, {}, defaultRanked)
+        challengeDialog.open(false, player, challengeData, defaultRanked)
     }
 
     function openIncomingChallenge(challenge) {
@@ -387,12 +394,18 @@ ApplicationWindow {
             away: false,
             playing: {}
         })
+        // Attach the room context so the dialog can say which game the
+        // challenge came from when the user is sitting in another room.
+        var incoming = Object.assign({}, challenge, {
+            channelTitle: channel?.title ?? channel?.name ?? challenge.channelName,
+            gameId: channel?.gameId ?? ""
+        })
         activeIncoming = challenge
         challengeIncoming = true
         challengeTarget = player
-        challengeData = challenge
+        challengeData = incoming
         challengeDialogVisible = true
-        challengeDialog.open(true, player, challenge, challenge.ranked)
+        challengeDialog.open(true, player, incoming, challenge.ranked)
     }
 
     function nextIncomingChallenge() {
@@ -405,6 +418,9 @@ ApplicationWindow {
 
     function acceptActiveChallenge(ranked) {
         if (challengeIncoming && activeIncoming) {
+            var incoming = activeIncoming
+            root.appendSystemMessage(incoming.channelName,
+                "You accepted " + incoming.challenger + "'s challenge" + (ranked > 0 ? " (FT" + ranked + ")" : "") + ".")
             client.acceptChallenge(activeIncoming.challenger, activeIncoming.channelName,
                                    activeIncoming.challengeId, ranked)
             var current = activeIncoming
@@ -426,6 +442,8 @@ ApplicationWindow {
 
     function declineActiveChallenge() {
         if (challengeIncoming && activeIncoming) {
+            root.appendSystemMessage(activeIncoming.channelName,
+                "You declined " + activeIncoming.challenger + "'s challenge.")
             client.rejectChallenge(activeIncoming.challenger, activeIncoming.channelName,
                                    activeIncoming.challengeId)
             var current = activeIncoming
@@ -629,7 +647,9 @@ ApplicationWindow {
     function handleLoggedIn() {
         loginBusy = false
         autoLoginAttempt = false
+        envLoginAttempt = false
         loginError = ""
+        restoringName = ""
         screen = "home"
         focusController.activeGroup = "main"
         Qt.callLater(function() { homeScreen.focusDefault() })
@@ -677,11 +697,12 @@ ApplicationWindow {
         loginError = message
         if (autoLoginAttempt) {
             autoLoginAttempt = false
-            if (["wrong-password", "user-not-found", "user-locked", "user-banned",
+            if (!envLoginAttempt && ["wrong-password", "user-not-found", "user-locked", "user-banned",
                  "login-locked", "too-many-failed-login"].indexOf(code) !== -1) {
                 settings.clearSession()
             }
         }
+        envLoginAttempt = false
     }
 
     function updateUserInChannels(update) {
@@ -735,10 +756,21 @@ ApplicationWindow {
 
     Component.onCompleted: {
         applyWindowMode()
-        if (settings.hasSession && settings.rememberLogin) {
+        if (appController.hasEnvCredentials) {
+            // Environment credentials are an explicit, unattended sign-in and
+            // win over a remembered browser-style session.
+            loginBusy = true
+            loginBusyText = "Signing in with environment credentials"
+            restoringName = appController.envUsername
+            autoLoginAttempt = true
+            envLoginAttempt = true
+            client.login(appController.envUsername, appController.takeEnvPassword())
+        } else if (settings.hasSession && settings.rememberLogin) {
             loginBusy = true
             loginBusyText = "Restoring session"
+            restoringName = settings.sessionName
             autoLoginAttempt = true
+            envLoginAttempt = false
             client.autologin(settings.sessionCookie)
         }
     }
@@ -995,6 +1027,14 @@ ApplicationWindow {
                 return item.challenger === challenge.challenger && item.challengeId === challenge.challengeId
             })
             if (!exists) root.incomingChallenges = root.incomingChallenges.concat([challenge])
+            // Fightcade surfaces challenge lifecycle in the channel chat. The
+            // server only sends discrete challenge events, so the room log
+            // entry is written here instead of waiting for a chat row.
+            var gameTitle = root.channelByName(challenge.channelName)?.title ?? ""
+            var rankedText = challenge.ranked > 0 ? " to FT" + challenge.ranked : ""
+            var whereText = gameTitle.length > 0 ? " in " + gameTitle : ""
+            root.appendSystemMessage(challenge.channelName,
+                challenge.challenger + " challenged you" + rankedText + whereText + ".")
             if (!root.challengeDialogVisible) root.openIncomingChallenge(challenge)
         }
         function onChallengeCancelled(challenge) {
@@ -1049,9 +1089,10 @@ ApplicationWindow {
         }
         function onChallengeSent(challenge) {
             root.outgoingChallenges = root.outgoingChallenges.concat([challenge])
-            root.notify("Challenge sent to " + challenge.challenger + " — waiting for a response.", "info")
+            var rankedText = challenge.ranked > 0 ? " (FT" + challenge.ranked + ")" : " (unranked)"
+            root.notify("Challenge sent to " + challenge.challenger + rankedText + " — waiting for a response.", "info")
             root.appendSystemMessage(challenge.channelName,
-                "Challenge sent to " + challenge.challenger + ". Waiting for a response...")
+                "Challenge sent to " + challenge.challenger + rankedText + ". Waiting for a response...")
         }
         function onChallengeFailed(channelName, message) {
             if (root.autoMatchActive) {
@@ -1064,6 +1105,14 @@ ApplicationWindow {
             if (root.autoMatchActive) root.stopAutoMatch(false)
             matchHistory.recordMatch(match)
             var channel = root.channelByName(match.channelName) ?? root.currentChannel
+            var opponent = match.opponent ?? ""
+            root.activeMatch = {
+                channelName: match.channelName,
+                opponent: opponent,
+                ranked: match.ranked ?? 0
+            }
+            root.appendSystemMessage(match.channelName,
+                (opponent.length > 0 ? "Match with " + opponent : "Match") + " started.")
             var payload = Object.assign({}, match)
             if (!payload.emulator) payload.emulator = channel?.emulator
             if (!payload.gameId) payload.gameId = channel?.gameId
@@ -1134,6 +1183,7 @@ ApplicationWindow {
                 gameOpenedTimer.restart()
             } else {
                 gameOpenedTimer.stop()
+                var hadGameWindow = root.gameWindowOpen
                 if (root.gameWindowOpen) {
                     root.gameWindowOpen = false
                     root.closeTransientUi()
@@ -1142,6 +1192,17 @@ ApplicationWindow {
                     root.applyWindowMode()
                 }
                 if (root.launching) {
+                    // Only a match that actually reached the emulator gets a
+                    // "Match ended" line. A failed ROM download never opened a
+                    // game window and must not log a phantom result.
+                    if (root.activeMatch && hadGameWindow) {
+                        var ended = root.activeMatch
+                        root.activeMatch = null
+                        var endedOpponent = ended.opponent ?? ""
+                        root.appendSystemMessage(ended.channelName,
+                            (endedOpponent.length > 0 ? "Match with " + endedOpponent : "Match") + " ended.")
+                    }
+                    root.activeMatch = null
                     root.launching = false
                     root.notify("Emulator closed.", "info")
                 }
@@ -1150,6 +1211,7 @@ ApplicationWindow {
         function onErrorOccurred(message) {
             appController.setWindowVisible(true)
             root.applyWindowMode()
+            root.activeMatch = null
             root.notify(message, "error")
         }
     }
@@ -1188,6 +1250,7 @@ ApplicationWindow {
         scale: settings.uiScale
         transformOrigin: Item.Center
         restoring: root.loginBusy
+        restoringName: root.restoringName
         busyText: root.loginBusyText
         errorText: root.loginError
         statusText: client.statusMessage
@@ -1195,8 +1258,18 @@ ApplicationWindow {
             root.loginBusy = true
             root.loginBusyText = "Signing in"
             root.loginError = ""
+            root.restoringName = ""
             root.autoLoginAttempt = false
+            root.envLoginAttempt = false
             client.login(username, password)
+        }
+        onCancelRestore: {
+            root.loginBusy = false
+            root.autoLoginAttempt = false
+            root.envLoginAttempt = false
+            root.loginError = ""
+            root.restoringName = ""
+            client.cancelLogin()
         }
     }
 
@@ -1329,6 +1402,8 @@ ApplicationWindow {
                             }
                             onAcceptChallenge: function(challenge) { root.openIncomingChallenge(challenge) }
                             onDeclineChallenge: function(challenge) {
+                                root.appendSystemMessage(challenge.channelName,
+                                    "You declined " + challenge.challenger + "'s challenge.")
                                 client.rejectChallenge(challenge.challenger, challenge.channelName, challenge.challengeId)
                                 root.incomingChallenges = root.incomingChallenges.filter(function(item) { return item !== challenge })
                             }
@@ -1505,6 +1580,7 @@ ApplicationWindow {
 
     ChallengeDialog {
         id: challengeDialog
+        objectName: "challengeDialog"
         anchors.fill: parent
         scale: settings.uiScale
         transformOrigin: Item.Center

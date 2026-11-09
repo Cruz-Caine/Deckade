@@ -55,7 +55,7 @@ Item {
         anchors.fill: parent
         spacing: 14
 
-        Row {
+        RowLayout {
             width: parent.width
             height: 56
             spacing: 12
@@ -66,17 +66,17 @@ Item {
                 font.family: theme.displayFamily
                 font.weight: Font.Bold
                 font.pixelSize: 24
-                width: 300
                 elide: Text.ElideRight
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.preferredWidth: Math.max(160, Math.min(300, screen.width * 0.24))
+                Layout.fillHeight: true
+                verticalAlignment: Text.AlignVCenter
             }
 
             DeckField {
                 id: searchField
-                width: parent.width - 616
-                height: 48
+                Layout.fillWidth: true
+                Layout.preferredHeight: 48
                 placeholderText: "Search games, systems, or ROM names"
-                anchors.verticalCenter: parent.verticalCenter
                 onTextChanged: searchDebounce.restart()
                 onAccepted: screen.requestSearch(0)
             }
@@ -84,12 +84,10 @@ Item {
             AppButton {
                 text: "Search"
                 compact: true
-                width: 126
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.preferredWidth: 126
+                Layout.preferredHeight: 48
                 onClicked: screen.requestSearch(0)
             }
-
-            Item { width: parent.width - 1048; height: 1 }
         }
 
         Row {
@@ -136,8 +134,18 @@ Item {
                 }
             }
 
-            Item { width: 1; height: 1 }
+            Item {
+                width: Math.max(0, parent.width - 4 * 116 - 3 * 8 - 180)
+                height: 1
+            }
 
+            Text {
+                text: screen.totalChannels + (screen.totalChannels === 1 ? " game" : " games")
+                color: theme.textFaint
+                font.family: theme.bodyFamily
+                font.pixelSize: 12
+                anchors.verticalCenter: parent.verticalCenter
+            }
         }
 
         Flickable {
@@ -208,39 +216,36 @@ Item {
                     font.pixelSize: 14
                 }
 
+                // A single page of results needs no pagination. Showing
+                // "Page 1 / 1" only added noise and clashed with the grid.
                 Row {
+                    visible: screen.totalPages() > 1
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: grid.bottom
                     anchors.topMargin: 16
                     spacing: 12
 
                     AppButton {
-                        text: "‹ PREVIOUS"
+                        text: "Previous"
                         compact: true
+                        width: 118
                         enabled: screen.page > 0
                         onClicked: screen.requestSearch(Math.max(0, screen.page - 1))
                     }
 
-                    Rectangle {
-                        width: 138
-                        height: 44
-                        radius: 10
-                        color: theme.panel
-                        border.width: 1
-                        border.color: theme.border
-                        Text {
-                            anchors.centerIn: parent
-                            text: "Page " + (screen.page + 1) + " / " + screen.totalPages()
-                            color: theme.textMuted
-                            font.family: theme.displayFamily
-                            font.weight: Font.DemiBold
-                            font.pixelSize: 11
-                        }
+                    Text {
+                        text: (screen.page + 1) + " / " + screen.totalPages()
+                        color: theme.textMuted
+                        font.family: theme.bodyFamily
+                        font.weight: Font.DemiBold
+                        font.pixelSize: 13
+                        anchors.verticalCenter: parent.verticalCenter
                     }
 
                     AppButton {
-                        text: "NEXT ›"
+                        text: "Next"
                         compact: true
+                        width: 118
                         enabled: screen.page + 1 < screen.totalPages()
                         onClicked: screen.requestSearch(screen.page + 1)
                     }

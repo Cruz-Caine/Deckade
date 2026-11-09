@@ -7,11 +7,13 @@ Item {
     id: screen
 
     property bool restoring: false
+    property string restoringName: ""
     property string errorText: ""
     property string statusText: ""
     property string busyText: "Signing in"
     property bool rememberLogin: settings.rememberLogin
     signal submit(string username, string password)
+    signal cancelRestore()
 
     function submitForm() {
         if (usernameField.text.trim().length === 0 || passwordField.text.length === 0) {
@@ -22,6 +24,13 @@ Item {
         screen.submit(usernameField.text.trim(), passwordField.text)
     }
 
+    function focusForm() {
+        Qt.callLater(function() {
+            if (usernameField.text.length === 0) usernameField.forceActiveFocus()
+            else passwordField.forceActiveFocus()
+        })
+    }
+
     Rectangle {
         anchors.fill: parent
         color: theme.background
@@ -29,15 +38,19 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        anchors.margins: Math.max(30, Math.min(72, screen.width * 0.045))
+        anchors.margins: Math.max(24, Math.min(72, screen.width * 0.045))
         spacing: Math.max(24, Math.min(64, screen.width * 0.035))
 
+        // The branding block needs real width. On a narrow window the sign-in
+        // card takes the whole screen instead of squashing the wordmark.
         Item {
+            visible: screen.width >= 900
             Layout.fillWidth: true
             Layout.fillHeight: true
 
             Column {
                 anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
                 spacing: 22
 
                 Image {
@@ -73,7 +86,7 @@ Item {
                 }
 
                 Text {
-                    width: parent.width
+                    width: Math.min(parent.width, 520)
                     text: "Native rollback runtimes. Big-picture navigation. No Wine, no browser, no keyboard required."
                     color: theme.textFaint
                     font.family: theme.bodyFamily
@@ -93,14 +106,114 @@ Item {
         }
 
         Rectangle {
-            Layout.preferredWidth: Math.min(432, Math.max(380, screen.width * 0.42))
+            Layout.preferredWidth: Math.min(432, Math.max(320, screen.width * 0.42))
             Layout.preferredHeight: 560
+            Layout.alignment: Qt.AlignVCenter
             radius: 10
             color: theme.panel
             border.width: 1
             border.color: theme.border
 
+            // Restoring a remembered session is its own screen, not a login
+            // form with dead fields. The user waits on a clear progress card.
             Column {
+                visible: screen.restoring
+                anchors.fill: parent
+                anchors.margins: 30
+                spacing: 18
+
+                Item { width: 1; height: 24 }
+
+                Text {
+                    text: "Welcome back"
+                    color: theme.accent
+                    font.family: theme.displayFamily
+                    font.weight: Font.Bold
+                    font.pixelSize: 26
+                }
+
+                Text {
+                    width: parent.width
+                    text: screen.restoringName.length > 0
+                          ? "Signing you in as " + screen.restoringName
+                          : "Restoring your Fightcade session"
+                    color: theme.text
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 15
+                    wrapMode: Text.WordWrap
+                }
+
+                Row {
+                    spacing: 12
+
+                    Rectangle {
+                        width: 18
+                        height: 18
+                        radius: 9
+                        color: "transparent"
+                        border.width: 2
+                        border.color: theme.accent
+                        anchors.verticalCenter: parent.verticalCenter
+                        RotationAnimator on rotation {
+                            running: screen.restoring
+                            loops: Animation.Infinite
+                            from: 0
+                            to: 360
+                            duration: 850
+                        }
+                    }
+
+                    Text {
+                        text: screen.busyText
+                        color: theme.textMuted
+                        font.family: theme.bodyFamily
+                        font.pixelSize: 14
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+
+                Text {
+                    visible: screen.statusText.length > 0
+                    width: parent.width
+                    text: screen.statusText
+                    color: theme.textFaint
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 12
+                    wrapMode: Text.WordWrap
+                }
+
+                Text {
+                    visible: screen.errorText.length > 0
+                    width: parent.width
+                    text: screen.errorText
+                    color: theme.red
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 12
+                    wrapMode: Text.WordWrap
+                }
+
+                Item { width: 1; height: 40 }
+
+                Text {
+                    width: parent.width
+                    text: "Deckade never stores your password. The saved Fightcade session stays on this device until you sign out."
+                    color: theme.textFaint
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 11
+                    lineHeight: 1.35
+                    wrapMode: Text.WordWrap
+                }
+
+                AppButton {
+                    width: parent.width
+                    text: "Use another account"
+                    compact: true
+                    onClicked: screen.cancelRestore()
+                }
+            }
+
+            Column {
+                visible: !screen.restoring
                 anchors.fill: parent
                 anchors.margins: 30
                 spacing: 18
@@ -122,7 +235,17 @@ Item {
                     wrapMode: Text.WordWrap
                 }
 
-                Item { width: 1; height: 8 }
+                Text {
+                    visible: screen.errorText.length > 0
+                    width: parent.width
+                    text: screen.errorText
+                    color: theme.red
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 12
+                    wrapMode: Text.WordWrap
+                }
+
+                Item { width: 1; height: 4 }
 
                 Text {
                     text: "Username"
@@ -136,7 +259,6 @@ Item {
                     id: usernameField
                     width: parent.width
                     placeholderText: "Fightcade username"
-                    enabled: !screen.restoring
                     Keys.onReturnPressed: screen.submitForm()
                     Keys.onTabPressed: passwordField.forceActiveFocus()
                 }
@@ -154,18 +276,7 @@ Item {
                     width: parent.width
                     placeholderText: "Password"
                     echoMode: TextInput.Password
-                    enabled: !screen.restoring
                     Keys.onReturnPressed: screen.submitForm()
-                }
-
-                Text {
-                    visible: screen.errorText.length > 0
-                    width: parent.width
-                    text: screen.errorText
-                    color: theme.red
-                    font.family: theme.bodyFamily
-                    font.pixelSize: 12
-                    wrapMode: Text.WordWrap
                 }
 
                 Item { width: 1; height: 2 }
@@ -174,7 +285,6 @@ Item {
                     width: parent.width
                     height: 30
                     navGroup: "main"
-                    navEnabled: !screen.restoring
                     ringRadius: 7
                     onActivated: {
                         screen.rememberLogin = !screen.rememberLogin
@@ -205,10 +315,8 @@ Item {
 
                 AppButton {
                     width: parent.width
-                    text: screen.restoring ? screen.busyText : "Sign in"
+                    text: "Sign in"
                     primary: true
-                    busy: screen.restoring
-                    enabled: !screen.restoring
                     onClicked: screen.submitForm()
                 }
 
@@ -222,29 +330,33 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                 }
 
+                Text {
+                    width: parent.width
+                    text: "Environment login: set DECKADE_USERNAME and DECKADE_PASSWORD."
+                    color: theme.textFaint
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 10
+                    horizontalAlignment: Text.AlignHCenter
+                    wrapMode: Text.WordWrap
+                }
             }
         }
     }
 
     Component.onCompleted: {
-        if (settings.hasSession && screen.restoring) {
+        if (settings.hasSession) {
             usernameField.text = settings.sessionName
         }
-        Qt.callLater(function() {
-            if (usernameField.text.length === 0) {
-                usernameField.forceActiveFocus()
-            } else {
-                passwordField.forceActiveFocus()
-            }
-        })
+        if (!screen.restoring) screen.focusForm()
+    }
+
+    onRestoringChanged: {
+        if (!screen.restoring) {
+            screen.focusForm()
+        }
     }
 
     onVisibleChanged: {
-        if (visible) {
-            Qt.callLater(function() {
-                if (usernameField.text.length === 0) usernameField.forceActiveFocus()
-                else passwordField.forceActiveFocus()
-            })
-        }
+        if (visible && !screen.restoring) screen.focusForm()
     }
 }

@@ -59,10 +59,10 @@ Focusable {
         }
 
         Text {
-            // Flag, ping bars, rank badge, one spacer and five gaps sit to the
+            // Ping bars, rank badge, one spacer and four gaps sit to the
             // right of the name; leave room for all of them so the badge is
             // never pushed out of the row.
-            width: Math.max(60, parent.width - 120)
+            width: Math.max(60, parent.width - 108)
             text: (root.isFriend ? "★ " : "") + (root.player.name ?? "")
             color: root.nameColor()
             font.family: theme.displayFamily

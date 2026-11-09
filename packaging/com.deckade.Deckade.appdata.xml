@@ -27,6 +27,17 @@
     <category>Emulator</category>
   </categories>
   <releases>
+    <release version="0.2.13" date="2026-11-09">
+      <description>
+        <p>Controls now live with each game instead of a redundant sidebar entry.
+        Remembered-session sign-in shows a dedicated restoring screen, and
+        credentials can be supplied through DECKADE_USERNAME and
+        DECKADE_PASSWORD. Challenge status is written to the room chat, incoming
+        challenges name the game they came from, the Browse page no longer shows
+        a pointless one-page pager, and narrow windows keep the room header and
+        columns readable.</p>
+      </description>
+    </release>
     <release version="0.2.12" date="2026-11-09">
       <description>
         <p>Redesigned interface focused on controller-first navigation, per-game controller

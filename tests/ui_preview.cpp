@@ -51,6 +51,10 @@ int main(int argc, char *argv[])
     QDir().mkpath(outDir);
 
     SettingsStore settings;
+    // Preview screenshots must never sign in with a developer's remembered
+    // session or touch Fightcade; the mock data below is all they need.
+    settings.clearSession();
+    settings.setRememberLogin(false);
     Theme theme;
     GamepadManager gamepad;
     FocusController focusController;
@@ -80,9 +84,15 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty()) return 1;
 
     auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().first());
-    window->resize(1280, 800);
+    bool widthOk = false;
+    bool heightOk = false;
+    const int previewWidth = qEnvironmentVariableIntValue("DECKADE_PREVIEW_WIDTH", &widthOk);
+    const int previewHeight = qEnvironmentVariableIntValue("DECKADE_PREVIEW_HEIGHT", &heightOk);
+    window->resize(widthOk && previewWidth > 0 ? previewWidth : 1280,
+                   heightOk && previewHeight > 0 ? previewHeight : 800);
     QObject *shell = window->findChild<QObject *>(QStringLiteral("shell"));
     QObject *login = window->findChild<QObject *>(QStringLiteral("loginScreen"));
+    QObject *challengeDialog = window->findChild<QObject *>(QStringLiteral("challengeDialog"));
 
     const QVariantMap fixture = QJsonDocument::fromJson(kFixture).toVariant().toMap();
     const QVariantList rooms2 = fixture.value(QStringLiteral("rooms")).toList();
@@ -92,9 +102,11 @@ int main(int argc, char *argv[])
     struct Shot { QString name; QString screen; QString inputMode; };
     const QList<Shot> shots = {
         {QStringLiteral("login"), QString(), QStringLiteral("controller")},
+        {QStringLiteral("restoring"), QString(), QStringLiteral("controller")},
         {QStringLiteral("home"), QStringLiteral("home"), QStringLiteral("controller")},
         {QStringLiteral("browse"), QStringLiteral("browse"), QStringLiteral("keyboard")},
         {QStringLiteral("room"), QStringLiteral("room"), QStringLiteral("controller")},
+        {QStringLiteral("challenge"), QStringLiteral("room"), QStringLiteral("controller")},
         {QStringLiteral("controls"), QStringLiteral("controls"), QStringLiteral("controller")},
         {QStringLiteral("settings"), QStringLiteral("settings"), QStringLiteral("controller")},
     };
@@ -104,7 +116,17 @@ int main(int argc, char *argv[])
     timer->setInterval(2500);
     auto apply = [=] {
         const Shot &shot = shots.at(*index);
-        if (shot.screen.isEmpty()) return;
+        if (shot.screen.isEmpty()) {
+            // Authentication screens: show the login page (or its restoring
+            // state) instead of leaving it hidden behind the shell.
+            shell->setProperty("visible", false);
+            login->setProperty("visible", true);
+            window->setProperty("loginBusy", shot.name == QStringLiteral("restoring"));
+            window->setProperty("loginBusyText", QStringLiteral("Restoring session"));
+            window->setProperty("restoringName", QStringLiteral("couchplayer"));
+            window->setProperty("loginError", QString());
+            return;
+        }
         login->setProperty("visible", false);
         shell->setProperty("visible", true);
         window->setProperty("user", fixture.value(QStringLiteral("user")));
@@ -116,6 +138,27 @@ int main(int argc, char *argv[])
         window->setProperty("currentChannel", rooms2.first());
         window->setProperty("inputMode", shot.inputMode);
         window->setProperty("screen", shot.screen);
+        if (shot.name == QStringLiteral("challenge")) {
+            const QVariantMap room = rooms2.first().toMap();
+            const QVariantMap player = room.value(QStringLiteral("users")).toList().first().toMap();
+            const QVariantMap challenge = {
+                {QStringLiteral("challenger"), player.value(QStringLiteral("name"))},
+                {QStringLiteral("channelName"), room.value(QStringLiteral("name"))},
+                {QStringLiteral("channelTitle"), room.value(QStringLiteral("title"))},
+                {QStringLiteral("gameId"), room.value(QStringLiteral("gameId"))},
+                {QStringLiteral("challengeId"), 1},
+                {QStringLiteral("ranked"), 3}
+            };
+            window->setProperty("challengeIncoming", true);
+            window->setProperty("challengeDialogVisible", true);
+            window->setProperty("challengeTarget", player);
+            window->setProperty("challengeData", challenge);
+            QMetaObject::invokeMethod(challengeDialog, "open",
+                Q_ARG(QVariant, true), Q_ARG(QVariant, player),
+                Q_ARG(QVariant, challenge), Q_ARG(QVariant, 3));
+        } else if (challengeDialog && challengeDialog->property("visible").toBool()) {
+            QMetaObject::invokeMethod(challengeDialog, "close");
+        }
     };
     QObject::connect(timer, &QTimer::timeout, &application, [=, &application] {
         const Shot &shot = shots.at(*index);

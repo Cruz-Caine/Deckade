@@ -33,6 +33,7 @@ public:
 
     Q_INVOKABLE void login(const QString &username, const QString &password);
     Q_INVOKABLE void autologin(const QString &cookie);
+    Q_INVOKABLE void cancelLogin();
     Q_INVOKABLE void logout();
     Q_INVOKABLE void listWelcome();
     Q_INVOKABLE void listAllChannels();

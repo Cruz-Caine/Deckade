@@ -157,6 +157,13 @@ Challenge requests:
 contains `channelname`, `quarkid`, `playerid`, `port`, `ranked`, `delay`,
 `token`, and the opponent user.
 
+The server does not send chat rows for challenge lifecycle events: `challenge`,
+`cancel`, `reject`, `accept` and `start` are separate requests with no
+`channelname`-scoped `chat`/`broken` text. Deckade therefore writes its own
+room-chat status lines for these events (for example "X challenged you to FT3
+in <game>", "X accepted the challenge", and "Match with X ended" when the
+emulator closes), the same way the Fightcade client's chat log surfaces them.
+
 ## Official launch routes
 
 The official web client changes `window.location` to an `fcade://` URI; the

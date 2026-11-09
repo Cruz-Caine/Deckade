@@ -90,11 +90,12 @@ Rectangle {
             }
         }
 
+        // Controls are per game, so they live in each room's header instead
+        // of taking a permanent sidebar slot.
         Repeater {
             model: [
                 { label: "Home", screen: "home" },
                 { label: "Browse", screen: "browse" },
-                { label: "Controls", screen: "controls" },
                 { label: "Settings", screen: "settings" }
             ]
 

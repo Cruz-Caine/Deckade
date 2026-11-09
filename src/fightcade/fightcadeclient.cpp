@@ -127,15 +127,18 @@ void FightcadeClient::login(const QString &username, const QString &password)
         return;
     }
 
+    const int generation = ++m_authGeneration;
     setStatus(QStringLiteral("connecting"), QStringLiteral("Contacting Fightcade..."));
-    requestLocation([this, username, password](bool ok, const QString &locationOrError) {
+    requestLocation([this, username, password, generation](bool ok, const QString &locationOrError) {
+        if (generation != m_authGeneration) return;
         if (!ok) {
             setStatus(QStringLiteral("error"), locationOrError);
             emit loginFailed(QStringLiteral("network-unavailable"), locationOrError);
             return;
         }
 
-        withSocket([this, username, password, locationOrError] {
+        withSocket([this, username, password, locationOrError, generation] {
+            if (generation != m_authGeneration) return;
             setStatus(QStringLiteral("authenticating"), QStringLiteral("Signing in..."));
             m_authFallbackCookie.clear();
             sendAuth(QStringLiteral("login"), QJsonObject{
@@ -158,15 +161,18 @@ void FightcadeClient::autologin(const QString &cookie)
         return;
     }
 
+    const int generation = ++m_authGeneration;
     setStatus(QStringLiteral("connecting"), QStringLiteral("Restoring session..."));
-    requestLocation([this, cookie](bool ok, const QString &locationOrError) {
+    requestLocation([this, cookie, generation](bool ok, const QString &locationOrError) {
+        if (generation != m_authGeneration) return;
         if (!ok) {
             setStatus(QStringLiteral("error"), locationOrError);
             emit loginFailed(QStringLiteral("network-unavailable"), locationOrError);
             return;
         }
 
-        withSocket([this, cookie, locationOrError] {
+        withSocket([this, cookie, locationOrError, generation] {
+            if (generation != m_authGeneration) return;
             setStatus(QStringLiteral("authenticating"), QStringLiteral("Restoring session..."));
             m_authFallbackCookie = cookie;
             sendAuth(QStringLiteral("autologin"), QJsonObject{
@@ -180,6 +186,24 @@ void FightcadeClient::autologin(const QString &cookie)
             emit loginFailed(QStringLiteral("network-unavailable"), message);
         });
     });
+}
+
+void FightcadeClient::cancelLogin()
+{
+    // Abandon a restored session or slow sign-in request. The saved cookie
+    // stays on disk so the user can retry, but the pending request must not
+    // connect behind the login form.
+    ++m_authGeneration;
+    m_authAction.clear();
+    m_authDeadline = 0;
+    m_authFallbackCookie.clear();
+    m_socketReady = {};
+    m_socketError = {};
+    if (m_socket.state() != QAbstractSocket::UnconnectedState) {
+        m_intentionalClose = true;
+        m_socket.close();
+    }
+    setStatus(QStringLiteral("disconnected"), QStringLiteral("Sign-in canceled."));
 }
 
 void FightcadeClient::handleAuthResponse(const QJsonObject &payload)
