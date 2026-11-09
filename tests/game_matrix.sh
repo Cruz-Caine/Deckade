@@ -9,7 +9,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BIN="${DECKADE_MATRIX_BIN:-$ROOT/runtime/bin/deckade-fbneo}"
-ROM_DIR="${DECKADE_MATRIX_ROM_DIR:-$HOME/.var/app/com.fightcade.Fightcade/data/ROMs/fbneo}"
+ROM_DIR="${DECKADE_MATRIX_ROM_DIR:-$HOME/.local/share/deckade/roms/fbneo}"
 WORK="${DECKADE_MATRIX_WORK:-$(mktemp -d)}"
 LIMIT="${DECKADE_MATRIX_LIMIT:-0}"
 MODES="${DECKADE_MATRIX_MODES:-solo training}"

@@ -20,8 +20,6 @@ SettingsStore::SettingsStore(QObject *parent)
     , m_settings(QSettings::IniFormat, QSettings::UserScope,
                  QStringLiteral("deckade"), QStringLiteral("deckade"))
 {
-    m_installMethod = m_settings.value(QStringLiteral("install/method"), QStringLiteral("auto")).toString();
-    m_fightcadePath = m_settings.value(QStringLiteral("install/path")).toString();
     m_romPath = m_settings.value(QStringLiteral("install/romPath")).toString();
     m_showControllerHints = m_settings.value(QStringLiteral("ui/controllerHints"), true).toBool();
     m_autoJoinLastChannels = m_settings.value(QStringLiteral("ui/autoJoinLastChannels"), true).toBool();
@@ -38,8 +36,6 @@ SettingsStore::SettingsStore(QObject *parent)
     protectConfigFile();
 }
 
-QString SettingsStore::installMethod() const { return m_installMethod; }
-QString SettingsStore::fightcadePath() const { return m_fightcadePath; }
 QString SettingsStore::romPath() const { return m_romPath; }
 bool SettingsStore::showControllerHints() const { return m_showControllerHints; }
 bool SettingsStore::autoJoinLastChannels() const { return m_autoJoinLastChannels; }
@@ -54,30 +50,6 @@ bool SettingsStore::hasSession() const { return !m_sessionCookie.isEmpty() && !m
 QString SettingsStore::sessionName() const { return m_sessionName; }
 QString SettingsStore::sessionDisplayName() const { return m_sessionDisplayName; }
 QString SettingsStore::sessionCookie() const { return m_sessionCookie; }
-
-void SettingsStore::setInstallMethod(const QString &value)
-{
-    const QString normalized = value == QStringLiteral("native") || value == QStringLiteral("flatpak")
-        ? value
-        : QStringLiteral("auto");
-    if (m_installMethod == normalized) {
-        return;
-    }
-    m_installMethod = normalized;
-    persist(QStringLiteral("install/method"), m_installMethod);
-    emit installMethodChanged();
-}
-
-void SettingsStore::setFightcadePath(const QString &value)
-{
-    const QString normalized = QDir::cleanPath(value.trimmed());
-    if (m_fightcadePath == normalized) {
-        return;
-    }
-    m_fightcadePath = normalized;
-    persist(QStringLiteral("install/path"), m_fightcadePath);
-    emit fightcadePathChanged();
-}
 
 void SettingsStore::setRomPath(const QString &value)
 {

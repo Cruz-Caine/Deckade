@@ -51,6 +51,11 @@ if [ ! -x "$ROOT/runtime/bin/deckade-snes9x" ]; then
     "$ROOT/scripts/build-snes9x.sh"
 fi
 
+if [ ! -x "$ROOT/runtime/bin/deckade-flycast" ]; then
+    echo "Flycast runtime is missing; installing it first."
+    "$ROOT/scripts/build-flycast.sh"
+fi
+
 CMAKE_EXTRA=()
 if [ -n "${CMAKE_PREFIX_PATH:-}" ]; then
     CMAKE_EXTRA+=("-DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH")

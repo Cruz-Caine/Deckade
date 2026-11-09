@@ -17,7 +17,7 @@ There is no Electron, no WebView, and no embedded browser. The UI is Qt Quick re
 | Room roster, chat, challenges, accept/decline/cancel | Working |
 | Native **FBNeo** runtime (GGPO/rollback, quark routes) | Working |
 | Native **Snes9x** runtime | Experimental (runner builds; validate live netplay) |
-| **Flycast** matches | Uses the official Fightcade **native Flycast** binary through the official helper; no Wine |
+| **Flycast** | Bundled Flycast Dojo 6.46; online play needs a live test |
 | **GGPOFBA / fc1 legacy** | Not yet ported natively |
 | Automatic ROM download from Fightcade's `fc2json` database | Working |
 | Controller navigation / on-screen keyboard | Working |
@@ -25,7 +25,7 @@ There is no Electron, no WebView, and no embedded browser. The UI is Qt Quick re
 | Automatic all-games load on Browse | Working |
 | Steam Deck Big Picture-style layout | Working |
 
-Deckade does not include game ROMs. It can download them from the same third-party hosts Fightcade uses, or use a local Fightcade ROM folder.
+Deckade does not include game ROMs. It can download them from the same third-party hosts Fightcade uses, or use a ROM folder you choose.
 
 ## Controller bindings
 
@@ -226,11 +226,7 @@ This builds the Snes9x libretro core, the native GGPO/quark runner, and writes `
 
 ### Flycast
 
-Flycast channels use the official Fightcade helper and its **native Linux Flycast binary**. No Wine is involved. Deckade starts the helper with the same `fcade://` route the official frontend uses and monitors the Flycast process so the launcher can return when the match ends.
-
-The official Fightcade install must be available:
-- Flatpak: `com.fightcade.Fightcade`
-- Native: set the folder containing `Fightcade2.sh` in Settings
+Flycast channels use a bundled, unmodified Flycast Dojo 6.46, the same build official Fightcade ships.
 
 ### GGPOFBA / fc1
 
@@ -261,16 +257,8 @@ Deckade does not host ROMs. Downloading and using ROMs is your responsibility; c
 Deckade is standalone for FBNeo and Snes9x: you only need the native runtime plus ROMs. A Fightcade install is used for:
 
 - Flycast (official native Flycast helper)
-- Reading an existing `ROMs/` library
-- DuckStation/custom helper routes
 
-For the Flatpak, Deckade looks in:
-
-```text
-~/.var/app/com.fightcade.Fightcade/data/ROMs/
-```
-
-For a native install, point Settings at the folder that contains `Fightcade2.sh` (`VERSION.txt` and `emulator/fcade` are the markers).
+Deckade keeps its files in its own folders and never reads a Fightcade install. To use another ROM folder, choose it in Settings.
 
 ## Install on Steam Deck
 

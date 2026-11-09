@@ -170,16 +170,8 @@ QString RomLibrary::fileNameForUrl(const QString &url) const
 
 QString RomLibrary::flycastDataDirectory() const
 {
-    if (!m_launcher) return {};
-    if (m_launcher->installMethod() == QStringLiteral("flatpak")) {
-        return QDir(QStandardPaths::writableLocation(QStandardPaths::HomeLocation))
-            .filePath(QStringLiteral(".var/app/com.fightcade.Fightcade/data/config/flycast/data"));
-    }
-    if (m_launcher->installMethod() == QStringLiteral("native")
-        && !m_launcher->installPath().isEmpty()) {
-        return QDir(m_launcher->installPath()).filePath(QStringLiteral("emulator/flycast/data"));
-    }
-    return {};
+    return QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+        .filePath(QStringLiteral("runtime-work/flycast/data"));
 }
 
 QString RomLibrary::destinationFor(const Entry &entry) const

@@ -5,7 +5,7 @@ This directory holds Deckade's native emulator runtimes. Built binaries live in
 
 - `./scripts/build-fbneo.sh` — native FBNeo + Fightcade GGPO/quark
 - `./scripts/build-snes9x.sh` — experimental native Snes9x runner
-- Flycast uses the official Fightcade helper's native Flycast binary
+- `./scripts/build-flycast.sh` — pinned Flycast Dojo 6.46 release (GPL-2.0; [source](https://github.com/blueminder/flycast-dojo/tree/dojo-6.46))
 - GGPOFBA/fc1 is not ported yet
 
 The app discovers this directory automatically when run from the source tree.

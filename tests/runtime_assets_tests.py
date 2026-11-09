@@ -80,6 +80,18 @@ def check_lua_overlay_wiring():
     check(not (FBNEO / 'gd.so').exists(), 'gd.so needs a system libgd; use the built-in module')
 
 
+def check_no_fightcade_dependency():
+    # Deckade must run without a Fightcade install and leave its files alone.
+    forbidden = ('com.fightcade.Fightcade', 'emulator/fcade', 'fcade://', 'fcade-quark', 'emulator/flycast')
+    for folder in ('src', 'qml', 'scripts', 'packaging'):
+        for path in (ROOT / folder).rglob('*'):
+            if not path.is_file() or path.suffix not in {'.cpp', '.h', '.qml', '.sh', '.py', '.desktop', '.xml'}:
+                continue
+            text = path.read_text(errors='replace')
+            for needle in forbidden:
+                check(needle not in text, f'{path.relative_to(ROOT)}: depends on Fightcade ({needle})')
+
+
 def check_training_scripts():
     # Windows-only paths abort the training script on Linux.
     pattern = re.compile(r'(dofile\([^)]*\\\\|resourcepath\s*=\s*"[^"]*\\\\)')
@@ -98,6 +110,7 @@ def main():
     check_build_wiring()
     check_lua_overlay_wiring()
     check_training_scripts()
+    check_no_fightcade_dependency()
     for failure in failures:
         print(f'FAIL {failure}')
     print(f'runtime assets: {len(failures)} failure(s)')

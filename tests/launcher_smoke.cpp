@@ -13,7 +13,6 @@ int main(int argc, char **argv)
     FightcadeLauncher launcher(&settings);
     launcher.refreshInstall();
 
-    qInfo().noquote() << "INSTALL" << launcher.installMethod() << launcher.installDetail();
     qInfo().noquote() << "ROMS" << launcher.romPath();
     qInfo().noquote() << "RUNTIME_ROOT" << launcher.runtimeRoot();
     for (const QVariant &entry : launcher.runtimeSummary()) {

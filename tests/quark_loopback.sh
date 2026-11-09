@@ -10,7 +10,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BIN="${DECKADE_FBNEO_BIN:-$ROOT/runtime/bin/deckade-fbneo}"
 GAME="${1:-sfiii3nr1}"
-ROM="${DECKADE_ROM_DIR:-$HOME/.var/app/com.fightcade.Fightcade/data/ROMs/fbneo}"
+ROM="${DECKADE_ROM_DIR:-$HOME/.local/share/deckade/roms/fbneo}"
 WORK="${DECKADE_RUNTIME_WORK:-$HOME/.local/share/Deckade/Deckade/runtime-work/fbneo}"
 HOLD="${DECKADE_LOOPBACK_HOLD:-30}"
 
@@ -21,7 +21,7 @@ if [ ! -x "$BIN" ]; then
 fi
 if [ ! -f "$ROM/$GAME.zip" ]; then
     echo "ROM not found: $ROM/$GAME.zip" >&2
-    echo "Set DECKADE_ROM_DIR to a Fightcade FBNeo ROM folder." >&2
+    echo "Set DECKADE_ROM_DIR to an FBNeo ROM folder." >&2
     exit 1
 fi
 

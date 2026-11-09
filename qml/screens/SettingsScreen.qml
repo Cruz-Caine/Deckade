@@ -15,17 +15,8 @@ Item {
         return decodeURIComponent(url.toString().replace("file://", ""))
     }
 
-    function setInstallMethod(method) {
-        settings.installMethod = method
-        launcher.refreshInstall()
-    }
-
     function focusDefault() {
-        if (installMethods.count > 0) {
-            focusController.focusItem(installMethods.itemAt(0))
-        } else {
-            focusController.focusFirst()
-        }
+        focusController.focusFirst()
     }
 
     function cycleScale() {
@@ -68,21 +59,12 @@ Item {
                     spacing: 10
 
                     Text {
-                        text: "FIGHTCADE INSTALLATION"
+                        text: "GAME FILES"
                         color: theme.text
                         font.family: theme.displayFamily
                         font.weight: Font.Bold
                         font.pixelSize: 17
                         font.letterSpacing: 1.8
-                    }
-
-                    Text {
-                        text: launcher.installDetail
-                        color: theme.textMuted
-                        font.family: theme.bodyFamily
-                        font.pixelSize: 12
-                        elide: Text.ElideRight
-                        width: parent.width
                     }
 
                     Text {
@@ -96,24 +78,6 @@ Item {
 
                     Row {
                         spacing: 8
-
-                        Repeater {
-                            id: installMethods
-                            model: [
-                                { label: "AUTO", value: "auto" },
-                                { label: "NATIVE", value: "native" },
-                                { label: "FLATPAK", value: "flatpak" }
-                            ]
-
-                            delegate: AppButton {
-                                required property var modelData
-                                text: modelData.label
-                                compact: true
-                                width: 104
-                                primary: settings.installMethod === modelData.value
-                                onClicked: screen.setInstallMethod(modelData.value)
-                            }
-                        }
 
                         AppButton {
                             text: "CHOOSE FOLDER"
@@ -577,9 +541,9 @@ Item {
 
     FolderDialog {
         id: folderDialog
-        title: "Select the Fightcade folder"
+        title: "Select your ROM folder"
         onAccepted: {
-            settings.fightcadePath = screen.localPath(selectedFolder)
+            settings.romPath = screen.localPath(selectedFolder)
             launcher.refreshInstall()
         }
     }

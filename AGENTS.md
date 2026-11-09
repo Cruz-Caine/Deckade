@@ -20,7 +20,7 @@
 - Read `docs/PROTOCOL.md` before changing auth, lobby, challenge, or launch flows.
 - Use `requestIdx` for every request that expects a response; `-1` for fire-and-forget.
 - Never change the UDP/GGPO wire format or invent matchmaking. Deckade targets Fightcade compatibility.
-- The official `fcade` helper is allowed only for native emulator routes (currently Flycast native and custom/external routes). Do not use it to fall back to Wine.
+- Deckade must not depend on, read, or write a Fightcade installation.
 - Keep `start`/`challenge`/`accept` semantics identical to the official web client.
 - ROM metadata and download URLs must stay in the bundled `fc2json` pack; validate URLs against the allowed Fightcade/archive hosts.
 
@@ -28,7 +28,7 @@
 
 - FBNeo: the pinned Macade source needs the Linux stub and the `VidPaint` SDL present fix. Do not remove the fix. `-joy` must be passed so P1 is controller 0.
 - Snes9x: experimental. Do not claim verified netplay without live peer tests.
-- Flycast: currently official native helper. GGPOFBA/fc1 remains unsupported until a native runtime exists.
+- Flycast: pinned Flycast Dojo 6.46, matching official Fightcade. Do not change the version without checking online compatibility. GGPOFBA/fc1 remains unsupported until a native runtime exists.
 - Runtime binaries are local build artifacts and are gitignored. Build scripts must remain reproducible.
 - Never bundle ROMs or BIOS files.
 

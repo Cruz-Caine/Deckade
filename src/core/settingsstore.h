@@ -7,8 +7,6 @@
 class SettingsStore : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString installMethod READ installMethod WRITE setInstallMethod NOTIFY installMethodChanged)
-    Q_PROPERTY(QString fightcadePath READ fightcadePath WRITE setFightcadePath NOTIFY fightcadePathChanged)
     Q_PROPERTY(QString romPath READ romPath WRITE setRomPath NOTIFY romPathChanged)
     Q_PROPERTY(bool showControllerHints READ showControllerHints WRITE setShowControllerHints NOTIFY showControllerHintsChanged)
     Q_PROPERTY(bool autoJoinLastChannels READ autoJoinLastChannels WRITE setAutoJoinLastChannels NOTIFY autoJoinLastChannelsChanged)
@@ -27,8 +25,6 @@ class SettingsStore : public QObject
 public:
     explicit SettingsStore(QObject *parent = nullptr);
 
-    QString installMethod() const;
-    QString fightcadePath() const;
     QString romPath() const;
     bool showControllerHints() const;
     bool autoJoinLastChannels() const;
@@ -44,8 +40,6 @@ public:
     QString sessionDisplayName() const;
     QString sessionCookie() const;
 
-    void setInstallMethod(const QString &value);
-    void setFightcadePath(const QString &value);
     void setRomPath(const QString &value);
     void setShowControllerHints(bool value);
     void setAutoJoinLastChannels(bool value);
@@ -63,8 +57,6 @@ public:
     Q_INVOKABLE void protectConfigFile();
 
 signals:
-    void installMethodChanged();
-    void fightcadePathChanged();
     void romPathChanged();
     void showControllerHintsChanged();
     void autoJoinLastChannelsChanged();
@@ -79,8 +71,6 @@ signals:
 
 private:
     QSettings m_settings;
-    QString m_installMethod;
-    QString m_fightcadePath;
     QString m_romPath;
     bool m_showControllerHints = true;
     bool m_autoJoinLastChannels = true;

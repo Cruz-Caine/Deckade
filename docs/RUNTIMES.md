@@ -9,7 +9,7 @@ process launched by `FightcadeLauncher` with a quark/GGPO route or a local game.
 | --- | --- | --- | --- | --- | --- |
 | FBNeo | `runtime/bin/deckade-fbneo` | yes | yes | launches | Native GGPO/quark |
 | Snes9x | `runtime/bin/deckade-snes9x` | experimental | experimental | launches | Native libretro+GGPO runner |
-| Flycast | official Flatpak/native helper | yes | yes | yes | Official native Flycast binary; no Wine |
+| Flycast | `runtime/bin/deckade-flycast` | yes, needs live test | yes, needs live test | launches | Unmodified Flycast Dojo 6.46, the build official Fightcade ships |
 | GGPOFBA / fc1 | — | no | no | no | Native port still missing |
 
 The Settings screen reads `runtimeSummary()` and marks what is present.
@@ -184,9 +184,7 @@ launching Wine.
 The launcher resolves a per-emulator ROM folder:
 
 - configured path from Settings, then `<configured>/<emulator>`
-- native Fightcade `<root>/emulator/<emulator>/ROMs`
-- native Fightcade `<root>/ROMs/<emulator>`
-- Flatpak `~/.var/app/com.fightcade.Fightcade/data/ROMs/<emulator>`
+- `~/.local/share/deckade/roms/<emulator>` if it exists
 - fallback `~/.local/share/Deckade/Deckade/roms/<emulator>`
 
 ## Verification

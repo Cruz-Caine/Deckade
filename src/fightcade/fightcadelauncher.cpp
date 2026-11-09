@@ -3,6 +3,7 @@
 #include "../core/settingsstore.h"
 #include "protocol.h"
 #include "netplayproxy.h"
+#include "flycastlaunch.h"
 #include "controllerprofile.h"
 
 #include <QCoreApplication>
@@ -18,6 +19,11 @@
 #include <QDateTime>
 #include <QUrl>
 #include <QDesktopServices>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
 #include <sys/stat.h>
 
@@ -39,112 +45,14 @@ bool executableExists(const QString &path)
     return info.isFile() && info.isExecutable();
 }
 
-QString readVersion(const QString &root)
+QString romRootForEmulator(const QString &configured, const QString &emulator)
 {
-    QFile file(QDir(root).filePath(QStringLiteral("VERSION.txt")));
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        return {};
-    }
-    return QString::fromUtf8(file.readAll()).trimmed();
-}
-
-QString nativeFightcadeRoot(const QString &configured)
-{
-    QStringList candidates;
-    if (!configured.isEmpty()) {
-        candidates << configured;
-    }
-    if (qEnvironmentVariableIsSet("DECKADE_FIGHTCODE_DIR")) {
-        candidates << qEnvironmentVariable("DECKADE_FIGHTCODE_DIR");
-    }
-    const QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    candidates << QDir(home).filePath(QStringLiteral("Fightcade"))
-               << QDir(home).filePath(QStringLiteral("Applications/Fightcade"))
-               << QDir(home).filePath(QStringLiteral("Games/Fightcade"))
-               << QDir(home).filePath(QStringLiteral("Downloads/Fightcade"))
-               << QDir(home).filePath(QStringLiteral("Desktop/Fightcade"))
-               << QDir(home).filePath(QStringLiteral(".local/share/Fightcade"))
-               << QStringLiteral("/opt/Fightcade")
-               << QStringLiteral("/usr/local/Fightcade");
-
-    for (const QString &candidate : std::as_const(candidates)) {
-        if (candidate.isEmpty()) {
-            continue;
-        }
-        const QString root = cleanPath(candidate);
-        if (QFileInfo(QDir(root).filePath(QStringLiteral("emulator/fcade"))).isFile()) {
-            return root;
-        }
-    }
-    return {};
-}
-
-bool flatpakInstalled()
-{
-    const QString flatpak = QStandardPaths::findExecutable(QStringLiteral("flatpak"));
-    if (flatpak.isEmpty()) {
-        return false;
-    }
-    QProcess process;
-    process.start(flatpak, {QStringLiteral("info"), QStringLiteral("com.fightcade.Fightcade")});
-    if (!process.waitForFinished(1500)) {
-        process.kill();
-        return false;
-    }
-    return process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0;
-}
-
-QString flatpakRomRoot()
-{
-    const QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    return QDir(home).filePath(QStringLiteral(".var/app/com.fightcade.Fightcade/data/ROMs"));
-}
-
-QString discoverRomPath(const QString &fightcadeRoot, const QString &configured)
-{
-    const QStringList candidates = {
-        configured,
-        fightcadeRoot.isEmpty() ? QString() : QDir(fightcadeRoot).filePath(QStringLiteral("emulator/fbneo/ROMs")),
-        fightcadeRoot.isEmpty() ? QString() : QDir(fightcadeRoot).filePath(QStringLiteral("ROMs")),
-        fightcadeRoot.isEmpty() ? QString() : QDir(fightcadeRoot).filePath(QStringLiteral("emulator/fbneo/roms")),
-        fightcadeRoot.isEmpty() ? QString() : QDir(fightcadeRoot).filePath(QStringLiteral("emulator/fbneo")),
-        flatpakRomRoot() + QStringLiteral("/fbneo"),
-        flatpakRomRoot(),
-        QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).filePath(QStringLiteral("deckade/roms/fbneo"))
-    };
-
-    for (const QString &candidate : candidates) {
-        if (candidate.isEmpty()) {
-            continue;
-        }
-        const QString path = cleanPath(candidate);
-        if (directoryExists(path)) {
-            return path;
-        }
-    }
-    return {};
-}
-
-QString romRootForEmulator(const QString &fightcadeRoot, const QString &configured,
-                           const QString &emulator)
-{
-    const QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    const QString flatpakRoot = QDir(home).filePath(QStringLiteral(".var/app/com.fightcade.Fightcade/data/ROMs"));
     QStringList candidates;
     if (!configured.isEmpty()) {
         candidates << configured
                    << QDir(configured).filePath(emulator);
     }
-    if (!fightcadeRoot.isEmpty()) {
-        candidates << QDir(fightcadeRoot).filePath(QStringLiteral("emulator/%1/ROMs").arg(emulator))
-                   << QDir(fightcadeRoot).filePath(QStringLiteral("emulator/%1/roms").arg(emulator))
-                   << QDir(fightcadeRoot).filePath(QStringLiteral("ROMs/%1").arg(emulator))
-                   << QDir(fightcadeRoot).filePath(QStringLiteral("emulator/%1").arg(emulator))
-                   << QDir(fightcadeRoot).filePath(QStringLiteral("ROMs"));
-    }
-    candidates << QDir(flatpakRoot).filePath(emulator)
-               << flatpakRoot
-               << QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation))
+    candidates << QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation))
                       .filePath(QStringLiteral("deckade/roms/%1").arg(emulator));
 
     for (const QString &candidate : std::as_const(candidates)) {
@@ -199,11 +107,7 @@ FightcadeLauncher::FightcadeLauncher(SettingsStore *settings, QObject *parent)
     : QObject(parent)
     , m_settings(settings)
 {
-    connect(m_settings, &SettingsStore::installMethodChanged, this, &FightcadeLauncher::refreshInstall);
-    connect(m_settings, &SettingsStore::fightcadePathChanged, this, &FightcadeLauncher::refreshInstall);
     connect(m_settings, &SettingsStore::romPathChanged, this, &FightcadeLauncher::refreshInstall);
-    m_externalMonitor.setInterval(700);
-    connect(&m_externalMonitor, &QTimer::timeout, this, &FightcadeLauncher::monitorExternalEmulator);
     refreshInstall();
 }
 
@@ -230,59 +134,9 @@ void FightcadeLauncher::refreshInstall()
     emit installChanged();
 }
 
-void FightcadeLauncher::setInstallMethod(const QString &method)
-{
-    m_settings->setInstallMethod(method);
-}
-
-void FightcadeLauncher::setInstallPath(const QString &path)
-{
-    m_settings->setFightcadePath(path);
-}
-
 void FightcadeLauncher::inspectInstall()
 {
-    const QString nativeRoot = nativeFightcadeRoot(m_settings->fightcadePath());
-    const bool hasFlatpak = flatpakInstalled();
-    const QString method = m_settings->installMethod();
-
-    m_installMethod = QStringLiteral("missing");
-    m_installPath.clear();
-    m_installedVersion.clear();
-
-    if (method == QStringLiteral("native")) {
-        if (!nativeRoot.isEmpty()) {
-            m_installMethod = QStringLiteral("native");
-            m_installPath = nativeRoot;
-            m_installedVersion = readVersion(nativeRoot);
-        }
-    } else if (method == QStringLiteral("flatpak")) {
-        if (hasFlatpak) {
-            m_installMethod = QStringLiteral("flatpak");
-            m_installPath = QStringLiteral("com.fightcade.Fightcade");
-        }
-    } else {
-        if (!nativeRoot.isEmpty()) {
-            m_installMethod = QStringLiteral("native");
-            m_installPath = nativeRoot;
-            m_installedVersion = readVersion(nativeRoot);
-        } else if (hasFlatpak) {
-            m_installMethod = QStringLiteral("flatpak");
-            m_installPath = QStringLiteral("com.fightcade.Fightcade");
-        }
-    }
-
-    m_romPath = romRootForEmulator(nativeRoot, m_settings->romPath(), QStringLiteral("fbneo"));
-
-    if (m_installMethod == QStringLiteral("native")) {
-        m_installDetail = m_installedVersion.isEmpty()
-            ? QStringLiteral("Native Fightcade at %1").arg(m_installPath)
-            : QStringLiteral("Fightcade %1 at %2").arg(m_installedVersion, m_installPath);
-    } else if (m_installMethod == QStringLiteral("flatpak")) {
-        m_installDetail = QStringLiteral("Fightcade Flatpak (com.fightcade.Fightcade)");
-    } else {
-        m_installDetail = QStringLiteral("No Fightcade installation found. Set it in Settings.");
-    }
+    m_romPath = romPathFor(QStringLiteral("fbneo"));
 }
 
 void FightcadeLauncher::inspectRuntimes()
@@ -306,7 +160,7 @@ void FightcadeLauncher::inspectRuntimes()
          {QStringLiteral("SNES")}, QStringLiteral("Native Snes9x runner (experimental)")},
         {QStringLiteral("flycast"), QStringLiteral("Flycast"), QStringLiteral("deckade-flycast"),
          {QStringLiteral("Dreamcast"), QStringLiteral("Naomi"), QStringLiteral("Atomiswave")},
-         QStringLiteral("Official native Flycast through the Fightcade helper")},
+         QStringLiteral("Flycast Dojo 6.46")},
         {QStringLiteral("ggpofba"), QStringLiteral("GGPOFBA"), QStringLiteral("deckade-ggpofba"),
          {QStringLiteral("Fightcade 1 legacy")}, QStringLiteral("Native Snes9x runner (experimental)")}
     };
@@ -315,20 +169,15 @@ void FightcadeLauncher::inspectRuntimes()
     for (const RuntimeDefinition &definition : definitions) {
         const QString executable = QDir(m_runtimeRoot).filePath(QStringLiteral("bin/%1").arg(definition.binary));
         const bool nativeAvailable = executableExists(executable);
-        const bool helperAvailable = definition.id == QStringLiteral("flycast")
-            && m_installMethod != QStringLiteral("missing");
-        const bool available = nativeAvailable || helperAvailable;
+        const bool available = nativeAvailable;
         QString note = definition.note;
         if (!available) {
             note = QStringLiteral("Not installed");
-        } else if (helperAvailable && !nativeAvailable) {
-            note = QStringLiteral("Official native Flycast via Fightcade helper");
         }
         m_runtimeSummary.append(QVariantMap{
             {"id", definition.id},
             {"name", definition.name},
             {"available", available},
-            {"helper", helperAvailable && !nativeAvailable},
             {"binary", executable},
             {"systems", definition.systems},
             {"note", note}
@@ -377,9 +226,7 @@ QString FightcadeLauncher::runtimeExecutable(const QString &emulator) const
 
 QString FightcadeLauncher::romPathFor(const QString &emulator) const
 {
-    const QString discovered = romRootForEmulator(
-        m_installMethod == QStringLiteral("native") ? m_installPath : QString(),
-        m_settings->romPath(), emulator);
+    const QString discovered = romRootForEmulator(m_settings->romPath(), emulator);
     if (!discovered.isEmpty()) {
         return discovered;
     }
@@ -531,31 +378,6 @@ bool copyTrainingMode(const QString &source, const QString &target)
     return QFileInfo(target).isDir();
 }
 
-QString findSavestateDirectory(const QString &romRoot, const QString &installPath,
-                               const QString &runtimeRoot)
-{
-    QStringList candidates;
-    if (!runtimeRoot.isEmpty()) {
-        candidates << QDir(runtimeRoot).filePath(QStringLiteral("fbneo/savestates"));
-    }
-    if (!romRoot.isEmpty()) {
-        const QDir rom(romRoot);
-        candidates << rom.filePath(QStringLiteral("../../config/fcadefbneo/savestates"))
-                   << rom.filePath(QStringLiteral("../savestates"))
-                   << rom.filePath(QStringLiteral("savestates"));
-    }
-    if (!installPath.isEmpty()) {
-        const QDir install(installPath);
-        candidates << install.filePath(QStringLiteral("data/config/fcadefbneo/savestates"))
-                   << install.filePath(QStringLiteral("emulator/fbneo/savestates"))
-                   << install.filePath(QStringLiteral("savestates"));
-    }
-    for (const QString &candidate : std::as_const(candidates)) {
-        if (QFileInfo(candidate).isDir()) return QDir(candidate).absolutePath();
-    }
-    return {};
-}
-
 bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QString &gameId)
 {
     const QString dataRoot = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
@@ -577,10 +399,7 @@ bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QStr
     QDir().mkpath(QDir(workDir).filePath(QStringLiteral("savestates")));
 
     if (emulator == QStringLiteral("fbneo")) {
-        QString trainingSource = QDir(m_runtimeRoot).filePath(QStringLiteral("fbneo/fbneo-training-mode"));
-        if (!QFileInfo(trainingSource).isDir()) {
-            trainingSource = QDir(romRoot).filePath(QStringLiteral("../../fbneo-training-mode"));
-        }
+        const QString trainingSource = QDir(m_runtimeRoot).filePath(QStringLiteral("fbneo/fbneo-training-mode"));
         const QString trainingLink = QDir(workDir).filePath(QStringLiteral("fbneo-training-mode"));
         if (QFileInfo(trainingSource).isDir()) {
             if (QFileInfo(trainingLink).isSymLink()) {
@@ -595,11 +414,9 @@ bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QStr
             }
         }
 
-        const QString savestateSource = findSavestateDirectory(
-            romRoot, m_installMethod == QStringLiteral("native") ? m_installPath : QString(),
-            m_runtimeRoot);
+        const QString savestateSource = QDir(m_runtimeRoot).filePath(QStringLiteral("fbneo/savestates"));
         const QString savestateLink = QDir(workDir).filePath(QStringLiteral("savestates"));
-        if (!savestateSource.isEmpty()) {
+        if (QFileInfo(savestateSource).isDir()) {
             const QFileInfo linkInfo(savestateLink);
             if (linkInfo.isSymLink() || QFile::exists(savestateLink)) {
                 if (linkInfo.isSymLink() || QFileInfo(savestateLink).isFile()) {
@@ -610,7 +427,6 @@ bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QStr
             }
             if (!QFileInfo::exists(savestateLink)) {
                 QFile::link(savestateSource, savestateLink);
-                qInfo().noquote() << "Using Fightcade savestates:" << savestateSource;
             }
         }
 
@@ -795,102 +611,48 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
     return true;
 }
 
-bool FightcadeLauncher::isHelperEmulator(const QString &emulator) const
+bool FightcadeLauncher::flycastCanStart(const QString &gameId)
 {
-    return emulator == QStringLiteral("flycast")
-        || emulator == QStringLiteral("duckstation")
-        || emulator == QStringLiteral("custom");
-}
-
-QString FightcadeLauncher::officialMatchUri(const QVariantMap &match) const
-{
-    const QString emulator = normalizedEmulator(match.value(QStringLiteral("emulator")).toString());
-    const QString gameId = match.value(QStringLiteral("gameId")).toString();
-    const QString quarkId = match.value(QStringLiteral("quarkId")).toString();
-    const int playerId = match.value(QStringLiteral("playerId")).toInt();
-    const int port = match.value(QStringLiteral("port")).toInt();
-    const int delay = match.value(QStringLiteral("delay")).toInt();
-    const int ranked = match.value(QStringLiteral("ranked")).toInt();
-    const QString token = match.value(QStringLiteral("token")).toString();
-
-    if (isHelperEmulator(emulator)) {
-        return QStringLiteral("fcade://launch/%1/%2/%3.%4,%5,%6,%7/%8")
-            .arg(emulator, gameId, quarkId).arg(playerId).arg(port).arg(delay).arg(ranked).arg(token);
-    }
-    return QStringLiteral("fcade://served/%1/%2/%3.%4,%5,%6,%7")
-        .arg(emulator, gameId, quarkId).arg(playerId).arg(port).arg(delay).arg(ranked);
-}
-
-QString FightcadeLauncher::officialSpectateUri(const QVariantMap &match) const
-{
-    const QString emulator = normalizedEmulator(match.value(QStringLiteral("emulator")).toString());
-    return QStringLiteral("fcade://stream/%1/%2/%3.2,%4")
-        .arg(emulator, match.value(QStringLiteral("gameId")).toString(),
-             match.value(QStringLiteral("quarkId")).toString())
-        .arg(match.value(QStringLiteral("port")).toInt());
-}
-
-bool FightcadeLauncher::launchDirectFlycast(const QString &gameId, bool training)
-{
-    if (m_installMethod == QStringLiteral("missing")) {
-        setError(QStringLiteral("Flycast needs the official Fightcade installation."));
+    if (!executableExists(runtimeExecutable(QStringLiteral("flycast")))) {
+        setError(QStringLiteral("The Flycast runtime is not installed."));
         return false;
     }
     if (m_running) {
         setError(QStringLiteral("An emulator is already running."));
         return false;
     }
-
     const QString romRoot = romPathFor(QStringLiteral("flycast"));
     if (findRomFile(gameId, romRoot).isEmpty()) {
         setError(QStringLiteral("No ROM found for %1 in %2. Add the game ROM, then try again.")
                      .arg(gameId, romRoot.isEmpty() ? QStringLiteral("the ROM folder") : romRoot));
         return false;
     }
+    return true;
+}
 
-    QString entry = gameId;
-    if (entry.startsWith(QStringLiteral("flycast_"))) entry = entry.mid(8);
+bool FightcadeLauncher::startFlycast(const QStringList &arguments)
+{
+    // Flycast keeps its config, BIOS files, and a ROMs link under FLYCAST_ROOT.
+    const QString workDir = QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+                                .filePath(QStringLiteral("runtime-work/flycast"));
+    QDir().mkpath(QDir(workDir).filePath(QStringLiteral("data")));
+    const QString romLink = QDir(workDir).filePath(QStringLiteral("ROMs"));
+    if (QFileInfo(romLink).isSymLink()) QFile::remove(romLink);
+    if (!QFileInfo::exists(romLink)) QFile::link(romPathFor(QStringLiteral("flycast")), romLink);
 
-    QStringList flycastArgs{
-        QStringLiteral("-config"), QStringLiteral("dojo:GameEntry=%1").arg(entry),
-        QStringLiteral("-config"), QStringLiteral("dojo:TestGame=no"),
-        QStringLiteral("-config"), QStringLiteral("dojo:Enable=no"),
-        QStringLiteral("-config"), QStringLiteral("dojo:EnableMatchCode=no")
-    };
-    if (training) {
-        flycastArgs << QStringLiteral("-config") << QStringLiteral("dojo:Training=yes");
+    // Holds the settings official clients run with. Some affect netplay sync.
+    const QString configPath = QDir(workDir).filePath(QStringLiteral("emu.cfg"));
+    if (!QFileInfo::exists(configPath)) {
+        QFile::copy(QDir(m_runtimeRoot).filePath(QStringLiteral("flycast-emu.default.cfg")), configPath);
+        QFile::setPermissions(configPath, QFile::ReadOwner | QFile::WriteOwner);
     }
 
     m_process = new QProcess(this);
-    if (m_installMethod == QStringLiteral("flatpak")) {
-        m_process->setProgram(QStringLiteral("flatpak"));
-        QStringList args{
-            QStringLiteral("run"),
-            QStringLiteral("--command=/app/fightcade/Fightcade/emulator/flycast/flycast.elf"),
-            QStringLiteral("com.fightcade.Fightcade")
-        };
-        args += flycastArgs;
-        m_process->setArguments(args);
-        m_process->setWorkingDirectory(QDir::homePath());
-    } else {
-        const QString flycast = QDir(m_installPath).filePath(QStringLiteral("emulator/flycast/flycast.elf"));
-        if (!QFileInfo(flycast).isExecutable()) {
-            setError(QStringLiteral("The official native Flycast binary was not found."));
-            delete m_process;
-            m_process = nullptr;
-            return false;
-        }
-        m_process->setProgram(flycast);
-        m_process->setArguments(flycastArgs);
-        m_process->setWorkingDirectory(QDir(m_installPath).filePath(QStringLiteral("emulator/flycast")));
-    }
-
+    m_process->setProgram(runtimeExecutable(QStringLiteral("flycast")));
+    m_process->setArguments(arguments);
+    m_process->setWorkingDirectory(workDir);
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-    environment.insert(QStringLiteral("WINEDEBUG"), QStringLiteral("-all"));
-    if (m_installMethod == QStringLiteral("native")) {
-        environment.insert(QStringLiteral("FLYCAST_ROOT"),
-                           QDir(m_installPath).filePath(QStringLiteral("emulator/flycast")));
-    }
+    environment.insert(QStringLiteral("FLYCAST_ROOT"), workDir);
     m_process->setProcessEnvironment(environment);
     m_process->setProcessChannelMode(QProcess::MergedChannels);
 
@@ -903,6 +665,12 @@ bool FightcadeLauncher::launchDirectFlycast(const QString &gameId, bool training
     connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, [this](int exitCode, QProcess::ExitStatus status) {
                 qInfo() << "Flycast exited" << exitCode << status;
+                reportFlycastFinished();
+                if (m_netplayProxy) {
+                    m_netplayProxy->stop();
+                    m_netplayProxy->deleteLater();
+                    m_netplayProxy = nullptr;
+                }
                 if (m_process) {
                     m_process->deleteLater();
                     m_process = nullptr;
@@ -912,12 +680,10 @@ bool FightcadeLauncher::launchDirectFlycast(const QString &gameId, bool training
     connect(m_process, &QProcess::errorOccurred, this, [this](QProcess::ProcessError) {
         if (m_process) {
             setError(QStringLiteral("Flycast failed to start: %1").arg(m_process->errorString()));
-            m_process->deleteLater();
-            m_process = nullptr;
         }
-        setRunning(false);
     });
 
+    m_process->start();
     if (!m_process->waitForStarted(2500)) {
         setError(QStringLiteral("Could not start Flycast: %1").arg(m_process->errorString()));
         m_process->deleteLater();
@@ -928,123 +694,78 @@ bool FightcadeLauncher::launchDirectFlycast(const QString &gameId, bool training
     return true;
 }
 
-bool FightcadeLauncher::launchOfficialHelper(const QString &uri, const QString &emulator)
+bool FightcadeLauncher::launchFlycastMatch(const QVariantMap &match)
 {
-    if (m_installMethod == QStringLiteral("missing")) {
-        setError(QStringLiteral("The official Fightcade helper is not available."));
-        return false;
+    const QString gameId = match.value(QStringLiteral("gameId")).toString();
+    if (!flycastCanStart(gameId)) return false;
+
+    if (m_netplayProxy) {
+        m_netplayProxy->stop();
+        m_netplayProxy->deleteLater();
     }
-    if (m_running) {
-        setError(QStringLiteral("An emulator is already running."));
+    m_netplayProxy = new NetplayProxy(match, this);
+    m_netplayProxy->setPeerWaitMs(25000);
+    if (!m_netplayProxy->prepare()) {
+        m_netplayProxy->deleteLater();
+        m_netplayProxy = nullptr;
+        setError(QStringLiteral("Could not connect to your opponent."));
         return false;
     }
 
-    m_helperProcess = new QProcess(this);
-    if (m_installMethod == QStringLiteral("flatpak")) {
-        m_helperProcess->setProgram(QStringLiteral("flatpak"));
-        m_helperProcess->setArguments({QStringLiteral("run"), QStringLiteral("--command=fcade-quark"),
-                                       QStringLiteral("com.fightcade.Fightcade"), uri});
-        m_helperProcess->setWorkingDirectory(QDir::homePath());
+    FlycastLaunch::MatchRoute route;
+    route.game = gameId;
+    route.quarkId = match.value(QStringLiteral("quarkId")).toString();
+    route.hosting = match.value(QStringLiteral("playerId")).toInt() == 0;
+    route.delay = match.value(QStringLiteral("delay")).toInt();
+    route.ranked = match.value(QStringLiteral("ranked")).toInt();
+    route.server = m_netplayProxy->masterHost();
+    route.spectatorPort = match.value(QStringLiteral("port")).toInt();
+    if (route.hosting) {
+        // The host's Flycast takes over the hole-punched port itself.
+        route.remotePort = m_netplayProxy->peerPort();
+        route.localPort = m_netplayProxy->releasePeerPort();
     } else {
-        m_helperProcess->setProgram(m_installPath + QStringLiteral("/emulator/fcade"));
-        m_helperProcess->setArguments({uri});
-        m_helperProcess->setWorkingDirectory(m_installPath + QStringLiteral("/emulator"));
+        // The guest's Flycast talks to Deckade's relay on localhost.
+        const int peerPort = m_netplayProxy->peerPort();
+        route.localPort = peerPort > 1028 ? peerPort - 4 : 6004;
+        route.remotePort = m_netplayProxy->proxyPort();
+        m_netplayProxy->setEmulatorPort(static_cast<quint16>(route.localPort));
     }
-    QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-    environment.insert(QStringLiteral("WINEDEBUG"), QStringLiteral("-all"));
-    m_helperProcess->setProcessEnvironment(environment);
-    m_helperProcess->setProcessChannelMode(QProcess::MergedChannels);
 
-    connect(m_helperProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            this, [this](int code, QProcess::ExitStatus status) {
-                qInfo() << "Fightcade helper exited" << code << status;
-                if (m_helperProcess) {
-                    m_helperProcess->deleteLater();
-                    m_helperProcess = nullptr;
-                }
-                if (m_externalMarker.isEmpty()) {
-                    setRunning(false);
-                }
-            });
-    connect(m_helperProcess, &QProcess::errorOccurred, this, [this](QProcess::ProcessError) {
-        if (m_helperProcess) {
-            setError(QStringLiteral("Fightcade helper failed: %1").arg(m_helperProcess->errorString()));
-        }
-    });
-
-    m_helperProcess->start();
-    if (!m_helperProcess->waitForStarted(2500)) {
-        setError(QStringLiteral("Could not start the Fightcade helper."));
-        m_helperProcess->deleteLater();
-        m_helperProcess = nullptr;
+    if (!startFlycast(FlycastLaunch::matchArguments(route))) {
+        m_netplayProxy->stop();
+        m_netplayProxy->deleteLater();
+        m_netplayProxy = nullptr;
         return false;
     }
-
-    m_externalHelper = true;
-    m_externalMarker = emulator == QStringLiteral("flycast") ? QStringLiteral("flycast")
-        : emulator == QStringLiteral("duckstation") ? QStringLiteral("duckstation")
-        : QString();
-    m_externalStartedAt = QDateTime::currentMSecsSinceEpoch();
-    setRunning(true);
-    m_externalMonitor.start();
+    m_flycastQuarkId = route.quarkId;
+    m_flycastToken = match.value(QStringLiteral("token")).toString();
     return true;
 }
 
-bool FightcadeLauncher::externalEmulatorRunning() const
+// Official clients tell Fightcade when a Flycast match ends.
+void FightcadeLauncher::reportFlycastFinished()
 {
-    if (m_externalMarker.isEmpty()) {
-        return false;
-    }
-    QDir proc(QStringLiteral("/proc"));
-    const QStringList entries = proc.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    for (const QString &entry : entries) {
-        bool isPid = false;
-        entry.toInt(&isPid);
-        if (!isPid) continue;
-        QFile file(QStringLiteral("/proc/%1/cmdline").arg(entry));
-        if (!file.open(QIODevice::ReadOnly)) continue;
-        const QString command = QString::fromUtf8(file.readAll()).replace(QChar('\0'), QChar(' '));
-        if (!command.contains(m_externalMarker, Qt::CaseInsensitive)) continue;
-        if (command.contains(QStringLiteral("fcade"), Qt::CaseInsensitive)
-            || command.contains(QStringLiteral("deckade"), Qt::CaseInsensitive)
-            || command.contains(QStringLiteral("pgrep"), Qt::CaseInsensitive)) {
-            continue;
-        }
-        return true;
-    }
-    return false;
-}
-
-void FightcadeLauncher::monitorExternalEmulator()
-{
-    if (!m_externalHelper) {
-        m_externalMonitor.stop();
-        return;
-    }
-    if (externalEmulatorRunning()) {
-        return;
-    }
-    const qint64 elapsed = QDateTime::currentMSecsSinceEpoch() - m_externalStartedAt;
-    if (elapsed > 5000) {
-        m_externalMonitor.stop();
-        m_externalHelper = false;
-        m_externalMarker.clear();
-        setRunning(false);
-    }
+    if (m_flycastQuarkId.isEmpty() || m_flycastToken.isEmpty()) return;
+    if (!m_network) m_network = new QNetworkAccessManager(this);
+    QNetworkRequest request{QUrl(QLatin1String(FightcadeProtocol::ApiUrl))};
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
+    const QJsonObject body{{QStringLiteral("req"), QStringLiteral("quarkstatus")},
+                           {QStringLiteral("quarkstatus"), QStringLiteral("finish")},
+                           {QStringLiteral("quarkid"), m_flycastQuarkId},
+                           {QStringLiteral("token"), m_flycastToken}};
+    QNetworkReply *reply = m_network->post(request, QJsonDocument(body).toJson(QJsonDocument::Compact));
+    connect(reply, &QNetworkReply::finished, reply, &QObject::deleteLater);
+    m_flycastQuarkId.clear();
+    m_flycastToken.clear();
 }
 
 bool FightcadeLauncher::launchMatch(const QVariantMap &match)
 {
     const QString emulator = normalizedEmulator(match.value(QStringLiteral("emulator")).toString());
     const QString gameId = match.value(QStringLiteral("gameId")).toString();
-    if (isHelperEmulator(emulator) && !executableExists(runtimeExecutable(emulator))) {
-        const QString helperRomRoot = romPathFor(emulator);
-        if (findRomFile(gameId, helperRomRoot).isEmpty()) {
-            setError(QStringLiteral("No ROM found for %1 in %2. Add the game ROM, then try again.")
-                         .arg(gameId, helperRomRoot.isEmpty() ? QStringLiteral("the ROM folder") : helperRomRoot));
-            return false;
-        }
-        return launchOfficialHelper(officialMatchUri(match), emulator);
+    if (emulator == QStringLiteral("flycast")) {
+        return launchFlycastMatch(match);
     }
     QVariantMap proxyEnvironment;
     if (emulator == QStringLiteral("fbneo")) {
@@ -1084,14 +805,12 @@ bool FightcadeLauncher::launchSpectate(const QVariantMap &match)
 {
     const QString emulator = normalizedEmulator(match.value(QStringLiteral("emulator")).toString());
     const QString gameId = match.value(QStringLiteral("gameId")).toString();
-    if (isHelperEmulator(emulator) && !executableExists(runtimeExecutable(emulator))) {
-        const QString helperRomRoot = romPathFor(emulator);
-        if (findRomFile(gameId, helperRomRoot).isEmpty()) {
-            setError(QStringLiteral("No ROM found for %1 in %2. Add the game ROM, then try again.")
-                         .arg(gameId, helperRomRoot.isEmpty() ? QStringLiteral("the ROM folder") : helperRomRoot));
-            return false;
-        }
-        return launchOfficialHelper(officialSpectateUri(match), emulator);
+    if (emulator == QStringLiteral("flycast")) {
+        if (!flycastCanStart(gameId)) return false;
+        return startFlycast(FlycastLaunch::spectateArguments(
+            gameId, match.value(QStringLiteral("quarkId")).toString(),
+            qEnvironmentVariable("DECKADE_PROXY_MASTER_HOST", "ggpo.fightcade.com"),
+            match.value(QStringLiteral("port")).toInt()));
     }
     const QString command = FightcadeProtocol::quarkStream(
         gameId,
@@ -1113,16 +832,7 @@ bool FightcadeLauncher::launchSolo(const QString &emulatorName, const QString &g
 {
     const QString emulator = normalizedEmulator(emulatorName);
     if (emulator == QStringLiteral("flycast")) {
-        return launchDirectFlycast(gameId, false);
-    }
-    if (isHelperEmulator(emulator) && !executableExists(runtimeExecutable(emulator))) {
-        const QString helperRomRoot = romPathFor(emulator);
-        if (findRomFile(gameId, helperRomRoot).isEmpty()) {
-            setError(QStringLiteral("No ROM found for %1 in %2. Add the game ROM, then try again.")
-                         .arg(gameId, helperRomRoot.isEmpty() ? QStringLiteral("the ROM folder") : helperRomRoot));
-            return false;
-        }
-        return launchOfficialHelper(QStringLiteral("fcade://play/%1/%2").arg(emulator, gameId), emulator);
+        return flycastCanStart(gameId) && startFlycast(FlycastLaunch::localArguments(gameId));
     }
     QStringList arguments;
     if (emulator == QStringLiteral("fbneo")) {
@@ -1140,16 +850,7 @@ bool FightcadeLauncher::launchTraining(const QString &emulatorName, const QStrin
 {
     const QString emulator = normalizedEmulator(emulatorName);
     if (emulator == QStringLiteral("flycast")) {
-        return launchDirectFlycast(gameId, true);
-    }
-    if (isHelperEmulator(emulator) && !executableExists(runtimeExecutable(emulator))) {
-        const QString helperRomRoot = romPathFor(emulator);
-        if (findRomFile(gameId, helperRomRoot).isEmpty()) {
-            setError(QStringLiteral("No ROM found for %1 in %2. Add the game ROM, then try again.")
-                         .arg(gameId, helperRomRoot.isEmpty() ? QStringLiteral("the ROM folder") : helperRomRoot));
-            return false;
-        }
-        return launchOfficialHelper(QStringLiteral("fcade://training/%1/%2").arg(emulator, gameId), emulator);
+        return flycastCanStart(gameId) && startFlycast(FlycastLaunch::localArguments(gameId));
     }
     const QString command = QStringLiteral("macade:training,%1").arg(gameId);
     QStringList arguments;
@@ -1171,20 +872,6 @@ void FightcadeLauncher::killEmulator()
         m_netplayProxy->deleteLater();
         m_netplayProxy = nullptr;
     }
-    if (m_externalHelper) {
-        m_externalMonitor.stop();
-        m_externalHelper = false;
-        if (m_installMethod == QStringLiteral("flatpak")) {
-            QProcess::startDetached(QStringLiteral("flatpak"),
-                                    {QStringLiteral("run"), QStringLiteral("--command=fcade-quark"),
-                                     QStringLiteral("com.fightcade.Fightcade"), QStringLiteral("fcade://killemu")});
-        } else if (m_installMethod == QStringLiteral("native")) {
-            QProcess::startDetached(m_installPath + QStringLiteral("/emulator/fcade"),
-                                    {QStringLiteral("fcade://killemu")});
-        }
-        setRunning(false);
-        return;
-    }
     if (!m_process) {
         setRunning(false);
         return;
@@ -1200,10 +887,6 @@ void FightcadeLauncher::killEmulator()
 
 void FightcadeLauncher::clearRunning()
 {
-    if (m_externalHelper) {
-        m_externalMonitor.stop();
-        m_externalHelper = false;
-    }
     if (!m_process) {
         setRunning(false);
     }

@@ -46,6 +46,7 @@ jobs:
         run: |
           ./scripts/build-fbneo.sh
           ./scripts/build-snes9x.sh
+          ./scripts/build-flycast.sh
 
       - name: Build AppImage
         run: ./scripts/build-appimage.sh

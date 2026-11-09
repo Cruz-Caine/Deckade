@@ -51,6 +51,7 @@ set(DECKADE_SOURCES
     src/fightcade/protocol.cpp
     src/fightcade/protocol.h
     src/fightcade/netplayproxy.cpp
+    src/fightcade/flycastlaunch.cpp
     src/fightcade/netplayproxy.h
     src/fightcade/netplaypreflight.cpp
     src/fightcade/netplaypreflight.h
@@ -150,6 +151,7 @@ add_executable(deckade_launcher_smoke
     src/fightcade/fightcadelauncher.cpp
     src/fightcade/protocol.cpp
     src/fightcade/netplayproxy.cpp
+    src/fightcade/flycastlaunch.cpp
     src/fightcade/netplaypreflight.cpp
     src/fightcade/portmapping.cpp
 )
@@ -167,6 +169,7 @@ add_executable(deckade_rom_probe
     src/fightcade/romlibrary.cpp
     src/fightcade/protocol.cpp
     src/fightcade/netplayproxy.cpp
+    src/fightcade/flycastlaunch.cpp
     src/fightcade/netplaypreflight.cpp
     src/fightcade/portmapping.cpp
     src/fightcade/userstatus.cpp
@@ -203,6 +206,7 @@ add_test(NAME deckade_netplay_tests COMMAND deckade_netplay_tests)
 add_executable(deckade_netplay_proxy_tests
     tests/netplay_proxy_tests.cpp
     src/fightcade/netplayproxy.cpp
+    src/fightcade/flycastlaunch.cpp
     src/fightcade/netplaypreflight.cpp
     src/fightcade/portmapping.cpp
 )
@@ -219,6 +223,14 @@ add_executable(deckade_social_tests
 target_include_directories(deckade_social_tests PRIVATE src)
 target_link_libraries(deckade_social_tests PRIVATE Qt6::Core Qt6::Network)
 add_test(NAME deckade_social_tests COMMAND deckade_social_tests)
+
+add_executable(deckade_flycast_launch_tests
+    tests/flycast_launch_tests.cpp
+    src/fightcade/flycastlaunch.cpp
+)
+target_include_directories(deckade_flycast_launch_tests PRIVATE src)
+target_link_libraries(deckade_flycast_launch_tests PRIVATE Qt6::Core)
+add_test(NAME deckade_flycast_launch_tests COMMAND deckade_flycast_launch_tests)
 
 add_test(NAME deckade_runtime_assets_tests
          COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tests/runtime_assets_tests.py)

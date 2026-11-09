@@ -12,6 +12,7 @@ dist/
 # Local runtime builds and binaries
 .runtime-src/
 runtime/bin/
+runtime/flycast/
 runtime/work/
 
 # Logs and local state

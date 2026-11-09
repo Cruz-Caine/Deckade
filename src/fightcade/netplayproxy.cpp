@@ -2,6 +2,7 @@
 #include "netplaypreflight.h"
 #include "portmapping.h"
 
+#include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
 #include <QElapsedTimer>
@@ -122,6 +123,7 @@ bool NetplayProxy::waitForDatagram(QUdpSocket &socket, QByteArray &payload, Endp
             return true;
         }
         socket.waitForReadyRead(50);
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
     return false;
 }
@@ -241,6 +243,24 @@ void NetplayProxy::sendToPeer(const QByteArray &payload)
     }
 }
 
+void NetplayProxy::setEmulatorPort(quint16 port)
+{
+    m_emulatorEndpoint = Endpoint{QHostAddress::LocalHost, port};
+}
+
+quint16 NetplayProxy::proxyPort() const
+{
+    return m_local ? m_local->localPort() : 0;
+}
+
+quint16 NetplayProxy::releasePeerPort()
+{
+    const quint16 port = m_master ? m_master->localPort() : 0;
+    m_keepaliveTimer.stop();
+    closeSockets();
+    return port;
+}
+
 bool NetplayProxy::prepare()
 {
     if (m_ready) return true;
@@ -277,7 +297,7 @@ bool NetplayProxy::prepare()
 
     Endpoint peer;
     QByteArray peerData;
-    if (!waitForDatagram(*m_master, peerData, peer, 5000)
+    if (!waitForDatagram(*m_master, peerData, peer, m_peerWaitMs)
         || !parsePeerAddress(peerData, peer)) {
         log(QStringLiteral("no peer address from master"));
         sendUsePorts();

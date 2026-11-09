@@ -17,8 +17,8 @@
     },
     "flycast": {
       "name": "Flycast",
-      "binary": "official-fcade-helper",
-      "status": "ready-via-official-helper",
+      "binary": "bin/deckade-flycast",
+      "status": "ready",
       "capabilities": ["match", "spectate", "training", "solo"],
       "systems": ["Dreamcast", "Naomi", "Atomiswave"]
     },
