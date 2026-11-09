@@ -22,7 +22,10 @@ Item {
 
     function featuredChannel() {
         if (!channels || channels.length === 0) return null
-        var sorted = channels.slice().sort(function(a, b) { return (b.playerCount ?? 0) - (a.playerCount ?? 0) })
+        // The banner's whole job is joining, so it only features playable games.
+        var sorted = channels.filter(function(channel) {
+            return launcher.isEmulatorSupported(channel.emulator ?? "")
+        }).sort(function(a, b) { return (b.playerCount ?? 0) - (a.playerCount ?? 0) })
         return sorted[0]
     }
 
@@ -54,7 +57,7 @@ Item {
         for (var i = 0; i < (lastChannels ?? []).length; ++i) {
             var name = lastChannels[i]
             var channel = known.find(function(c) { return c.name === name })
-            if (channel) result.push(channel)
+            if (channel && launcher.isEmulatorSupported(channel.emulator ?? "")) result.push(channel)
         }
         return result
     }

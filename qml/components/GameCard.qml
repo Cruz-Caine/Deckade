@@ -15,13 +15,15 @@ Focusable {
             : ({ known: false })
     }
 
+    readonly property bool unsupported: !launcher.isEmulatorSupported(root.channel.emulator ?? "")
+
     signal joinRequested()
     signal joinToggleRequested()
     signal favoriteRequested()
 
     ringRadius: 8
-    hintPrimary: joined ? "Open room" : "Join and open"
-    hintSecondary: joined ? "Leave room" : "Join"
+    hintPrimary: unsupported ? "" : joined ? "Open room" : "Join and open"
+    hintSecondary: unsupported ? "" : joined ? "Leave room" : "Join"
     hintTertiary: favorite ? "Unfavorite" : "Favorite"
     onActivated: root.joinRequested()
     onSecondaryActivated: root.joinToggleRequested()
@@ -42,6 +44,7 @@ Focusable {
             asynchronous: true
             cache: true
             smooth: true
+            opacity: root.unsupported ? 0.45 : 1
         }
 
         Rectangle {
@@ -68,6 +71,12 @@ Focusable {
                 text: String(root.channel.playerCount ?? 0) + " online"
                 dot: true
                 foreground: theme.green
+            }
+            Pill {
+                visible: root.unsupported
+                text: "Unsupported"
+                strong: true
+                foreground: theme.red
             }
             Pill {
                 visible: root.joined
@@ -106,7 +115,7 @@ Focusable {
 
                 Text {
                     visible: root.showSystem
-                    width: parent.width - fileLabel.width - 8
+                    width: parent.width - (fileLabel.visible ? fileLabel.width + 8 : 0)
                     text: (root.channel.isRanked === true ? "Ranked, " : "") + (root.channel.system ?? "")
                     color: theme.textFaint
                     elide: Text.ElideRight
@@ -116,7 +125,7 @@ Focusable {
 
                 Text {
                     id: fileLabel
-                    visible: root.files.known === true
+                    visible: root.files.known === true && !root.unsupported
                     text: root.files.ready ? "Downloaded" : "Not downloaded"
                     color: root.files.ready ? theme.green : theme.textFaint
                     font.family: theme.bodyFamily

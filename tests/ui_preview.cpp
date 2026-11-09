@@ -38,7 +38,7 @@ static const char *kFixture = R"({
  "more":[
   {"name":"garou","title":"Garou: Mark of the Wolves","system":"Neo Geo","gameId":"garou","emulator":"fbneo","playerCount":96,"isRanked":true,"previewUrl":"https://web.fightcade.com/static/previews/garou.png"},
   {"name":"vsav","title":"Vampire Savior","system":"CPS2","gameId":"vsav","emulator":"fbneo","playerCount":54,"previewUrl":"https://web.fightcade.com/static/previews/vsav.png"},
-  {"name":"mvsc","title":"Marvel vs. Capcom","system":"CPS2","gameId":"mvsc","emulator":"fbneo","playerCount":33,"previewUrl":"https://web.fightcade.com/static/previews/mvsc.png"},
+  {"name":"mvsc","title":"Marvel vs. Capcom","system":"CPS2","gameId":"mvsc","emulator":"ggpofba","playerCount":999,"previewUrl":"https://web.fightcade.com/static/previews/mvsc.png"},
   {"name":"kof2002","title":"The King of Fighters 2002","system":"Neo Geo","gameId":"kof2002","emulator":"fbneo","playerCount":120,"previewUrl":"https://web.fightcade.com/static/previews/kof2002.png"}
  ]
 })";

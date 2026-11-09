@@ -139,6 +139,9 @@ int main(int argc, char *argv[])
     for (const char *name : {"garou", "vsav", "mvsc", "kof2002", "sf2ce", "dino", "sfa3", "xmen"}) {
         lobby.append(channel(QString::fromLatin1(name), 120));
     }
+    QVariantMap legacyGame = channel(QStringLiteral("legacygame"), 120);
+    legacyGame.insert(QStringLiteral("emulator"), QStringLiteral("ggpofba"));
+    lobby.append(legacyGame);
 
     window->setProperty("user", QVariantMap{{QStringLiteral("name"), QStringLiteral("someone")}});
     window->setProperty("joinedChannels", QVariantList{room});
@@ -155,6 +158,18 @@ int main(int argc, char *argv[])
         QMetaObject::invokeMethod(window, "switchScreen", Q_ARG(QVariant, QVariant(name)));
         spin();
     };
+
+    // Games with no runtime are listed, but can't be joined by any route.
+    check(launcher.isEmulatorSupported(QStringLiteral("fbneo")), "FBNeo is supported");
+    check(launcher.isEmulatorSupported(QStringLiteral("nulldc")), "nullDC rooms map to Flycast");
+    check(launcher.isEmulatorSupported(QString()), "a channel with no emulator is not flagged");
+    check(!launcher.isEmulatorSupported(QStringLiteral("fc1")), "GGPOFBA is unsupported");
+    check(!launcher.isEmulatorSupported(QStringLiteral("duckstation")), "an unknown emulator is unsupported");
+    const QVariant legacyName(QStringLiteral("legacygame"));
+    QMetaObject::invokeMethod(window, "joinChannel", Q_ARG(QVariant, legacyName), Q_ARG(QVariant, QVariant(false)));
+    check(window->property("pendingOpenChannel").toString().isEmpty(), "joining an unsupported game does nothing");
+    QMetaObject::invokeMethod(window, "openRoom", Q_ARG(QVariant, legacyName));
+    check(window->property("pendingOpenChannel").toString().isEmpty(), "opening an unsupported game does nothing");
 
     // The featured banner: sideways moves stay in its row on a wide screen.
     window->resize(1920, 1080);

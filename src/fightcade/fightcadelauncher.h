@@ -43,6 +43,9 @@ public:
     Q_INVOKABLE void openRomFolder();
     Q_INVOKABLE void reportUserStatus(const QString &token);
     Q_INVOKABLE bool hasLocalRom(const QString &emulator, const QString &gameId) const;
+    // False when Deckade has no way to launch this emulator's games. A channel
+    // that does not name an emulator is not treated as unsupported.
+    Q_INVOKABLE bool isEmulatorSupported(const QString &emulator) const;
     Q_INVOKABLE QString romDirectoryFor(const QString &emulator) const;
     Q_INVOKABLE QString runtimeBinaryFor(const QString &emulator) const;
 

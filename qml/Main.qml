@@ -199,9 +199,18 @@ ApplicationWindow {
         })
     }
 
+    // Games Deckade cannot launch are listed but can't be joined. Attempts
+    // are ignored on purpose; the card's badge already says why.
+    function isChannelUnsupported(name) {
+        const named = function(channel) { return channel.name === name }
+        const channel = allChannels.find(named) ?? browseChannels.find(named)
+        return !!channel && !launcher.isEmulatorSupported(channel.emulator ?? "")
+    }
+
     function openRoom(name) {
         var channel = channelByName(name)
         if (!channel) {
+            if (isChannelUnsupported(name)) return
             pendingOpenChannel = name
             client.joinChannel(name, false)
             return
@@ -219,6 +228,7 @@ ApplicationWindow {
             if (!auto) openRoom(name)
             return
         }
+        if (isChannelUnsupported(name)) return
         if (joinedChannels.length >= roomLimit()) {
             notify("Room limit reached (" + roomLimit() + "). Leave a room before joining another.", "warning")
             return
@@ -245,6 +255,8 @@ ApplicationWindow {
     function toggleJoin(name) {
         if (isJoined(name)) {
             leaveRoomByName(name)
+        } else if (isChannelUnsupported(name)) {
+            return
         } else if (joinedChannels.length >= roomLimit()) {
             notify("Room limit reached (" + roomLimit() + "). Leave a room before joining another.", "warning")
         } else {
@@ -684,7 +696,8 @@ ApplicationWindow {
         }
 
         const freeSlots = Math.max(0, roomLimit() - joinedChannels.length)
-        autoJoinNames = candidates.slice(0, Math.min(6, freeSlots))
+        autoJoinNames = candidates.filter(function(name) { return !isChannelUnsupported(name) })
+                                  .slice(0, Math.min(6, freeSlots))
         for (var k = 0; k < autoJoinNames.length; ++k) {
             if (!isJoined(autoJoinNames[k])) client.joinChannel(autoJoinNames[k], false)
         }

@@ -275,6 +275,15 @@ QString FightcadeLauncher::findRomFile(const QString &gameId, const QString &rom
     return {};
 }
 
+bool FightcadeLauncher::isEmulatorSupported(const QString &emulator) const
+{
+    const QString normalized = normalizedEmulator(emulator);
+    return normalized.isEmpty()
+        || normalized == QStringLiteral("fbneo")
+        || normalized == QStringLiteral("snes9x")
+        || normalized == QStringLiteral("flycast");
+}
+
 bool FightcadeLauncher::hasLocalRom(const QString &emulator, const QString &gameId) const
 {
     return !findRomFile(gameId, romPathFor(normalizedEmulator(emulator))).isEmpty();

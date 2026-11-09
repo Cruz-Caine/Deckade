@@ -27,6 +27,12 @@
     <category>Emulator</category>
   </categories>
   <releases>
+    <release version="0.2.15" date="2026-11-09">
+      <description>
+        <p>Games Deckade cannot launch are marked Unsupported and can no longer
+        be joined.</p>
+      </description>
+    </release>
     <release version="0.2.14" date="2026-11-09">
       <description>
         <p>Moving sideways from the Home banner now goes to what is beside it.
