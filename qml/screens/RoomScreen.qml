@@ -19,7 +19,14 @@ Item {
     property bool friendsOnly: false
     property string focusedPlayerName: ""
     property string channelKey: ""
-    property bool preservingPlayerFocus: false
+    // Roster and chat are ListModels updated row by row. Assigning a fresh
+    // array to a ListView resets it: every row is destroyed, the selection is
+    // lost and the list jumps to the top.
+    property var playerLookup: Object.create(null)
+    property var playerKeys: []
+    property var shownMessages: []
+    property bool followChat: false
+    property var liveMatchKeys: []
     property bool autoMatchActive: false
 
     signal sendChat(string text)
@@ -144,30 +151,104 @@ Item {
                 return (player.name ?? "").toLowerCase().indexOf(query) !== -1
             })
         }
-        preservingPlayerFocus = true
+        var lookup = Object.create(null)
+        users.forEach(function(player) { lookup[player.name ?? ""] = player })
+        playerLookup = lookup
         visibleUsers = users
-        Qt.callLater(function() { screen.restorePlayerFocus() })
+        syncPlayerModel(users.map(function(player) { return player.name ?? "" }))
     }
 
-    function restorePlayerFocus() {
-        if (!focusedPlayerName) {
-            preservingPlayerFocus = false
-            return
+    function syncPlayerModel(names) {
+        var current = playerKeys
+        var focusedIndex = focusedPlayerName ? current.indexOf(focusedPlayerName) : -1
+        var focusedGone = focusedIndex >= 0 && names.indexOf(focusedPlayerName) < 0
+        var wanted = new Set(names)
+        for (var r = current.length - 1; r >= 0; --r) {
+            if (!wanted.has(current[r])) {
+                playerModel.remove(r)
+                current.splice(r, 1)
+            }
         }
-        var index = visibleUsers.findIndex(function(player) {
-            return (player.name ?? "") === focusedPlayerName
+        for (var i = 0; i < names.length; ++i) {
+            if (current[i] === names[i]) continue
+            var from = current.indexOf(names[i], i + 1)
+            if (from >= 0) {
+                playerModel.move(from, i, 1)
+                current.splice(from, 1)
+            } else {
+                playerModel.insert(i, { playerKey: names[i] })
+            }
+            current.splice(i, 0, names[i])
+        }
+        while (current.length > names.length) {
+            playerModel.remove(current.length - 1)
+            current.pop()
+        }
+        if (focusedGone) focusPlayerNear(focusedIndex)
+    }
+
+    // The selected player left: stay at the same spot in the list.
+    function focusPlayerNear(index) {
+        focusedPlayerName = ""
+        Qt.callLater(function() {
+            var target = Math.min(index, playerList.count - 1)
+            if (target < 0 || !screen.visible) return
+            playerList.positionViewAtIndex(target, ListView.Contain)
+            var item = playerList.itemAtIndex(target)
+            if (item) focusController.focusItem(item)
         })
-        if (index >= 0) {
-            playerList.positionViewAtIndex(index, ListView.Contain)
-            playerList.currentIndex = index
-            Qt.callLater(function() {
-                var item = playerList.itemAtIndex(index)
-                if (item) focusController.focusItem(item)
-                preservingPlayerFocus = false
-            })
-        } else {
-            preservingPlayerFocus = false
+    }
+
+    function chatNearEnd() {
+        return chatList.contentY + chatList.height >= chatList.originY + chatList.contentHeight - 48
+    }
+
+    function chatRow(message) {
+        return {
+            kind: String(message.kind ?? ""),
+            username: String(message.username ?? ""),
+            body: String(message.text ?? "")
         }
+    }
+
+    function syncChat() {
+        var next = screen.messages ?? []
+        var previous = shownMessages
+        var follow = followChat || chatModel.count === 0 || chatNearEnd()
+        // Normally the new list is the old one plus a message, minus the
+        // oldest once the 400-message cap is reached.
+        var dropped = next.length > 0 ? previous.indexOf(next[0]) : -1
+        var continues = dropped >= 0 && previous.length - dropped <= next.length
+        for (var k = dropped; continues && k < previous.length; ++k) {
+            if (previous[k] !== next[k - dropped]) continues = false
+        }
+        var firstNew = 0
+        if (continues) {
+            if (dropped > 0) chatModel.remove(0, dropped)
+            firstNew = previous.length - dropped
+        } else {
+            chatModel.clear()
+            follow = true
+        }
+        if (firstNew < next.length) chatModel.append(next.slice(firstNew).map(chatRow))
+        shownMessages = next
+        followChat = false
+        if (follow) chatList.positionViewAtEnd()
+    }
+
+    onMessagesChanged: syncChat()
+
+    function matchKey(quark) {
+        return String(quark.quarkId ?? "")
+    }
+
+    function matchByKey(key) {
+        return (screen.channel.quarks ?? []).find(function(quark) { return matchKey(quark) === key }) ?? ({})
+    }
+
+    function refreshLiveMatchKeys() {
+        var next = liveMatches().map(matchKey)
+        if (next.join("\n") !== liveMatchKeys.join("\n")) liveMatchKeys = next
     }
 
     onFriendsChanged: refreshVisibleUsers()
@@ -179,8 +260,12 @@ Item {
             channelKey = nextKey
             playerSearch = ""
             focusedPlayerName = ""
+            playerModel.clear()
+            playerKeys = []
+            playerList.positionViewAtBeginning()
         }
         refreshVisibleUsers()
+        refreshLiveMatchKeys()
     }
     onPlayerSearchChanged: {
         focusedPlayerName = ""
@@ -192,7 +277,7 @@ Item {
     Connections {
         target: focusController
         function onFocusMoved(item) {
-            if (screen.preservingPlayerFocus || !item) return
+            if (!item) return
             if (item.player && item.player.name) screen.focusedPlayerName = item.player.name
             else screen.focusedPlayerName = ""
         }
@@ -216,6 +301,8 @@ Item {
         var text = chatInput.text.trim()
         if (text.length === 0) return
         chatInput.text = ""
+        // Your own message always brings the log back to the bottom.
+        followChat = true
         screen.sendChat(text)
     }
 
@@ -450,25 +537,17 @@ Item {
 
                         ListView {
                             id: playerList
+                            objectName: "playerList"
                             width: parent.width
                             height: parent.height - 148
                             clip: true
                             spacing: 1
-                            model: screen.visibleUsers
+                            model: ListModel { id: playerModel }
+                            // FocusController owns selection. With a current
+                            // row, a join above it would shift currentIndex
+                            // and the view would steal focus and scroll to it.
+                            currentIndex: -1
                             boundsBehavior: Flickable.StopAtBounds
-                            property real stableY: 0
-
-                            onMovementStarted: {
-                                if (!screen.preservingPlayerFocus) screen.focusedPlayerName = ""
-                            }
-                            onMovementEnded: stableY = contentY
-                            onModelChanged: {
-                                const target = stableY
-                                Qt.callLater(function() {
-                                    contentY = Math.min(target, Math.max(0, contentHeight - height))
-                                    screen.restorePlayerFocus()
-                                })
-                            }
 
                             ScrollBar.vertical: ScrollBar {
                                 id: playerScrollBar
@@ -488,13 +567,14 @@ Item {
                             }
 
                             delegate: PlayerRow {
+                                required property string playerKey
                                 width: ListView.view.width
-                                player: modelData
-                                isLocal: screen.isLocal(modelData)
-                                isFriend: screen.friends.some(function(name) { return name.toLowerCase() === (modelData.name ?? "").toLowerCase() })
-                                onChallengeRequested: screen.challengePlayer(modelData)
-                                onFriendToggleRequested: screen.friendToggleRequested(modelData)
-                                onCopyRequested: screen.copyRequested(modelData.name ?? "")
+                                player: screen.playerLookup[playerKey] ?? ({})
+                                isLocal: screen.isLocal(player)
+                                isFriend: screen.friends.some(function(name) { return name.toLowerCase() === playerKey.toLowerCase() })
+                                onChallengeRequested: screen.challengePlayer(player)
+                                onFriendToggleRequested: screen.friendToggleRequested(player)
+                                onCopyRequested: screen.copyRequested(playerKey)
                             }
                         }
 
@@ -558,18 +638,19 @@ Item {
 
                         ListView {
                             id: chatList
+                            objectName: "chatList"
                             width: parent.width
                             height: parent.height - 86
                             clip: true
                             spacing: 6
-                            model: screen.messages
+                            model: ListModel { id: chatModel }
                             boundsBehavior: Flickable.StopAtBounds
-
-                            onCountChanged: positionViewAtEnd()
 
                             delegate: Item {
                                 id: messageRow
-                                required property var modelData
+                                required property string kind
+                                required property string username
+                                required property string body
                                 width: chatList.width
                                 height: messageText.implicitHeight + 8
 
@@ -577,11 +658,11 @@ Item {
                                     id: messageText
                                     width: parent.width
                                     textFormat: Text.PlainText
-                                    text: (modelData.kind === "system")
-                                          ? "— " + (modelData.text ?? "")
-                                          : (modelData.username ?? "") + "   " + (modelData.text ?? "")
-                                    color: modelData.kind === "system" ? theme.textFaint
-                                         : modelData.kind === "error" ? theme.red
+                                    text: messageRow.kind === "system"
+                                          ? "— " + messageRow.body
+                                          : messageRow.username + "   " + messageRow.body
+                                    color: messageRow.kind === "system" ? theme.textFaint
+                                         : messageRow.kind === "error" ? theme.red
                                          : theme.text
                                     font.family: theme.bodyFamily
                                     font.pixelSize: 13
@@ -663,15 +744,18 @@ Item {
                         }
 
                         Repeater {
-                            model: screen.liveMatches()
+                            // Keyed by match so spectator-count and roster
+                            // updates don't rebuild a selected row.
+                            model: screen.liveMatchKeys
 
                             delegate: Focusable {
                                 id: matchItem
-                                required property var modelData
+                                required property string modelData
+                                readonly property var match: screen.matchByKey(modelData)
                                 width: parent.width
                                 height: 58
                                 ringRadius: 9
-                                onActivated: screen.spectateRequested(modelData)
+                                onActivated: screen.spectateRequested(match)
 
                                 Rectangle {
                                     anchors.fill: parent
@@ -687,7 +771,7 @@ Item {
                                     spacing: 2
                                     Text {
                                         width: parent.width
-                                        text: screen.matchPlayerNames(modelData)
+                                        text: screen.matchPlayerNames(matchItem.match)
                                         color: theme.text
                                         elide: Text.ElideRight
                                         font.family: theme.displayFamily
@@ -695,8 +779,8 @@ Item {
                                         font.pixelSize: 14
                                     }
                                     Text {
-                                        text: (modelData.ranked > 0 ? "FT" + modelData.ranked + "  ·  " : "CASUAL  ·  ")
-                                              + modelData.spectators + " watching"
+                                        text: (matchItem.match.ranked > 0 ? "FT" + matchItem.match.ranked + "  ·  " : "CASUAL  ·  ")
+                                              + matchItem.match.spectators + " watching"
                                         color: theme.textFaint
                                         font.family: theme.bodyFamily
                                         font.pixelSize: 10

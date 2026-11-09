@@ -10,6 +10,17 @@ Rectangle {
     property var unread: ({})
     property int roomLimit: 5
 
+    // The model is just the room names: `rooms` is replaced on every player
+    // update, and rebuilding the rows each time would drop the selection.
+    property var roomNames: []
+    onRoomsChanged: {
+        var next = (rooms ?? []).map(function(room) { return room.name })
+        if (next.join("\n") !== roomNames.join("\n")) roomNames = next
+    }
+    function roomByName(name) {
+        return (rooms ?? []).find(function(room) { return room.name === name }) ?? ({})
+    }
+
     signal selected(string screen)
     signal roomOpened(string name)
     signal roomLeft(string name)
@@ -131,22 +142,23 @@ Rectangle {
         anchors.bottomMargin: 10
         clip: true
         spacing: 2
-        model: root.rooms
+        model: root.roomNames
         boundsBehavior: Flickable.StopAtBounds
 
         delegate: NavRow {
-            required property var modelData
+            required property string modelData
+            readonly property var room: root.roomByName(modelData)
             width: roomList.width
-            label: modelData.title ?? modelData.name
-            current: root.currentScreen === "room" && root.currentRoom === modelData.name
-            detail: (root.unread[modelData.name] ?? 0) > 0
-                    ? String(root.unread[modelData.name])
-                    : String(modelData.playerCount ?? (modelData.users ?? []).length)
-            detailColor: (root.unread[modelData.name] ?? 0) > 0 ? theme.accentSoft : theme.textFaint
+            label: room.title ?? modelData
+            current: root.currentScreen === "room" && root.currentRoom === modelData
+            detail: (root.unread[modelData] ?? 0) > 0
+                    ? String(root.unread[modelData])
+                    : String(room.playerCount ?? (room.users ?? []).length)
+            detailColor: (root.unread[modelData] ?? 0) > 0 ? theme.accentSoft : theme.textFaint
             hintPrimary: "Open room"
             hintSecondary: "Leave room"
-            onActivated: root.roomOpened(modelData.name)
-            onSecondaryActivated: root.roomLeft(modelData.name)
+            onActivated: root.roomOpened(modelData)
+            onSecondaryActivated: root.roomLeft(modelData)
         }
     }
 }

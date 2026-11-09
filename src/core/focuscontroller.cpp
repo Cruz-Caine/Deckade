@@ -5,6 +5,39 @@
 #include <QtMath>
 #include <limits>
 
+namespace {
+// A Flickable (and therefore a ListView/GridView) exposes contentY and
+// contentItem. Deckade's scrolling views all clip to their own bounds.
+bool isScrollContainer(QQuickItem *item)
+{
+    return item && item->property("contentY").isValid()
+        && item->property("contentItem").isValid();
+}
+
+// Returns the item's nearest scrolling ancestor when the item has been
+// scrolled outside that ancestor's viewport, otherwise nullptr.
+QQuickItem *scrolledOutContainer(QQuickItem *item, QRectF *viewport)
+{
+    for (QQuickItem *ancestor = item->parentItem(); ancestor; ancestor = ancestor->parentItem()) {
+        if (!isScrollContainer(ancestor)) {
+            continue;
+        }
+        const QRectF local = item->mapRectToItem(ancestor,
+            QRectF(0, 0, item->width(), item->height()));
+        const QRectF visible(0, 0, ancestor->width(), ancestor->height());
+        if (!visible.intersects(local)) {
+            if (viewport) {
+                *viewport = visible;
+            }
+            return ancestor;
+        }
+        // Only the nearest scroller decides whether the row is on screen.
+        break;
+    }
+    return nullptr;
+}
+} // namespace
+
 FocusController::FocusController(QObject *parent)
     : QObject(parent)
 {
@@ -120,51 +153,110 @@ void FocusController::move(int dx, int dy)
         return;
     }
 
-    const Candidate *best = nullptr;
-    qreal bestScore = std::numeric_limits<qreal>::max();
-
-    for (const Candidate &candidate : items) {
-        if (candidate.item == origin->item) {
-            continue;
-        }
-
-        const qreal deltaX = candidate.center.x() - origin->center.x();
-        const qreal deltaY = candidate.center.y() - origin->center.y();
-
-        if (dx > 0 && deltaX <= 1.0) continue;
-        if (dx < 0 && deltaX >= -1.0) continue;
-        if (dy > 0 && deltaY <= 1.0) continue;
-        if (dy < 0 && deltaY >= -1.0) continue;
-
-        const qreal primary = dx != 0 ? qAbs(deltaX) : qAbs(deltaY);
-        const qreal secondary = dx != 0 ? qAbs(deltaY) : qAbs(deltaX);
-
-        qreal overlap = 0.0;
-        if (dx != 0) {
-            const qreal top = qMax(candidate.rect.top(), origin->rect.top());
-            const qreal bottom = qMin(candidate.rect.bottom(), origin->rect.bottom());
-            overlap = qMax<qreal>(0.0, bottom - top);
+    // When the focused row has been scrolled out of its list, navigating from
+    // its hidden position would drag the list back to it. Up and Down start
+    // from the viewport edge instead, so they land on a row the player can
+    // see. Left and Right still leave the list from the row's own column.
+    QQuickItem *scroller = nullptr;
+    QRectF viewport;
+    QPointF originCenter = origin->center;
+    QRectF originRect = origin->rect;
+    bool restrictToViewport = false;
+    if (QQuickItem *container = scrolledOutContainer(origin->item, &viewport)) {
+        const QRectF sceneViewport = container->mapRectToScene(viewport);
+        if (dy != 0) {
+            scroller = container;
+            restrictToViewport = true;
+            originCenter.setY(dy > 0 ? sceneViewport.top() : sceneViewport.bottom());
         } else {
-            const qreal left = qMax(candidate.rect.left(), origin->rect.left());
-            const qreal right = qMin(candidate.rect.right(), origin->rect.right());
-            overlap = qMax<qreal>(0.0, right - left);
-        }
-
-        qreal score = primary + secondary * (overlap > 0.0 ? 0.35 : 2.2);
-        if (overlap > 0.0) {
-            score -= qMin<qreal>(overlap, 120.0) * 0.35;
-        }
-
-        if (score < bestScore) {
-            bestScore = score;
-            best = &candidate;
+            originCenter.setY(sceneViewport.center().y());
+            originRect.setTop(sceneViewport.top());
+            originRect.setBottom(sceneViewport.bottom());
         }
     }
 
-    if (best) {
-        focusItem(best->item);
+    auto insideViewport = [&](const Candidate &candidate) {
+        if (!scroller) {
+            return true;
+        }
+        const QRectF local = candidate.item->mapRectToItem(scroller,
+            QRectF(0, 0, candidate.item->width(), candidate.item->height()));
+        return QRectF(0, 0, scroller->width(), scroller->height()).intersects(local);
+    };
+
+    // Horizontal moves stay in the row band the player is looking at;
+    // vertical moves stay in the same column band. Only when nothing shares
+    // that band do we consider diagonal candidates. Without this, a wide
+    // window made Right from the featured banner jump to a card below it
+    // instead of the panel beside it.
+    auto pick = [&](bool requireBandOverlap) -> QQuickItem * {
+        const Candidate *best = nullptr;
+        qreal bestScore = std::numeric_limits<qreal>::max();
+
+        for (const Candidate &candidate : items) {
+            if (candidate.item == origin->item) {
+                continue;
+            }
+            if (restrictToViewport && !insideViewport(candidate)) {
+                continue;
+            }
+
+            const qreal deltaX = candidate.center.x() - originCenter.x();
+            const qreal deltaY = candidate.center.y() - originCenter.y();
+
+            if (dx > 0 && deltaX <= 1.0) continue;
+            if (dx < 0 && deltaX >= -1.0) continue;
+            if (dy > 0 && deltaY <= 1.0) continue;
+            if (dy < 0 && deltaY >= -1.0) continue;
+
+            const qreal primary = dx != 0 ? qAbs(deltaX) : qAbs(deltaY);
+            const qreal secondary = dx != 0 ? qAbs(deltaY) : qAbs(deltaX);
+
+            qreal overlap = 0.0;
+            if (dx != 0) {
+                const qreal top = qMax(candidate.rect.top(), originRect.top());
+                const qreal bottom = qMin(candidate.rect.bottom(), originRect.bottom());
+                overlap = qMax<qreal>(0.0, bottom - top);
+            } else {
+                const qreal left = qMax(candidate.rect.left(), originRect.left());
+                const qreal right = qMin(candidate.rect.right(), originRect.right());
+                overlap = qMax<qreal>(0.0, right - left);
+            }
+
+            if (requireBandOverlap && overlap <= 0.0) {
+                continue;
+            }
+
+            qreal score = primary + secondary * (overlap > 0.0 ? 0.35 : 2.2);
+            if (overlap > 0.0) {
+                score -= qMin<qreal>(overlap, 120.0) * 0.35;
+            }
+
+            if (score < bestScore) {
+                bestScore = score;
+                best = &candidate;
+            }
+        }
+
+        return best ? best->item : nullptr;
+    };
+
+    QQuickItem *target = pick(true);
+    if (!target) {
+        // No candidate within the band. Allow diagonal movement, but when a
+        // list was scrolled, stay inside that list before leaving it.
+        target = pick(false);
+    }
+    if (!target && restrictToViewport) {
+        restrictToViewport = false;
+        target = pick(false);
+    }
+
+    if (target) {
+        focusItem(target);
     }
 }
+
 
 void FocusController::activate()
 {

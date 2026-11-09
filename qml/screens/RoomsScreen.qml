@@ -10,6 +10,16 @@ Item {
     property int maxChannels: 5
     property var unread: ({})
 
+    // Keyed by name so player updates don't rebuild the selected card.
+    property var roomNames: []
+    onRoomsChanged: {
+        var next = (rooms ?? []).map(function(room) { return room.name })
+        if (next.join("\n") !== roomNames.join("\n")) roomNames = next
+    }
+    function roomByName(name) {
+        return (rooms ?? []).find(function(room) { return room.name === name }) ?? ({})
+    }
+
     signal openRequested(string channelName)
     signal browseRequested()
 
@@ -92,16 +102,16 @@ Item {
 
                 Repeater {
                     id: roomRepeater
-                    model: screen.rooms
+                    model: screen.roomNames
 
                     delegate: GameCard {
-                        required property var modelData
+                        required property string modelData
                         width: (roomGrid.width - (roomGrid.columns - 1) * 14) / roomGrid.columns
                         height: width * 0.58
-                        channel: modelData
+                        channel: screen.roomByName(modelData)
                         joined: true
                         favorite: false
-                        onJoinRequested: screen.openRequested(modelData.name)
+                        onJoinRequested: screen.openRequested(modelData)
                     }
                 }
             }

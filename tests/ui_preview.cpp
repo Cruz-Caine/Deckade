@@ -21,6 +21,8 @@
 #include <QQmlContext>
 #include <QQuickStyle>
 #include <QQuickWindow>
+#include <QSettings>
+#include <QTemporaryDir>
 #include <QTimer>
 
 static const char *kFixture = R"({
@@ -50,11 +52,14 @@ int main(int argc, char *argv[])
     const QString outDir = argc > 1 ? QString::fromLocal8Bit(argv[1]) : QStringLiteral(".");
     QDir().mkpath(outDir);
 
+    // SettingsStore always opens deckade/deckade.ini, so point QSettings at a
+    // throwaway directory. Previews must never see or change a developer's
+    // real session, rooms or preferences.
+    QTemporaryDir settingsDir;
+    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, settingsDir.path());
+
     SettingsStore settings;
-    // Preview screenshots must never sign in with a developer's remembered
-    // session or touch Fightcade; the mock data below is all they need.
-    settings.clearSession();
-    settings.setRememberLogin(false);
+    settings.setFullscreen(false); // The default would snap to the virtual screen.
     Theme theme;
     GamepadManager gamepad;
     FocusController focusController;
@@ -136,6 +141,10 @@ int main(int argc, char *argv[])
         window->setProperty("browseTotal", all.size());
         window->setProperty("unread", QVariantMap{{QStringLiteral("sfiii3nr1"), 3}});
         window->setProperty("currentChannel", rooms2.first());
+        window->setProperty("currentMessages", QVariantList{
+            QVariantMap{{QStringLiteral("kind"), QStringLiteral("system")}, {QStringLiteral("text"), QStringLiteral("terry_b challenged you to FT3 in The King of Fighters '98.")}},
+            QVariantMap{{QStringLiteral("kind"), QStringLiteral("chat")}, {QStringLiteral("username"), QStringLiteral("Iori_main")}, {QStringLiteral("text"), QStringLiteral("anyone up for ft5?")}},
+            QVariantMap{{QStringLiteral("kind"), QStringLiteral("error")}, {QStringLiteral("text"), QStringLiteral("Message could not be sent.")}}});
         window->setProperty("inputMode", shot.inputMode);
         window->setProperty("screen", shot.screen);
         if (shot.name == QStringLiteral("challenge")) {

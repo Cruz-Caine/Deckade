@@ -256,13 +256,11 @@ ApplicationWindow {
         var next = desired === undefined ? !isFavorite(name) : desired
         client.favChannel(name, next)
         replaceChannel(name, function(channel) { channel.isFavorite = next })
-        var list = allChannels.slice()
-        for (var i = 0; i < list.length; ++i) {
-            if (list[i].name === name) {
-                list[i] = Object.assign({}, list[i], { isFavorite: next })
-            }
+        // Update in place: reassigning allChannels rebuilds every Home card,
+        // which drops the selection and resets the scroll position.
+        for (var i = 0; i < allChannels.length; ++i) {
+            if (allChannels[i].name === name) allChannels[i].isFavorite = next
         }
-        allChannels = list
     }
 
     function sendChat(text) {

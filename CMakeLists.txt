@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(Deckade VERSION 0.2.13 LANGUAGES CXX)
+project(Deckade VERSION 0.2.14 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -245,6 +245,20 @@ qt_add_resources(deckade_ui_preview "deckade_preview_resources"
 )
 get_target_property(DECKADE_APP_LIBS deckade LINK_LIBRARIES)
 target_link_libraries(deckade_ui_preview PRIVATE ${DECKADE_APP_LIBS})
+
+# Drives the real QML with D-pad moves and roster/chat updates, headlessly.
+qt_add_executable(deckade_navigation_tests tests/navigation_tests.cpp ${DECKADE_PREVIEW_SOURCES})
+target_compile_definitions(deckade_navigation_tests PRIVATE DECKADE_VERSION="${PROJECT_VERSION}")
+target_include_directories(deckade_navigation_tests PRIVATE src)
+qt_add_resources(deckade_navigation_tests "deckade_navigation_resources"
+    PREFIX "/"
+    BASE "${CMAKE_CURRENT_SOURCE_DIR}"
+    FILES ${DECKADE_QML} ${DECKADE_ASSETS}
+)
+target_link_libraries(deckade_navigation_tests PRIVATE ${DECKADE_APP_LIBS})
+add_test(NAME deckade_navigation_tests COMMAND deckade_navigation_tests)
+set_tests_properties(deckade_navigation_tests PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software")
 
 add_test(NAME deckade_runtime_assets_tests
          COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tests/runtime_assets_tests.py)

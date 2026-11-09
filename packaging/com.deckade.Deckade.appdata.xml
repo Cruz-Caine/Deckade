@@ -27,6 +27,13 @@
     <category>Emulator</category>
   </categories>
   <releases>
+    <release version="0.2.14" date="2026-11-09">
+      <description>
+        <p>Moving sideways from the Home banner now goes to what is beside it.
+        The player list, chat and room lists keep their position and selection
+        while the lobby updates instead of jumping to the top.</p>
+      </description>
+    </release>
     <release version="0.2.13" date="2026-11-09">
       <description>
         <p>Controls now live with each game instead of a redundant sidebar entry.
