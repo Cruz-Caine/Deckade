@@ -352,8 +352,7 @@ bool copyTrainingMode(const QString &source, const QString &target)
                     }
                 }
                 if (destination.endsWith(QStringLiteral("fbneo-training-mode.lua"))) {
-                    const QByteArray disabled = data;
-                    data.replace("DISABLE_SCROLLING_INPUT = false", "DISABLE_SCROLLING_INPUT = true");
+                    const QByteArray original = data;
                     // The training script calls gd.* directly; Lua's require()
                     // does not create that global on all Lua 5.1 builds.
                     data.replace("require \"gd\"", "gd = require \"gd\"");
@@ -367,7 +366,7 @@ bool copyTrainingMode(const QString &source, const QString &target)
                     // render as a blue/white grid. Keep hitboxes opt-in via the
                     // training menu instead of enabling them by default.
                     data.replace("hitbox = {\n\t\tenabled = true", "hitbox = {\n\t\tenabled = false");
-                    changed = changed || data != disabled;
+                    changed = changed || data != original;
                 }
                 if (changed && file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
                     file.write(data);
