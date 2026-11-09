@@ -27,6 +27,13 @@
     <category>Emulator</category>
   </categories>
   <releases>
+    <release version="0.2.12" date="2026-11-09">
+      <description>
+        <p>Redesigned interface focused on controller-first navigation, per-game controller
+        bindings for FBNeo, Snes9x and Flycast, an explicit keyboard-input mode, and a
+        clear indicator for whether a game's required files have been downloaded.</p>
+      </description>
+    </release>
     <release version="0.2.11" date="2026-11-09"/>
     <release version="0.2.10" date="2026-11-06"/>
     <release version="0.2.9" date="2026-11-06"/>

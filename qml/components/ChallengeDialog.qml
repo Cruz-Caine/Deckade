@@ -58,7 +58,7 @@ FocusScope {
         width: 700
         height: root.incoming ? 330 : 430
         anchors.centerIn: parent
-        radius: 18
+        radius: 10
         color: theme.backgroundAlt
         border.width: 1
         border.color: theme.borderStrong
@@ -69,12 +69,11 @@ FocusScope {
             spacing: 18
 
             Text {
-                text: root.incoming ? "INCOMING CHALLENGE" : "CHALLENGE PLAYER"
+                text: root.incoming ? "Incoming challenge" : "Challenge player"
                 color: root.incoming ? theme.gold : theme.accent
                 font.family: theme.displayFamily
                 font.weight: Font.Bold
                 font.pixelSize: 17
-                font.letterSpacing: 2.4
             }
 
             Row {
@@ -127,8 +126,8 @@ FocusScope {
                         { label: "FT3", value: 3 },
                         { label: "FT5", value: 5 },
                         { label: "FT10", value: 10 },
-                        { label: "FT20", value: 20 },
-                        { label: "UNRANKED", value: 0 }
+                        { label: "Ft20", value: 20 },
+                        { label: "Unranked", value: 0 }
                     ]
 
                     delegate: AppButton {
@@ -149,7 +148,7 @@ FocusScope {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 AppButton {
-                    text: "CANCEL"
+                    text: "Cancel"
                     compact: true
                     navGroup: "modal"
                     onClicked: root.cancel()
@@ -162,7 +161,7 @@ FocusScope {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 AppButton {
-                    text: "DECLINE"
+                    text: "Decline"
                     compact: true
                     danger: true
                     navGroup: "modal"
@@ -170,7 +169,7 @@ FocusScope {
                 }
 
                 AppButton {
-                    text: root.challenge.ranked > 0 ? "ACCEPT FT" + root.challenge.ranked : "ACCEPT"
+                    text: root.challenge.ranked > 0 ? "Accept FT" + root.challenge.ranked : "Accept"
                     compact: true
                     primary: true
                     navGroup: "modal"

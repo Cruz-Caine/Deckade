@@ -1,4 +1,9 @@
 #include "libretro.h"
+
+#include <cstdlib>
+#include <fstream>
+#include <sstream>
+#include <string>
 #include "macade_quark.h"
 #include "snapshot.h"
 
@@ -157,6 +162,45 @@ uint32_t buttonBit(unsigned id)
     }
 }
 
+struct PadBinding {
+    char kind = 0;
+    int index = 0;
+    int direction = 0;
+};
+PadBinding padBindings[16];
+bool keyboardInput = false;
+
+// Reads the bindings saved on Deckade's Controls screen.
+void loadPadBindings()
+{
+    const char *device = std::getenv("DECKADE_INPUT_DEVICE");
+    keyboardInput = device && std::string(device) == "keyboard";
+    const char *path = std::getenv("MACADE_GAMEPAD_PROFILE_PATH");
+    if (!path) return;
+    std::ifstream file(path);
+    std::string line;
+    if (!std::getline(file, line) || line != "MACADE_GAMEPADS 1") return;
+    while (std::getline(file, line)) {
+        std::istringstream row(line);
+        std::string identity, game, info, kind;
+        int input = 0, player = 0, index = 0, direction = 0;
+        if (!(row >> identity >> game >> input >> player >> info >> kind >> index >> direction)) continue;
+        if (input < 0 || input >= 16 || kind.size() != 1) continue;
+        padBindings[input] = PadBinding{kind[0], index, direction};
+    }
+}
+
+bool padBindingActive(SDL_Joystick *joystick, const PadBinding &binding)
+{
+    if (binding.kind == 'b') return SDL_JoystickGetButton(joystick, binding.index) != 0;
+    if (binding.kind == 'h') return (SDL_JoystickGetHat(joystick, binding.index) & binding.direction) != 0;
+    if (binding.kind == 'a') {
+        const int value = SDL_JoystickGetAxis(joystick, binding.index);
+        return binding.direction < 0 ? value < -16000 : value > 16000;
+    }
+    return false;
+}
+
 uint32_t localJoypadBits()
 {
     uint32_t bits = 0;
@@ -181,6 +225,13 @@ uint32_t localJoypadBits()
         if (pressed(SDL_CONTROLLER_BUTTON_DPAD_DOWN) || axis(SDL_CONTROLLER_AXIS_LEFTY) > 16000) bits |= buttonBit(RETRO_DEVICE_ID_JOYPAD_DOWN);
         if (pressed(SDL_CONTROLLER_BUTTON_DPAD_LEFT) || axis(SDL_CONTROLLER_AXIS_LEFTX) < -16000) bits |= buttonBit(RETRO_DEVICE_ID_JOYPAD_LEFT);
         if (pressed(SDL_CONTROLLER_BUTTON_DPAD_RIGHT) || axis(SDL_CONTROLLER_AXIS_LEFTX) > 16000) bits |= buttonBit(RETRO_DEVICE_ID_JOYPAD_RIGHT);
+
+        SDL_Joystick *joystick = SDL_GameControllerGetJoystick(controller);
+        for (int id = 0; id < 16; ++id) {
+            if (!padBindings[id].kind) continue;
+            bits &= ~(1u << id);
+            if (padBindingActive(joystick, padBindings[id])) bits |= 1u << id;
+        }
     }
 
     const Uint8 *keys = SDL_GetKeyboardState(nullptr);
@@ -379,6 +430,8 @@ void configureDirectories()
 
 void openController()
 {
+    loadPadBindings();
+    if (keyboardInput) return;
     for (int i = 0; i < SDL_NumJoysticks(); ++i) {
         if (!SDL_IsGameController(i)) continue;
         controller = SDL_GameControllerOpen(i);

@@ -8,6 +8,7 @@ class SettingsStore : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString romPath READ romPath WRITE setRomPath NOTIFY romPathChanged)
+    Q_PROPERTY(QString gameInputDevice READ gameInputDevice WRITE setGameInputDevice NOTIFY gameInputDeviceChanged)
     Q_PROPERTY(bool showControllerHints READ showControllerHints WRITE setShowControllerHints NOTIFY showControllerHintsChanged)
     Q_PROPERTY(bool autoJoinLastChannels READ autoJoinLastChannels WRITE setAutoJoinLastChannels NOTIFY autoJoinLastChannelsChanged)
     Q_PROPERTY(bool reduceMotion READ reduceMotion WRITE setReduceMotion NOTIFY reduceMotionChanged)
@@ -41,6 +42,8 @@ public:
     QString sessionCookie() const;
 
     void setRomPath(const QString &value);
+    QString gameInputDevice() const { return m_gameInputDevice; }
+    void setGameInputDevice(const QString &value);
     void setShowControllerHints(bool value);
     void setAutoJoinLastChannels(bool value);
     void setReduceMotion(bool value);
@@ -58,6 +61,7 @@ public:
 
 signals:
     void romPathChanged();
+    void gameInputDeviceChanged();
     void showControllerHintsChanged();
     void autoJoinLastChannelsChanged();
     void reduceMotionChanged();
@@ -72,6 +76,7 @@ signals:
 private:
     QSettings m_settings;
     QString m_romPath;
+    QString m_gameInputDevice = QStringLiteral("controller");
     bool m_showControllerHints = true;
     bool m_autoJoinLastChannels = true;
     bool m_reduceMotion = false;

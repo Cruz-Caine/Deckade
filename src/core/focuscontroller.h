@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE void refresh();
     Q_INVOKABLE void activate();
     Q_INVOKABLE void secondaryActivate();
+    Q_INVOKABLE void tertiaryActivate();
     Q_INVOKABLE void focusItem(QQuickItem *item);
 
 signals:

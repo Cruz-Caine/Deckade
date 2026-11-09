@@ -48,6 +48,8 @@ public:
     int controllerIndex() const { return m_controllerIndex; }
 
     Q_INVOKABLE void loadForGame(const QString &gameId);
+    // Snes9x and Flycast share one profile each; only FBNeo varies by game.
+    Q_INVOKABLE void loadFor(const QString &emulator, const QString &gameId);
     Q_INVOKABLE void prepareCapture(int inputIndex);
     Q_INVOKABLE void cancelCapture();
     Q_INVOKABLE void clearBinding(int inputIndex);
@@ -67,9 +69,14 @@ private:
         QString kind;
         int controlIndex = 0;
         int direction = 0;
+        QString flycastName;
     };
 
     void runHelper();
+    void buildStaticActions();
+    void seedFlycastDefaults();
+    void writeFlycastMappings() const;
+    QString flycastMappingBase() const;
     void parseProfile();
     bool ensureController();
     void closeController();
@@ -84,6 +91,7 @@ private:
     FightcadeLauncher *m_launcher = nullptr;
     SettingsStore *m_settings = nullptr;
     QString m_gameId;
+    QString m_emulator = QStringLiteral("fbneo");
     QString m_status;
     QList<Action> m_actionList;
     bool m_capturing = false;

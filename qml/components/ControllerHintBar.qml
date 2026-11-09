@@ -3,45 +3,58 @@ import QtQuick
 Rectangle {
     id: root
 
-    property var hints: [
-        { button: "A", label: "Select" },
-        { button: "B", label: "Back" },
-        { button: "X", label: "Favorite" },
-        { button: "Y", label: "Keyboard" },
-        { button: "LB/RB", label: "Section" },
-        { button: "☰", label: "Menu" }
-    ]
+    property string inputMode: "controller"
+    property var item: null
+
+    readonly property bool keyboard: inputMode === "keyboard"
+    readonly property bool textField: item !== null && item.deckTextInput === true
+    readonly property var hints: {
+        const list = []
+        const add = function(pad, key, label) {
+            if (label && label.length > 0) list.push({ button: keyboard ? key : pad, label: label })
+        }
+        if (textField) {
+            add("A", "Enter", keyboard ? "Confirm" : "Open keyboard")
+        } else {
+            add("A", "Enter", item ? item.hintPrimary : "Select")
+            add("X", "X", item ? item.hintSecondary : "")
+            add("Y", "F", item ? item.hintTertiary : "")
+        }
+        add("B", "Esc", "Back")
+        add("Lb / rb", "Q / e", "Switch page")
+        add("Menu", "M", "Settings")
+        return list
+    }
 
     height: 42
-    color: "#0a0d14dd"
-    border.width: 0
+    color: theme.backgroundAlt
 
     Row {
         anchors.left: parent.left
-        anchors.leftMargin: 22
+        anchors.leftMargin: 18
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 18
+        spacing: 20
 
         Repeater {
             model: root.hints
             delegate: Row {
+                required property var modelData
                 spacing: 7
                 anchors.verticalCenter: parent.verticalCenter
 
                 Rectangle {
                     width: Math.max(24, badgeText.implicitWidth + 12)
                     height: 22
-                    radius: 6
+                    radius: 5
                     color: theme.panelHover
-                    border.width: 1
-                    border.color: theme.borderStrong
+                    anchors.verticalCenter: parent.verticalCenter
 
                     Text {
                         id: badgeText
                         anchors.centerIn: parent
                         text: modelData.button
                         color: theme.text
-                        font.family: theme.displayFamily
+                        font.family: theme.bodyFamily
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
                     }
@@ -49,37 +62,25 @@ Rectangle {
 
                 Text {
                     text: modelData.label
-                    color: theme.textFaint
+                    color: theme.textMuted
                     font.family: theme.bodyFamily
-                    font.pixelSize: 11
+                    font.pixelSize: 12
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
         }
     }
 
-    Row {
+    Text {
         anchors.right: parent.right
-        anchors.rightMargin: 22
+        anchors.rightMargin: 18
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 8
-
-        Rectangle {
-            width: 7
-            height: 7
-            radius: 4
-            color: gamepad.connected ? theme.green : theme.textFaint
-            anchors.verticalCenter: parent.verticalCenter
-        }
-
-        Text {
-            text: gamepad.connected ? gamepad.controllerName : "Keyboard navigation"
-            color: theme.textFaint
-            font.family: theme.bodyFamily
-            font.pixelSize: 11
-            elide: Text.ElideRight
-            width: 250
-            horizontalAlignment: Text.AlignRight
-        }
+        text: gamepad.connected ? gamepad.controllerName : "No controller connected"
+        color: theme.textFaint
+        font.family: theme.bodyFamily
+        font.pixelSize: 12
+        elide: Text.ElideRight
+        width: 220
+        horizontalAlignment: Text.AlignRight
     }
 }

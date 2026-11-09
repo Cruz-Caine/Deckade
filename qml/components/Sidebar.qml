@@ -1,139 +1,151 @@
 import QtQuick
+import QtQuick.Controls
 
 Rectangle {
     id: root
 
-    property int currentIndex: 0
-    property int roomCount: 0
-    signal selected(int index)
+    property string currentScreen: "home"
+    property string currentRoom: ""
+    property var rooms: []
+    property var unread: ({})
+    property int roomLimit: 5
 
-    width: 94
-    color: "#0b0e16cc"
-    border.width: 0
+    signal selected(string screen)
+    signal roomOpened(string name)
+    signal roomLeft(string name)
+
+    color: theme.backgroundAlt
+
+    component NavRow: Focusable {
+        id: row
+        property string label: ""
+        property string detail: ""
+        property bool current: false
+        property color detailColor: theme.textFaint
+        width: parent.width
+        height: 40
+        ringOutside: false
+        ringRadius: 6
+
+        Rectangle {
+            anchors.fill: parent
+            radius: 6
+            color: row.current ? theme.panelRaised : row.hovered ? theme.panel : "transparent"
+        }
+
+        Text {
+            anchors.left: parent.left
+            anchors.leftMargin: 12
+            anchors.right: detailText.left
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            text: row.label
+            color: row.current ? theme.text : theme.textMuted
+            elide: Text.ElideRight
+            font.family: theme.bodyFamily
+            font.weight: row.current ? Font.DemiBold : Font.Medium
+            font.pixelSize: 14
+        }
+
+        Text {
+            id: detailText
+            anchors.right: parent.right
+            anchors.rightMargin: 12
+            anchors.verticalCenter: parent.verticalCenter
+            text: row.detail
+            color: row.detailColor
+            font.family: theme.bodyFamily
+            font.pixelSize: 12
+        }
+    }
 
     Column {
-        anchors.fill: parent
-        anchors.topMargin: 18
-        anchors.bottomMargin: 14
-        spacing: 8
+        id: topColumn
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.margins: 10
+        spacing: 2
 
-        Item {
-            width: parent.width
-            height: 52
+        Row {
+            height: 54
+            spacing: 10
+            leftPadding: 6
 
             Image {
-                anchors.centerIn: parent
-                width: 42
-                height: 42
+                width: 26
+                height: 26
+                anchors.verticalCenter: parent.verticalCenter
                 source: "qrc:/assets/icons/deckade.svg"
                 smooth: true
+            }
+
+            Text {
+                text: "Deckade"
+                color: theme.text
+                anchors.verticalCenter: parent.verticalCenter
+                font.family: theme.bodyFamily
+                font.weight: Font.Bold
+                font.pixelSize: 17
+            }
+        }
+
+        Repeater {
+            model: [
+                { label: "Home", screen: "home" },
+                { label: "Browse", screen: "browse" },
+                { label: "Controls", screen: "controls" },
+                { label: "Settings", screen: "settings" }
+            ]
+
+            delegate: NavRow {
+                required property var modelData
+                label: modelData.label
+                current: root.currentScreen === modelData.screen
+                hintPrimary: "Open"
+                onActivated: root.selected(modelData.screen)
             }
         }
 
         Item { width: 1; height: 12 }
 
-        Repeater {
-            model: [
-                { icon: "⌂", label: "HOME" },
-                { icon: "⌕", label: "BROWSE" },
-                { icon: "▤", label: "ROOMS" },
-                { icon: "⚙", label: "SETTINGS" }
-            ]
-
-            delegate: Focusable {
-                id: navItem
-                required property int index
-                required property var modelData
-                property bool current: root.currentIndex === index
-
-                width: 94
-                height: 68
-                navGroup: "main"
-                ringRadius: 12
-                onActivated: root.selected(index)
-
-                Rectangle {
-                    anchors.fill: parent
-                    anchors.margins: 9
-                    radius: 12
-                    color: navItem.current ? theme.panelRaised : navItem.activeFocus ? theme.panelHover : "transparent"
-                    border.width: navItem.current ? 1 : 0
-                    border.color: theme.borderStrong
-                }
-
-                Rectangle {
-                    visible: navItem.current
-                    width: 3
-                    height: 28
-                    radius: 2
-                    color: theme.accent
-                    anchors.left: parent.left
-                    anchors.leftMargin: 3
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Column {
-                    anchors.centerIn: parent
-                    spacing: 1
-
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: modelData.icon
-                        color: navItem.current ? theme.accent : theme.textMuted
-                        font.family: theme.bodyFamily
-                        font.pixelSize: 24
-                    }
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: modelData.label
-                        color: navItem.current ? theme.text : theme.textFaint
-                        font.family: theme.displayFamily
-                        font.weight: Font.DemiBold
-                        font.pixelSize: 9
-                        font.letterSpacing: 0.9
-                    }
-                }
-
-                Rectangle {
-                    visible: index === 2 && root.roomCount > 0 && !navItem.current
-                    width: 7
-                    height: 7
-                    radius: 4
-                    color: theme.cyan
-                    anchors.top: parent.top
-                    anchors.topMargin: 15
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-            }
+        NavRow {
+            label: "Rooms"
+            detail: root.rooms.length + " of " + root.roomLimit
+            current: root.currentScreen === "rooms"
+            hintPrimary: "Manage rooms"
+            onActivated: root.selected("rooms")
         }
+    }
 
-        Item { width: 1; height: 6 }
+    ListView {
+        id: roomList
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: topColumn.bottom
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+        anchors.topMargin: 2
+        anchors.bottomMargin: 10
+        clip: true
+        spacing: 2
+        model: root.rooms
+        boundsBehavior: Flickable.StopAtBounds
 
-        Item {
-            width: parent.width
-            height: 54
-
-            Column {
-                anchors.centerIn: parent
-                spacing: 4
-
-                Rectangle {
-                    width: 8
-                    height: 8
-                    radius: 4
-                    color: gamepad.connected ? theme.green : theme.textFaint
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                Text {
-                    text: gamepad.connected ? "PAD" : "KEYS"
-                    color: theme.textFaint
-                    font.family: theme.displayFamily
-                    font.weight: Font.DemiBold
-                    font.pixelSize: 9
-                    font.letterSpacing: 1.2
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-            }
+        delegate: NavRow {
+            required property var modelData
+            width: roomList.width
+            label: modelData.title ?? modelData.name
+            current: root.currentScreen === "room" && root.currentRoom === modelData.name
+            detail: (root.unread[modelData.name] ?? 0) > 0
+                    ? String(root.unread[modelData.name])
+                    : String(modelData.playerCount ?? (modelData.users ?? []).length)
+            detailColor: (root.unread[modelData.name] ?? 0) > 0 ? theme.accentSoft : theme.textFaint
+            hintPrimary: "Open room"
+            hintSecondary: "Leave room"
+            onActivated: root.roomOpened(modelData.name)
+            onSecondaryActivated: root.roomLeft(modelData.name)
         }
     }
 }

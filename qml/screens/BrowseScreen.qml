@@ -9,7 +9,7 @@ Item {
     property var channels: []
     property int page: 0
     property int totalChannels: 0
-    property string title: "ALL GAMES"
+    property string title: "All games"
     property bool loading: false
     property var filters: ({})
     property var joinedChannels: []
@@ -19,6 +19,7 @@ Item {
     signal searchRequested(var request)
     signal joinRequested(string channelName)
     signal favoriteRequested(string channelName, bool favorite)
+    signal joinToggleRequested(string channelName)
 
     function requestSearch(targetPage) {
         var request = {
@@ -60,12 +61,11 @@ Item {
             spacing: 12
 
             Text {
-                text: screen.title.toUpperCase()
+                text: screen.title
                 color: theme.text
                 font.family: theme.displayFamily
                 font.weight: Font.Bold
                 font.pixelSize: 24
-                font.letterSpacing: 2
                 width: 300
                 elide: Text.ElideRight
                 anchors.verticalCenter: parent.verticalCenter
@@ -82,7 +82,7 @@ Item {
             }
 
             AppButton {
-                text: "SEARCH"
+                text: "Search"
                 compact: true
                 width: 126
                 anchors.verticalCenter: parent.verticalCenter
@@ -99,10 +99,10 @@ Item {
 
             Repeater {
                 model: [
-                    { label: "ALL", mode: 0 },
-                    { label: "RANKED", mode: 1 },
-                    { label: "UNRANKED", mode: 2 },
-                    { label: "FAVORITES", mode: 3 }
+                    { label: "All", mode: 0 },
+                    { label: "Ranked", mode: 1 },
+                    { label: "Unranked", mode: 2 },
+                    { label: "Favorites", mode: 3 }
                 ]
 
                 delegate: Focusable {
@@ -132,7 +132,6 @@ Item {
                         font.family: theme.displayFamily
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        font.letterSpacing: 1.1
                     }
                 }
             }
@@ -171,11 +170,12 @@ Item {
                         delegate: GameCard {
                             required property var modelData
                             width: (grid.width - (grid.columns - 1) * 14) / grid.columns
-                            height: width * 0.58
+                            height: Math.max(width * 0.62, 176)
                             channel: modelData
                             joined: screen.isJoined(modelData.name)
                             favorite: screen.isFavorite(modelData.name)
                             onJoinRequested: screen.joinRequested(modelData.name)
+                            onJoinToggleRequested: screen.joinToggleRequested(modelData.name)
                             onFavoriteRequested: screen.favoriteRequested(modelData.name, !screen.isFavorite(modelData.name))
                         }
                     }
@@ -186,7 +186,7 @@ Item {
                     anchors.centerIn: parent
                     width: 260
                     height: 90
-                    radius: 14
+                    radius: 10
                     color: theme.panel
                     border.width: 1
                     border.color: theme.border
@@ -230,12 +230,11 @@ Item {
                         border.color: theme.border
                         Text {
                             anchors.centerIn: parent
-                            text: "PAGE " + (screen.page + 1) + " / " + screen.totalPages()
+                            text: "Page " + (screen.page + 1) + " / " + screen.totalPages()
                             color: theme.textMuted
                             font.family: theme.displayFamily
                             font.weight: Font.DemiBold
                             font.pixelSize: 11
-                            font.letterSpacing: 1
                         }
                     }
 

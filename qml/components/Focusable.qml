@@ -9,8 +9,12 @@ Item {
     property string navGroup: "main"
     property bool hovered: mouse.containsMouse
     property color ringColor: theme.accent
-    property real ringRadius: 14
+    property real ringRadius: 8
     property bool ringOutside: true
+    // Labels the hint bar shows while this item is selected.
+    property string hintPrimary: "Select"
+    property string hintSecondary: ""
+    property string hintTertiary: ""
     default property alias content: contentItem.data
 
     implicitWidth: contentItem.implicitWidth
@@ -19,6 +23,7 @@ Item {
 
     signal activated()
     signal secondaryActivated()
+    signal tertiaryActivated()
 
     Item {
         id: contentItem
@@ -26,32 +31,13 @@ Item {
     }
 
     Rectangle {
-        id: glow
         anchors.fill: parent
-        anchors.margins: root.ringOutside ? -6 : 0
-        radius: root.ringRadius + 6
+        anchors.margins: root.ringOutside ? -3 : 0
+        radius: root.ringRadius + (root.ringOutside ? 3 : 0)
         color: "transparent"
-        border.width: 8
+        border.width: 2
         border.color: root.ringColor
-        opacity: root.activeFocus ? 0.22 : 0
-        visible: opacity > 0.01
-        Behavior on opacity {
-            NumberAnimation { duration: settings.reduceMotion ? 0 : 130 }
-        }
-    }
-
-    Rectangle {
-        id: ring
-        anchors.fill: parent
-        anchors.margins: root.ringOutside ? -2 : 1
-        radius: root.ringRadius + 2
-        color: "transparent"
-        border.width: root.activeFocus ? 3 : 0
-        border.color: root.ringColor
-        opacity: root.activeFocus ? 1 : 0
-        Behavior on opacity {
-            NumberAnimation { duration: settings.reduceMotion ? 0 : 110 }
-        }
+        visible: root.activeFocus
     }
 
     MouseArea {

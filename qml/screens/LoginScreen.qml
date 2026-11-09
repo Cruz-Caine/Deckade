@@ -9,7 +9,7 @@ Item {
     property bool restoring: false
     property string errorText: ""
     property string statusText: ""
-    property string busyText: "SIGNING IN"
+    property string busyText: "Signing in"
     property bool rememberLogin: settings.rememberLogin
     signal submit(string username, string password)
 
@@ -24,33 +24,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "#07090f" }
-            GradientStop { position: 0.62; color: "#0c111b" }
-            GradientStop { position: 1.0; color: "#141b2a" }
-        }
-    }
-
-    Rectangle {
-        width: 620
-        height: 620
-        radius: 310
-        x: -220
-        y: -260
-        color: "#19ff4655"
-        opacity: 0.55
-    }
-
-    Rectangle {
-        width: 520
-        height: 520
-        radius: 260
-        anchors.right: parent.right
-        anchors.rightMargin: -180
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: -210
-        color: "#163dd6ff"
-        opacity: 0.6
+        color: theme.background
     }
 
     RowLayout {
@@ -74,12 +48,11 @@ Item {
                 }
 
                 Text {
-                    text: "DECKADE"
+                    text: "Deckade"
                     color: theme.text
                     font.family: theme.displayFamily
                     font.weight: Font.Bold
                     font.pixelSize: Math.max(52, Math.min(86, screen.width * 0.062))
-                    font.letterSpacing: 6
                 }
 
                 Rectangle {
@@ -91,12 +64,11 @@ Item {
 
                 Text {
                     width: parent.width
-                    text: "FIGHTCADE, REBUILT FOR THE COUCH."
+                    text: "Fightcade, rebuilt for the couch."
                     color: theme.textMuted
                     font.family: theme.displayFamily
                     font.weight: Font.DemiBold
                     font.pixelSize: Math.max(18, Math.min(22, screen.width * 0.017))
-                    font.letterSpacing: 2.5
                     wrapMode: Text.WordWrap
                 }
 
@@ -113,9 +85,9 @@ Item {
                 Row {
                     spacing: 10
 
-                    Pill { text: "NATIVE GGPO"; strong: true; foreground: theme.green; line: "#245544"; fill: "#0d1915" }
-                    Pill { text: "CONTROLLER FIRST"; strong: true; foreground: theme.cyan; line: "#24516b"; fill: "#0e1c27" }
-                    Pill { text: "STEAM DECK"; strong: true; foreground: theme.gold; line: "#5b4720"; fill: "#1a160b" }
+                    Pill { text: "Native GGPO"; strong: true; foreground: theme.green; line: "#245544"; fill: "#0d1915" }
+                    Pill { text: "Controller first"; strong: true; foreground: theme.cyan; line: "#24516b"; fill: "#0e1c27" }
+                    Pill { text: "Steam deck"; strong: true; foreground: theme.gold; line: "#5b4720"; fill: "#1a160b" }
                 }
             }
         }
@@ -123,10 +95,10 @@ Item {
         Rectangle {
             Layout.preferredWidth: Math.min(432, Math.max(380, screen.width * 0.42))
             Layout.preferredHeight: 560
-            radius: 20
-            color: "#111722ee"
+            radius: 10
+            color: theme.panel
             border.width: 1
-            border.color: theme.borderStrong
+            border.color: theme.border
 
             Column {
                 anchors.fill: parent
@@ -134,12 +106,11 @@ Item {
                 spacing: 18
 
                 Text {
-                    text: "SIGN IN"
+                    text: "Sign in"
                     color: theme.accent
                     font.family: theme.displayFamily
                     font.weight: Font.Bold
                     font.pixelSize: 20
-                    font.letterSpacing: 2.6
                 }
 
                 Text {
@@ -154,12 +125,11 @@ Item {
                 Item { width: 1; height: 8 }
 
                 Text {
-                    text: "USERNAME"
+                    text: "Username"
                     color: theme.textMuted
                     font.family: theme.bodyFamily
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
-                    font.letterSpacing: 1.5
                 }
 
                 DeckField {
@@ -172,12 +142,11 @@ Item {
                 }
 
                 Text {
-                    text: "PASSWORD"
+                    text: "Password"
                     color: theme.textMuted
                     font.family: theme.bodyFamily
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
-                    font.letterSpacing: 1.5
                 }
 
                 DeckField {
@@ -236,7 +205,7 @@ Item {
 
                 AppButton {
                     width: parent.width
-                    text: screen.restoring ? screen.busyText : "ENTER THE ARCADE"
+                    text: screen.restoring ? screen.busyText : "Sign in"
                     primary: true
                     busy: screen.restoring
                     enabled: !screen.restoring
@@ -253,17 +222,6 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                 }
 
-                Item { width: 1; height: 12 }
-
-                Text {
-                    width: parent.width
-                    text: "A select   ·   Y on-screen keyboard   ·   Steam + X also works"
-                    color: theme.textFaint
-                    font.family: theme.bodyFamily
-                    font.pixelSize: 10
-                    horizontalAlignment: Text.AlignHCenter
-                    wrapMode: Text.WordWrap
-                }
             }
         }
     }

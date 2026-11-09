@@ -9,7 +9,7 @@ Rectangle {
 
     width: Math.min(440, textItem.implicitWidth + 58)
     height: Math.max(48, textItem.implicitHeight + 24)
-    radius: 12
+    radius: 10
     color: "#151b27ee"
     border.width: 1
     border.color: level === "error" ? theme.red : level === "warning" ? theme.gold : theme.borderStrong

@@ -17,6 +17,7 @@ Item {
     signal joinRequested(string channelName)
     signal recentMatchJoinRequested(string channelName)
     signal favoriteRequested(string channelName, bool favorite)
+    signal joinToggleRequested(string channelName)
     signal browseRequested()
 
     function featuredChannel() {
@@ -81,6 +82,12 @@ Item {
                     width: parent.width - 356
                     height: parent.height
                     ringRadius: 18
+                    hintPrimary: "Join and open"
+                    hintSecondary: "Join"
+                    onSecondaryActivated: {
+                        var featured = screen.featuredChannel()
+                        if (featured) screen.joinToggleRequested(featured.name)
+                    }
                     onActivated: {
                         var featured = screen.featuredChannel()
                         if (featured) screen.joinRequested(featured.name)
@@ -88,7 +95,7 @@ Item {
 
                     Rectangle {
                         anchors.fill: parent
-                        radius: 18
+                        radius: 10
                         color: theme.panel
                         clip: true
                         border.width: 1
@@ -100,7 +107,7 @@ Item {
                             fillMode: Image.PreserveAspectCrop
                             asynchronous: true
                             cache: true
-                            opacity: 0.72
+                            opacity: 0.85
                         }
 
                         Rectangle {
@@ -124,14 +131,14 @@ Item {
                             Row {
                                 spacing: 8
                                 Pill {
-                                    text: "FEATURED"
+                                    text: "Featured"
                                     strong: true
                                     foreground: theme.accent
                                     line: "#5a2430"
                                     fill: "#1a0d12"
                                 }
                                 Pill {
-                                    text: String(screen.featuredChannel()?.playerCount ?? 0) + " ONLINE"
+                                    text: String(screen.featuredChannel()?.playerCount ?? 0) + " online"
                                     dot: true
                                     foreground: theme.green
                                     line: "#245544"
@@ -139,7 +146,7 @@ Item {
                                 }
                                 Pill {
                                     visible: screen.featuredChannel()?.isRanked === true
-                                    text: "RANKED"
+                                    text: "Ranked"
                                     strong: true
                                     foreground: theme.gold
                                     line: "#5b4720"
@@ -149,11 +156,11 @@ Item {
 
                             Text {
                                 width: parent.width
-                                text: screen.featuredChannel()?.title ?? "NO CHANNELS YET"
+                                text: screen.featuredChannel()?.title ?? "No channels yet"
                                 color: theme.text
                                 font.family: theme.displayFamily
                                 font.weight: Font.Bold
-                                font.pixelSize: 38
+                                font.pixelSize: 30
                                 elide: Text.ElideRight
                             }
 
@@ -172,15 +179,6 @@ Item {
                                     font.pixelSize: 13
                                 }
                             }
-
-                            Text {
-                                text: "PRESS A TO JOIN"
-                                color: hero.activeFocus ? theme.accent : theme.textFaint
-                                font.family: theme.displayFamily
-                                font.weight: Font.DemiBold
-                                font.pixelSize: 12
-                                font.letterSpacing: 1.8
-                            }
                         }
                     }
                 }
@@ -188,8 +186,8 @@ Item {
                 Rectangle {
                     width: 340
                     height: parent.height
-                    radius: 18
-                    color: "#111722cc"
+                    radius: 10
+                    color: theme.panel
                     border.width: 1
                     border.color: theme.border
 
@@ -199,12 +197,11 @@ Item {
                         spacing: 10
 
                         Text {
-                            text: "JUMP BACK IN"
+                            text: "Jump back in"
                             color: theme.textMuted
                             font.family: theme.displayFamily
                             font.weight: Font.DemiBold
                             font.pixelSize: 13
-                            font.letterSpacing: 1.8
                         }
 
                         Text {
@@ -289,7 +286,7 @@ Item {
 
                         AppButton {
                             width: parent.width
-                            text: "BROWSE ALL GAMES"
+                            text: "Browse all games"
                             compact: true
                             onClicked: screen.browseRequested()
                         }
@@ -302,22 +299,20 @@ Item {
                 height: 26
 
                 Text {
-                    text: "POPULAR NOW"
+                    text: "Popular now"
                     color: theme.text
                     font.family: theme.displayFamily
                     font.weight: Font.Bold
                     font.pixelSize: 19
-                    font.letterSpacing: 2
                 }
 
                 Item { width: parent.width - 280; height: 1 }
 
                 Text {
-                    text: "LIVE CHANNELS"
+                    text: "Live channels"
                     color: theme.textFaint
                     font.family: theme.bodyFamily
                     font.pixelSize: 11
-                    font.letterSpacing: 1.2
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
@@ -335,11 +330,12 @@ Item {
                     delegate: GameCard {
                         required property var modelData
                         width: (popularGrid.width - (popularGrid.columns - 1) * 14) / popularGrid.columns
-                        height: width * 0.58
+                        height: Math.max(width * 0.62, 176)
                         channel: modelData
                         joined: screen.isJoined(modelData.name)
                         favorite: screen.isFavorite(modelData.name)
                         onJoinRequested: screen.joinRequested(modelData.name)
+                        onJoinToggleRequested: screen.joinToggleRequested(modelData.name)
                         onFavoriteRequested: screen.favoriteRequested(modelData.name, !screen.isFavorite(modelData.name))
                     }
                 }
@@ -349,16 +345,15 @@ Item {
                 width: parent.width
                 height: 26
                 Text {
-                    text: "RECENT MATCHES"
+                    text: "Recent matches"
                     color: theme.text
                     font.family: theme.displayFamily
                     font.weight: Font.Bold
                     font.pixelSize: 16
-                    font.letterSpacing: 1.8
                 }
                 Item { width: parent.width - 320; height: 1 }
                 Text {
-                    text: screen.recentMatches.length > 0 ? "PRESS A TO RETURN TO ROOM" : ""
+                    text: ""
                     color: theme.textFaint
                     font.family: theme.bodyFamily
                     font.pixelSize: 10
@@ -405,7 +400,7 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                             Text {
-                                text: modelData.ranked > 0 ? ("FT" + modelData.ranked) : "CASUAL"
+                                text: modelData.ranked > 0 ? ("FT" + modelData.ranked) : "Casual"
                                 color: theme.textFaint
                                 font.family: theme.bodyFamily
                                 font.pixelSize: 10
@@ -420,7 +415,7 @@ Item {
                 visible: screen.popularChannels().length === 0
                 width: parent.width
                 height: 120
-                radius: 14
+                radius: 10
                 color: theme.panel
                 border.width: 1
                 border.color: theme.border

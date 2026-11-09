@@ -21,6 +21,7 @@ SettingsStore::SettingsStore(QObject *parent)
                  QStringLiteral("deckade"), QStringLiteral("deckade"))
 {
     m_romPath = m_settings.value(QStringLiteral("install/romPath")).toString();
+    m_gameInputDevice = m_settings.value(QStringLiteral("input/gameDevice"), QStringLiteral("controller")).toString();
     m_showControllerHints = m_settings.value(QStringLiteral("ui/controllerHints"), true).toBool();
     m_autoJoinLastChannels = m_settings.value(QStringLiteral("ui/autoJoinLastChannels"), true).toBool();
     m_reduceMotion = m_settings.value(QStringLiteral("ui/reduceMotion"), false).toBool();
@@ -50,6 +51,15 @@ bool SettingsStore::hasSession() const { return !m_sessionCookie.isEmpty() && !m
 QString SettingsStore::sessionName() const { return m_sessionName; }
 QString SettingsStore::sessionDisplayName() const { return m_sessionDisplayName; }
 QString SettingsStore::sessionCookie() const { return m_sessionCookie; }
+
+void SettingsStore::setGameInputDevice(const QString &value)
+{
+    const QString normalized = value == QStringLiteral("keyboard") ? value : QStringLiteral("controller");
+    if (m_gameInputDevice == normalized) return;
+    m_gameInputDevice = normalized;
+    persist(QStringLiteral("input/gameDevice"), m_gameInputDevice);
+    emit gameInputDeviceChanged();
+}
 
 void SettingsStore::setRomPath(const QString &value)
 {

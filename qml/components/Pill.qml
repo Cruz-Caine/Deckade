@@ -10,23 +10,21 @@ Rectangle {
     property bool strong: false
     property bool dot: false
 
-    implicitWidth: content.implicitWidth + (dot ? 30 : 20)
-    implicitHeight: 26
-    radius: 8
-    color: fill
-    border.width: 1
-    border.color: line
+    implicitWidth: content.implicitWidth + 16
+    implicitHeight: 22
+    radius: 6
+    color: theme.panelRaised
 
     Row {
         id: content
         anchors.centerIn: parent
-        spacing: 6
+        spacing: 5
 
         Rectangle {
             visible: root.dot
-            width: 7
-            height: 7
-            radius: 4
+            width: 6
+            height: 6
+            radius: 3
             color: root.foreground
             anchors.verticalCenter: parent.verticalCenter
         }
@@ -34,10 +32,9 @@ Rectangle {
         Text {
             text: root.text
             color: root.foreground
-            font.family: root.strong ? theme.displayFamily : theme.bodyFamily
-            font.weight: root.strong ? Font.DemiBold : Font.Medium
-            font.pixelSize: 12
-            font.letterSpacing: root.strong ? 1.1 : 0.2
+            font.family: theme.bodyFamily
+            font.weight: Font.Medium
+            font.pixelSize: 11
             anchors.verticalCenter: parent.verticalCenter
         }
     }

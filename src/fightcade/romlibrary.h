@@ -16,6 +16,7 @@ class RomLibrary : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ busy NOTIFY stateChanged)
+    Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
     Q_PROPERTY(QString status READ status NOTIFY stateChanged)
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(QString activeEmulator READ activeEmulator NOTIFY stateChanged)
@@ -33,12 +34,16 @@ public:
     QString activeGameId() const { return m_gameId; }
 
     Q_INVOKABLE bool hasRom(const QString &emulator, const QString &gameId) const;
+    // {known, ready, total, missing}: every file a game needs, BIOS included.
+    Q_INVOKABLE QVariantMap fileStatus(const QString &emulator, const QString &gameId);
+    int revision() const { return m_revision; }
     Q_INVOKABLE void ensureRom(const QString &emulator, const QString &gameId);
     Q_INVOKABLE void cancel();
 
 signals:
     void stateChanged();
     void progressChanged();
+    void revisionChanged();
     void romReady(const QString &emulator, const QString &gameId, const QString &path);
     void romFailed(const QString &emulator, const QString &gameId, const QString &message);
     void notice(const QString &message);
@@ -81,6 +86,7 @@ private:
     QString m_mainDestination;
     QString m_romRoot;
     QString m_status;
+    int m_revision = 0;
     qreal m_progress = 0;
     bool m_busy = false;
     bool m_cancelled = false;

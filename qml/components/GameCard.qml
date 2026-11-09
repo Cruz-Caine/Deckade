@@ -7,109 +7,77 @@ Focusable {
     property bool showSystem: true
     property bool joined: false
     property bool favorite: false
+    // Re-evaluated whenever a download finishes.
+    readonly property var files: {
+        roms.revision
+        return root.channel.emulator && root.channel.gameId
+            ? roms.fileStatus(root.channel.emulator, root.channel.gameId)
+            : ({ known: false })
+    }
 
     signal joinRequested()
+    signal joinToggleRequested()
     signal favoriteRequested()
 
-    ringRadius: 14
+    ringRadius: 8
+    hintPrimary: joined ? "Open room" : "Join and open"
+    hintSecondary: joined ? "Leave room" : "Join"
+    hintTertiary: favorite ? "Unfavorite" : "Favorite"
     onActivated: root.joinRequested()
-    onSecondaryActivated: root.favoriteRequested()
+    onSecondaryActivated: root.joinToggleRequested()
+    onTertiaryActivated: root.favoriteRequested()
 
     Rectangle {
         anchors.fill: parent
-        radius: 14
+        radius: 8
         color: theme.panel
-        border.width: 1
-        border.color: root.activeFocus ? theme.accent : theme.border
         clip: true
 
         Image {
             id: preview
             anchors.fill: parent
+            anchors.bottomMargin: 62
             source: root.channel.previewUrl ?? ""
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             cache: true
             smooth: true
-            opacity: 0.92
         }
 
         Rectangle {
-            anchors.fill: parent
+            anchors.fill: preview
             visible: preview.status !== Image.Ready
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#253248" }
-                GradientStop { position: 1.0; color: "#10151f" }
-            }
+            color: theme.panelRaised
             Text {
                 anchors.centerIn: parent
-                text: (root.channel.title ?? "?").slice(0, 2).toUpperCase()
+                text: (root.channel.title ?? "?").slice(0, 2)
                 color: theme.textFaint
-                font.family: theme.displayFamily
-                font.pixelSize: 34
-                font.weight: Font.Bold
-            }
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#080b11" }
-                GradientStop { position: 0.45; color: "#080b1100" }
-                GradientStop { position: 1.0; color: "#080b11ee" }
+                font.family: theme.bodyFamily
+                font.pixelSize: 26
+                font.weight: Font.DemiBold
             }
         }
 
         Row {
             anchors.left: parent.left
             anchors.top: parent.top
-            anchors.margins: 12
-            spacing: 7
+            anchors.margins: 8
+            spacing: 5
 
             Pill {
-                text: String(root.channel.playerCount ?? 0)
+                text: String(root.channel.playerCount ?? 0) + " online"
                 dot: true
                 foreground: theme.green
-                fill: "#0b1512dd"
-                line: "#245544"
             }
             Pill {
-                visible: root.channel.isRanked === true
-                text: "RANKED"
-                strong: true
-                foreground: theme.gold
-                fill: "#1a160bdd"
-                line: "#5b4720"
+                visible: root.joined
+                text: "Joined"
+                foreground: theme.cyan
             }
             Pill {
                 visible: root.favorite
                 text: "★"
                 foreground: theme.gold
-                fill: "#1a160bdd"
-                line: "#5b4720"
-            }
-        }
-
-        Rectangle {
-            visible: root.joined
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: 12
-            width: joinedLabel.implicitWidth + 18
-            height: 26
-            radius: 8
-            color: "#0d1a2bdd"
-            border.width: 1
-            border.color: theme.cyan
-            Text {
-                id: joinedLabel
-                anchors.centerIn: parent
-                text: "JOINED"
-                color: theme.cyan
-                font.family: theme.displayFamily
-                font.weight: Font.DemiBold
-                font.pixelSize: 11
-                font.letterSpacing: 1.2
             }
         }
 
@@ -117,7 +85,9 @@ Focusable {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            anchors.margins: 14
+            anchors.leftMargin: 10
+            anchors.rightMargin: 10
+            anchors.bottomMargin: 9
             spacing: 3
 
             Text {
@@ -125,25 +95,34 @@ Focusable {
                 text: root.channel.title ?? root.channel.name ?? ""
                 color: theme.text
                 elide: Text.ElideRight
-                font.family: theme.displayFamily
-                font.weight: Font.Bold
-                font.pixelSize: 20
-                font.letterSpacing: 0.3
-            }
-            Text {
-                visible: root.showSystem
-                width: parent.width
-                text: [root.channel.system, root.channel.gameId].filter(Boolean).join("  ·  ")
-                color: theme.textMuted
-                elide: Text.ElideRight
                 font.family: theme.bodyFamily
-                font.pixelSize: 12
+                font.weight: Font.DemiBold
+                font.pixelSize: 14
+            }
+
+            Row {
+                width: parent.width
+                spacing: 8
+
+                Text {
+                    visible: root.showSystem
+                    width: parent.width - fileLabel.width - 8
+                    text: (root.channel.isRanked === true ? "Ranked, " : "") + (root.channel.system ?? "")
+                    color: theme.textFaint
+                    elide: Text.ElideRight
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 11
+                }
+
+                Text {
+                    id: fileLabel
+                    visible: root.files.known === true
+                    text: root.files.ready ? "Downloaded" : "Not downloaded"
+                    color: root.files.ready ? theme.green : theme.textFaint
+                    font.family: theme.bodyFamily
+                    font.pixelSize: 11
+                }
             }
         }
-    }
-
-    scale: root.activeFocus ? 1.025 : 1.0
-    Behavior on scale {
-        NumberAnimation { duration: settings.reduceMotion ? 0 : 120; easing.type: Easing.OutCubic }
     }
 }

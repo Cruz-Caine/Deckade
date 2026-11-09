@@ -34,12 +34,12 @@ ApplicationWindow {
     property var browseChannels: []
     property int browsePage: 0
     property int browseTotal: 0
-    property string browseTitle: "ALL GAMES"
+    property string browseTitle: "All games"
     property bool browseLoading: false
     property var browseQuery: ({})
 
     property bool loginBusy: false
-    property string loginBusyText: "SIGNING IN"
+    property string loginBusyText: "Signing in"
     property string loginError: ""
     property bool autoLoginAttempt: false
 
@@ -61,6 +61,8 @@ ApplicationWindow {
     property bool gameWindowOpen: false
     property var pendingRomAction: null
     property double suppressGamepadUntil: 0
+    property string inputMode: gamepad.connected ? "controller" : "keyboard"
+    property var focusedItem: null
 
     function notify(message, level) {
         if (!message || message.length === 0) return
@@ -223,13 +225,28 @@ ApplicationWindow {
     }
 
     function leaveRoom() {
-        if (!currentChannel) return
-        var name = currentChannel.name
+        if (currentChannel) leaveRoomByName(currentChannel.name)
+    }
+
+    function leaveRoomByName(name) {
         client.leaveChannel(name)
         joinedChannels = joinedChannels.filter(function(channel) { return channel.name !== name })
-        currentChannel = null
-        currentMessages = []
-        switchScreen("home")
+        if (currentChannel && currentChannel.name === name) {
+            currentChannel = null
+            currentMessages = []
+            switchScreen("home")
+        }
+        notify("Left " + name + ".", "info")
+    }
+
+    function toggleJoin(name) {
+        if (isJoined(name)) {
+            leaveRoomByName(name)
+        } else if (joinedChannels.length >= roomLimit()) {
+            notify("Room limit reached (" + roomLimit() + "). Leave a room before joining another.", "warning")
+        } else {
+            client.joinChannel(name, false)
+        }
     }
 
     function toggleFavorite(name, desired) {
@@ -558,18 +575,24 @@ ApplicationWindow {
             virtualKeyboardVisible = true
             virtualKeyboard.open(target)
         } else {
-            notify("Focus a text field first, then press Y.", "info")
+            notify("Select a text field first.", "info")
         }
     }
 
     function cycleSection(direction) {
-        var sections = ["home", "browse"]
-        if (joinedChannels.length > 0) sections.push("rooms")
-        sections.push("settings")
-        var index = sections.indexOf(screen)
+        var pages = [{ screen: "home" }, { screen: "browse" }]
+        for (var i = 0; i < joinedChannels.length; ++i) {
+            pages.push({ screen: "room", room: joinedChannels[i].name })
+        }
+        pages.push({ screen: "controls" })
+        pages.push({ screen: "settings" })
+        var index = pages.findIndex(function(page) {
+            return page.screen === screen && (page.room === undefined || page.room === currentChannel?.name)
+        })
         if (index < 0) index = 0
-        index = (index + direction + sections.length) % sections.length
-        switchScreen(sections[index])
+        var next = pages[(index + direction + pages.length) % pages.length]
+        if (next.room) openRoom(next.room)
+        else switchScreen(next.screen)
     }
 
     function goBack() {
@@ -595,11 +618,11 @@ ApplicationWindow {
         browseLoading = true
         browseQuery = request
         browsePage = request.page ?? 0
-        browseTitle = (request.text ?? "").length > 0 ? "SEARCH RESULTS"
-                    : request.favorites === true ? "FAVORITES"
-                    : request.ranked === true ? "RANKED GAMES"
-                    : request.ranked === false ? "UNRANKED GAMES"
-                    : "ALL GAMES"
+        browseTitle = (request.text ?? "").length > 0 ? "Search results"
+                    : request.favorites === true ? "Favorites"
+                    : request.ranked === true ? "Ranked games"
+                    : request.ranked === false ? "Unranked games"
+                    : "All games"
         client.listChannels(request)
     }
 
@@ -714,7 +737,7 @@ ApplicationWindow {
         applyWindowMode()
         if (settings.hasSession && settings.rememberLogin) {
             loginBusy = true
-            loginBusyText = "RESTORING SESSION"
+            loginBusyText = "Restoring session"
             autoLoginAttempt = true
             client.autologin(settings.sessionCookie)
         }
@@ -740,41 +763,79 @@ ApplicationWindow {
     Shortcut {
         sequence: "Up"
         enabled: !root.isTextFieldFocused()
-        onActivated: focusController.move(0, -1)
+        onActivated: { root.inputMode = "keyboard"; focusController.move(0, -1) }
     }
     Shortcut {
         sequence: "Down"
         enabled: !root.isTextFieldFocused()
-        onActivated: focusController.move(0, 1)
+        onActivated: { root.inputMode = "keyboard"; focusController.move(0, 1) }
     }
     Shortcut {
         sequence: "Left"
         enabled: !root.isTextFieldFocused()
-        onActivated: focusController.move(-1, 0)
+        onActivated: { root.inputMode = "keyboard"; focusController.move(-1, 0) }
     }
     Shortcut {
         sequence: "Right"
         enabled: !root.isTextFieldFocused()
-        onActivated: focusController.move(1, 0)
+        onActivated: { root.inputMode = "keyboard"; focusController.move(1, 0) }
     }
     Shortcut {
         sequence: "Return"
         enabled: !root.isTextFieldFocused()
-        onActivated: focusController.activate()
+        onActivated: { root.inputMode = "keyboard"; focusController.activate() }
     }
     Shortcut {
         sequence: "Enter"
         enabled: !root.isTextFieldFocused()
-        onActivated: focusController.activate()
+        onActivated: { root.inputMode = "keyboard"; focusController.activate() }
     }
     Shortcut {
         sequence: "Space"
         enabled: !root.isTextFieldFocused()
-        onActivated: focusController.activate()
+        onActivated: { root.inputMode = "keyboard"; focusController.activate() }
     }
     Shortcut {
         sequence: "Escape"
-        onActivated: root.goBack()
+        onActivated: { root.inputMode = "keyboard"; root.goBack() }
+    }
+    Shortcut {
+        sequence: "X"
+        enabled: !root.isTextFieldFocused()
+        onActivated: { root.inputMode = "keyboard"; focusController.secondaryActivate() }
+    }
+    Shortcut {
+        sequence: "F"
+        enabled: !root.isTextFieldFocused()
+        onActivated: { root.inputMode = "keyboard"; focusController.tertiaryActivate() }
+    }
+    Shortcut {
+        sequence: "Q"
+        enabled: !root.isTextFieldFocused()
+        onActivated: { root.inputMode = "keyboard"; root.cycleSection(-1) }
+    }
+    Shortcut {
+        sequence: "E"
+        enabled: !root.isTextFieldFocused()
+        onActivated: { root.inputMode = "keyboard"; root.cycleSection(1) }
+    }
+    Shortcut {
+        sequence: "M"
+        enabled: !root.isTextFieldFocused()
+        onActivated: { root.inputMode = "keyboard"; root.switchScreen("settings") }
+    }
+
+    Connections {
+        target: gamepad
+        function markController() { root.inputMode = "controller" }
+        function onNavigate(dx, dy) { markController() }
+        function onAcceptPressed() { markController() }
+        function onBackPressed() { markController() }
+        function onSecondaryPressed() { markController() }
+        function onKeyboardPressed() { markController() }
+        function onMenuPressed() { markController() }
+        function onTabLeftPressed() { markController() }
+        function onTabRightPressed() { markController() }
     }
 
     Connections {
@@ -801,7 +862,9 @@ ApplicationWindow {
             focusController.secondaryActivate()
         }
         function onKeyboardPressed() {
-            if (root.gamepadAllowed()) root.openKeyboard()
+            if (!root.gamepadAllowed()) return
+            if (root.isTextInputFocused()) root.openKeyboard()
+            else focusController.tertiaryActivate()
         }
         function onMenuPressed() {
             if (controllerProfile.capturing) {
@@ -820,7 +883,7 @@ ApplicationWindow {
 
     Connections {
         target: focusController
-        function onFocusMoved(item) { root.revealItem(item) }
+        function onFocusMoved(item) { root.focusedItem = item; root.revealItem(item) }
     }
 
     Connections {
@@ -1118,36 +1181,8 @@ ApplicationWindow {
         }
     }
 
-    Rectangle {
-        anchors.fill: parent
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "#080a10" }
-            GradientStop { position: 0.55; color: "#0b1019" }
-            GradientStop { position: 1.0; color: "#111828" }
-        }
-    }
-
-    Rectangle {
-        width: 700
-        height: 700
-        radius: 350
-        x: -360
-        y: -420
-        color: "#12ff4655"
-    }
-
-    Rectangle {
-        width: 620
-        height: 620
-        radius: 310
-        anchors.right: parent.right
-        anchors.rightMargin: -340
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: -360
-        color: "#103dd6ff"
-    }
-
     LoginScreen {
+        objectName: "loginScreen"
         anchors.fill: parent
         visible: !client.connected
         scale: settings.uiScale
@@ -1158,7 +1193,7 @@ ApplicationWindow {
         statusText: client.statusMessage
         onSubmit: function(username, password) {
             root.loginBusy = true
-            root.loginBusyText = "SIGNING IN"
+            root.loginBusyText = "Signing in"
             root.loginError = ""
             root.autoLoginAttempt = false
             client.login(username, password)
@@ -1167,6 +1202,7 @@ ApplicationWindow {
 
     Item {
         id: shell
+        objectName: "shell"
         anchors.fill: parent
         visible: client.connected
         scale: settings.uiScale
@@ -1177,54 +1213,44 @@ ApplicationWindow {
             anchors.bottomMargin: settings.showControllerHints ? 42 : 0
 
             Sidebar {
-                width: 94
+                width: 212
                 height: parent.height
-                currentIndex: root.screen === "home" ? 0
-                            : root.screen === "browse" ? 1
-                            : (root.screen === "room" || root.screen === "rooms") ? 2 : 3
-                roomCount: root.joinedChannels.length
-                onSelected: function(index) {
-                    if (index === 0) root.switchScreen("home")
-                    else if (index === 1) root.switchScreen("browse")
-                    else if (index === 2) root.switchScreen("rooms")
-                    else root.switchScreen("settings")
-                }
+                currentScreen: root.screen
+                currentRoom: root.currentChannel?.name ?? ""
+                rooms: root.joinedChannels
+                unread: root.unread
+                roomLimit: root.roomLimit()
+                onSelected: function(screenName) { root.switchScreen(screenName) }
+                onRoomOpened: function(name) { root.openRoom(name) }
+                onRoomLeft: function(name) { root.leaveRoomByName(name) }
             }
 
             Item {
-                width: parent.width - 94
+                width: parent.width - 212
                 height: parent.height
 
                 Column {
                     anchors.fill: parent
-                    anchors.margins: 24
-                    spacing: 14
+                    anchors.margins: 20
+                    spacing: 12
 
                     TopBar {
                         width: parent.width
                         user: root.user
-                        title: root.screen === "home" ? "HOME"
-                             : root.screen === "browse" ? "BROWSE"
-                             : root.screen === "room" ? "ROOM"
-                             : root.screen === "rooms" ? "ROOMS"
-                             : root.screen === "controls" ? "CONTROLS"
-                             : "SETTINGS"
-                        subtitle: root.screen === "home"
-                                  ? "Welcome back, " + (root.user.displayName ?? root.user.name ?? "player")
-                                  : root.screen === "browse"
-                                    ? "Find your next game · " + root.allChannels.length + " channels indexed"
-                                    : root.screen === "room"
-                                      ? (root.currentChannel?.title ?? root.currentChannel?.name ?? "")
-                                      : root.screen === "rooms"
-                                        ? root.joinedChannels.length + " joined · " + root.roomLimit() + " slots available"
-                                        : root.screen === "controls"
-                                          ? "Player 1 bindings for " + (root.currentChannel?.title ?? "this game")
-                                          : "Native runtimes, controller, and account"
+                        title: root.screen === "home" ? "Home"
+                             : root.screen === "browse" ? "Browse"
+                             : root.screen === "room" ? (root.currentChannel?.title ?? root.currentChannel?.name ?? "Room")
+                             : root.screen === "rooms" ? "Rooms"
+                             : root.screen === "controls" ? "Controls"
+                             : "Settings"
+                        subtitle: root.screen === "browse" ? root.allChannels.length + " games"
+                                : root.screen === "rooms" ? root.joinedChannels.length + " of " + root.roomLimit() + " rooms joined"
+                                : ""
                     }
 
                     Item {
                         width: parent.width
-                        height: parent.height - 86
+                        height: parent.height - 64
 
                         HomeScreen {
                             id: homeScreen
@@ -1240,6 +1266,7 @@ ApplicationWindow {
                             onRecentMatchJoinRequested: function(channelName) { root.joinChannel(channelName, false) }
                             onFavoriteRequested: function(channelName, favorite) { root.toggleFavorite(channelName, favorite) }
                             onBrowseRequested: function() { root.switchScreen("browse") }
+                            onJoinToggleRequested: function(channelName) { root.toggleJoin(channelName) }
                         }
 
                         BrowseScreen {
@@ -1255,6 +1282,7 @@ ApplicationWindow {
                             joinedChannels: root.joinedChannels
                             user: root.user
                             onSearchRequested: function(request) { root.browseRequest(request) }
+                            onJoinToggleRequested: function(channelName) { root.toggleJoin(channelName) }
                             onJoinRequested: function(channelName) { root.joinChannel(channelName, false) }
                             onFavoriteRequested: function(channelName, favorite) { root.toggleFavorite(channelName, favorite) }
                         }
@@ -1295,6 +1323,10 @@ ApplicationWindow {
                             onFriendToggleRequested: function(player) { friendsStore.toggleFriend(player.name ?? "") }
                             onAutoMatchToggleRequested: function() { root.toggleAutoMatch() }
                             onChannelTvRequested: function() { root.startChannelTv() }
+                            onControlsRequested: function() { root.switchScreen("controls") }
+                            onFilesRequested: function() {
+                                if (root.currentChannel) roms.ensureRom(root.currentChannel.emulator, root.currentChannel.gameId)
+                            }
                             onAcceptChallenge: function(challenge) { root.openIncomingChallenge(challenge) }
                             onDeclineChallenge: function(challenge) {
                                 client.rejectChallenge(challenge.challenger, challenge.channelName, challenge.challengeId)
@@ -1312,7 +1344,8 @@ ApplicationWindow {
                             visible: root.screen === "controls"
                             gameId: root.currentChannel?.gameId ?? ""
                             gameTitle: root.currentChannel?.title ?? ""
-                            onBackRequested: root.switchScreen("room")
+                            roomEmulator: root.currentChannel?.emulator ?? ""
+                            onBackRequested: root.goBack()
                         }
 
                         SettingsScreen {
@@ -1333,6 +1366,8 @@ ApplicationWindow {
         }
 
         ControllerHintBar {
+            inputMode: root.inputMode
+            item: root.focusedItem
             visible: settings.showControllerHints
             anchors.left: parent.left
             anchors.right: parent.right
@@ -1344,10 +1379,10 @@ ApplicationWindow {
             visible: roms.busy
             width: 430
             height: 64
-            radius: 12
-            color: "#111722f2"
+            radius: 10
+            color: theme.panelRaised
             border.width: 1
-            border.color: theme.cyan
+            border.color: theme.border
             anchors.right: parent.right
             anchors.rightMargin: 28
             anchors.bottom: parent.bottom
@@ -1440,12 +1475,11 @@ ApplicationWindow {
                 }
 
                 Text {
-                    text: "LAUNCHING NATIVE RUNTIME"
-                    color: theme.accent
+                    text: "Starting game"
+                    color: theme.textMuted
                     font.family: theme.displayFamily
-                    font.weight: Font.Bold
-                    font.pixelSize: 17
-                    font.letterSpacing: 2.4
+                    font.weight: Font.Medium
+                    font.pixelSize: 15
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 

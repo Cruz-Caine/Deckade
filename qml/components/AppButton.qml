@@ -14,10 +14,9 @@ Focusable {
 
     signal clicked()
 
-    implicitWidth: Math.max(compact ? 132 : 168, label.implicitWidth + (iconText.length > 0 ? 66 : 44))
-    implicitHeight: compact ? 44 : 54
-    ringRadius: 12
-
+    implicitWidth: Math.max(compact ? 96 : 140, label.implicitWidth + (iconText.length > 0 ? 56 : 36))
+    implicitHeight: compact ? 40 : 48
+    hintPrimary: text
     onActivated: {
         if (root.enabled && !root.busy) {
             root.clicked()
@@ -26,58 +25,46 @@ Focusable {
 
     Rectangle {
         anchors.fill: parent
-        radius: 12
-        color: root.primary
-               ? (root.activeFocus ? theme.accentSoft : theme.accent)
-               : root.danger
-                 ? (root.activeFocus ? "#3a1a24" : theme.panel)
-                 : (root.activeFocus ? theme.panelHover : root.selected ? theme.panelRaised : theme.panelRaised)
-        border.width: 1
-        border.color: root.primary
-                      ? Qt.lighter(theme.accent, 1.2)
-                      : root.danger
-                        ? theme.red
-                        : root.activeFocus ? theme.borderStrong : theme.border
-        Behavior on color {
-            ColorAnimation { duration: settings.reduceMotion ? 0 : 120 }
-        }
+        radius: 8
+        color: root.primary ? (root.hovered ? theme.accentSoft : theme.accent)
+             : root.selected ? theme.panelHover
+             : root.hovered ? theme.panelHover : theme.panelRaised
     }
 
     Row {
         anchors.centerIn: parent
-        spacing: 10
+        spacing: 8
 
         Text {
             visible: root.iconText.length > 0
             text: root.iconText
-            color: root.primary ? "#16070a" : theme.text
+            color: label.color
             font.family: theme.bodyFamily
-            font.pixelSize: root.compact ? 17 : 19
+            font.pixelSize: 15
             anchors.verticalCenter: parent.verticalCenter
         }
 
         Text {
             id: label
             text: root.text
-            color: root.primary ? "#16070a" : root.danger ? theme.red : theme.text
-            font.family: theme.displayFamily
+            color: root.primary ? "#ffffff" : root.danger ? theme.red : theme.text
+            font.family: theme.bodyFamily
             font.weight: Font.DemiBold
-            font.pixelSize: root.compact ? 17 : 19
-            font.letterSpacing: 0.6
+            font.pixelSize: root.compact ? 13 : 15
             anchors.verticalCenter: parent.verticalCenter
         }
     }
 
     Rectangle {
         visible: root.busy
-        width: 16
-        height: 16
-        radius: 8
+        width: 14
+        height: 14
+        radius: 7
         color: "transparent"
         border.width: 2
-        border.color: root.primary ? "#16070a" : theme.accent
+        border.color: root.primary ? "#ffffff" : theme.accent
         anchors.right: parent.right
-        anchors.rightMargin: 16
+        anchors.rightMargin: 14
         anchors.verticalCenter: parent.verticalCenter
         RotationAnimator on rotation {
             running: root.busy
@@ -90,4 +77,3 @@ Focusable {
 
     opacity: enabled ? 1 : 0.4
 }
-

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(Deckade VERSION 0.2.11 LANGUAGES CXX)
+project(Deckade VERSION 0.2.12 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -231,6 +231,20 @@ add_executable(deckade_flycast_launch_tests
 target_include_directories(deckade_flycast_launch_tests PRIVATE src)
 target_link_libraries(deckade_flycast_launch_tests PRIVATE Qt6::Core)
 add_test(NAME deckade_flycast_launch_tests COMMAND deckade_flycast_launch_tests)
+
+# Renders screens with sample data for reviewing the interface headlessly.
+set(DECKADE_PREVIEW_SOURCES ${DECKADE_SOURCES})
+list(REMOVE_ITEM DECKADE_PREVIEW_SOURCES src/main.cpp)
+qt_add_executable(deckade_ui_preview tests/ui_preview.cpp ${DECKADE_PREVIEW_SOURCES})
+target_compile_definitions(deckade_ui_preview PRIVATE DECKADE_VERSION="${PROJECT_VERSION}")
+target_include_directories(deckade_ui_preview PRIVATE src)
+qt_add_resources(deckade_ui_preview "deckade_preview_resources"
+    PREFIX "/"
+    BASE "${CMAKE_CURRENT_SOURCE_DIR}"
+    FILES ${DECKADE_QML} ${DECKADE_ASSETS}
+)
+get_target_property(DECKADE_APP_LIBS deckade LINK_LIBRARIES)
+target_link_libraries(deckade_ui_preview PRIVATE ${DECKADE_APP_LIBS})
 
 add_test(NAME deckade_runtime_assets_tests
          COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tests/runtime_assets_tests.py)

@@ -100,10 +100,11 @@ void ControllerProfile::setStatus(const QString &status)
 
 void ControllerProfile::loadForGame(const QString &gameId)
 {
-    if (m_gameId == gameId && !m_actionList.isEmpty()) {
+    if (m_emulator == QStringLiteral("fbneo") && m_gameId == gameId && !m_actionList.isEmpty()) {
         return;
     }
     stopCapture();
+    m_emulator = QStringLiteral("fbneo");
     m_gameId = gameId;
     m_status.clear();
     m_actionList.clear();
@@ -113,6 +114,140 @@ void ControllerProfile::loadForGame(const QString &gameId)
     parseProfile();
     setStatus(QStringLiteral("%1 P1 actions").arg(m_actionList.size()));
     emit actionsChanged();
+}
+
+void ControllerProfile::loadFor(const QString &emulator, const QString &gameId)
+{
+    stopCapture();
+    m_emulator = emulator;
+    m_gameId = emulator == QStringLiteral("fbneo") ? gameId : emulator;
+    m_status.clear();
+    m_actionList.clear();
+    if (emulator == QStringLiteral("fbneo")) {
+        if (!gameId.isEmpty()) runHelper();
+    } else {
+        buildStaticActions();
+    }
+    parseProfile();
+    emit stateChanged();
+    emit actionsChanged();
+}
+
+void ControllerProfile::buildStaticActions()
+{
+    struct Definition { int index; const char *title; const char *flycastName; };
+    // Snes9x indices are libretro joypad IDs, which the runner reads back.
+    static const Definition snes[] = {
+        {4, "Up", ""}, {5, "Down", ""}, {6, "Left", ""}, {7, "Right", ""},
+        {0, "B", ""}, {8, "A", ""}, {1, "Y", ""}, {9, "X", ""},
+        {10, "L", ""}, {11, "R", ""}, {3, "Start", ""}, {2, "Select", ""}};
+    static const Definition flycast[] = {
+        {0, "Up", "btn_dpad1_up"}, {1, "Down", "btn_dpad1_down"},
+        {2, "Left", "btn_dpad1_left"}, {3, "Right", "btn_dpad1_right"},
+        {4, "Button 1 (A)", "btn_a"}, {5, "Button 2 (B)", "btn_b"}, {6, "Button 3 (C)", "btn_c"},
+        {7, "Button 4 (X)", "btn_x"}, {8, "Button 5 (Y)", "btn_y"}, {9, "Button 6 (Z)", "btn_z"},
+        {10, "Start", "btn_start"}, {11, "Emulator menu", "btn_menu"}};
+    const auto add = [this](const Definition &definition) {
+        Action action;
+        action.index = definition.index;
+        action.title = QString::fromLatin1(definition.title);
+        action.info = m_emulator;
+        action.flycastName = QString::fromLatin1(definition.flycastName);
+        m_actionList.append(action);
+    };
+    if (m_emulator == QStringLiteral("snes9x")) {
+        for (const Definition &definition : snes) add(definition);
+    } else if (m_emulator == QStringLiteral("flycast")) {
+        for (const Definition &definition : flycast) add(definition);
+    }
+}
+
+// A Flycast mapping file replaces its defaults outright, so start from the
+// controller's standard layout instead of leaving the other buttons dead.
+void ControllerProfile::seedFlycastDefaults()
+{
+    if (m_emulator != QStringLiteral("flycast") || !m_joystick) return;
+    for (const Action &action : std::as_const(m_actionList)) {
+        if (!action.kind.isEmpty()) return;
+    }
+    SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER);
+    SDL_GameController *controller = SDL_GameControllerOpen(m_controllerIndex);
+    if (!controller) return;
+
+    struct Default { const char *name; int button; int axis; };
+    static const Default defaults[] = {
+        {"btn_dpad1_up", SDL_CONTROLLER_BUTTON_DPAD_UP, -1}, {"btn_dpad1_down", SDL_CONTROLLER_BUTTON_DPAD_DOWN, -1},
+        {"btn_dpad1_left", SDL_CONTROLLER_BUTTON_DPAD_LEFT, -1}, {"btn_dpad1_right", SDL_CONTROLLER_BUTTON_DPAD_RIGHT, -1},
+        {"btn_x", SDL_CONTROLLER_BUTTON_A, -1}, {"btn_y", SDL_CONTROLLER_BUTTON_B, -1},
+        {"btn_a", SDL_CONTROLLER_BUTTON_X, -1}, {"btn_b", SDL_CONTROLLER_BUTTON_Y, -1},
+        {"btn_c", SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, -1}, {"btn_z", -1, SDL_CONTROLLER_AXIS_TRIGGERRIGHT},
+        {"btn_start", SDL_CONTROLLER_BUTTON_START, -1}, {"btn_menu", SDL_CONTROLLER_BUTTON_BACK, -1}};
+    for (Action &action : m_actionList) {
+        for (const Default &entry : defaults) {
+            if (action.flycastName != QLatin1String(entry.name)) continue;
+            const SDL_GameControllerButtonBind bind = entry.button >= 0
+                ? SDL_GameControllerGetBindForButton(controller, static_cast<SDL_GameControllerButton>(entry.button))
+                : SDL_GameControllerGetBindForAxis(controller, static_cast<SDL_GameControllerAxis>(entry.axis));
+            if (bind.bindType == SDL_CONTROLLER_BINDTYPE_BUTTON) {
+                action.kind = QStringLiteral("b");
+                action.controlIndex = bind.value.button;
+            } else if (bind.bindType == SDL_CONTROLLER_BINDTYPE_HAT) {
+                action.kind = QStringLiteral("h");
+                action.controlIndex = bind.value.hat.hat;
+                action.direction = bind.value.hat.hat_mask;
+            } else if (bind.bindType == SDL_CONTROLLER_BINDTYPE_AXIS) {
+                action.kind = QStringLiteral("a");
+                action.controlIndex = bind.value.axis;
+                action.direction = 1;
+            }
+        }
+    }
+    SDL_GameControllerClose(controller);
+}
+
+QString ControllerProfile::flycastMappingBase() const
+{
+    QString name = QStringLiteral("SDL_") + m_controllerName;
+    name.replace(QRegularExpression(QStringLiteral("[/\\\\:?*|]")), QStringLiteral("-"));
+    return QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+        .filePath(QStringLiteral("runtime-work/flycast/mappings/%1").arg(name));
+}
+
+void ControllerProfile::writeFlycastMappings() const
+{
+    if (m_emulator != QStringLiteral("flycast") || m_controllerName.isEmpty()) return;
+    QStringList digital;
+    QStringList analog;
+    for (const Action &action : m_actionList) {
+        if (action.kind == QStringLiteral("b")) {
+            digital << QStringLiteral("%1:%2").arg(action.controlIndex).arg(action.flycastName);
+        } else if (action.kind == QStringLiteral("h")) {
+            const int code = action.direction == SDL_HAT_UP ? 256
+                           : action.direction == SDL_HAT_DOWN ? 257
+                           : action.direction == SDL_HAT_LEFT ? 258 : 259;
+            digital << QStringLiteral("%1:%2").arg(code).arg(action.flycastName);
+        } else if (action.kind == QStringLiteral("a")) {
+            analog << QStringLiteral("%1%2:%3").arg(action.controlIndex)
+                          .arg(action.direction < 0 ? QLatin1Char('-') : QLatin1Char('+'))
+                          .arg(action.flycastName);
+        }
+    }
+    QString text = QStringLiteral("[analog]\n");
+    for (int i = 0; i < analog.size(); ++i) text += QStringLiteral("bind%1 = %2\n").arg(i).arg(analog.at(i));
+    text += QStringLiteral("\n[digital]\n");
+    for (int i = 0; i < digital.size(); ++i) text += QStringLiteral("bind%1 = %2\n").arg(i).arg(digital.at(i));
+    text += QStringLiteral("\n[emulator]\ndead_zone = 10\nmapping_name = Deckade\nrumble_power = 100\nversion = 3\n");
+
+    const QString base = flycastMappingBase();
+    QDir().mkpath(QFileInfo(base).absolutePath());
+    // Flycast reads separate files for console and arcade games.
+    for (const QString &suffix : {QStringLiteral(".cfg"), QStringLiteral("_arcade.cfg")}) {
+        QSaveFile file(base + suffix);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            file.write(text.toUtf8());
+            file.commit();
+        }
+    }
 }
 
 void ControllerProfile::runHelper()
@@ -263,10 +398,11 @@ void ControllerProfile::prepareCapture(int inputIndex)
 {
     const Action *action = actionByIndex(inputIndex);
     if (!action) {
-        setStatus(QStringLiteral("Unknown FBNeo action."));
+        setStatus(QStringLiteral("That action is no longer available."));
         return;
     }
     if (!ensureController()) return;
+    seedFlycastDefaults();
 
     stopCapture();
     m_captureInputIndex = inputIndex;
@@ -415,6 +551,7 @@ void ControllerProfile::saveProfile()
                << action.direction << '\n';
     }
     file.commit();
+    writeFlycastMappings();
 }
 
 void ControllerProfile::clearBinding(int inputIndex)
@@ -432,11 +569,15 @@ void ControllerProfile::clearBinding(int inputIndex)
 void ControllerProfile::resetDefaults()
 {
     QFile::remove(controllerProfilePath(m_gameId));
+    if (m_emulator == QStringLiteral("flycast") && ensureController()) {
+        QFile::remove(flycastMappingBase() + QStringLiteral(".cfg"));
+        QFile::remove(flycastMappingBase() + QStringLiteral("_arcade.cfg"));
+    }
     for (Action &action : m_actionList) {
         action.kind.clear();
         action.controlIndex = 0;
         action.direction = 0;
     }
-    setStatus(QStringLiteral("Controller profile cleared; FBNeo defaults apply."));
+    setStatus(QStringLiteral("Bindings reset to the emulator defaults."));
     emit actionsChanged();
 }

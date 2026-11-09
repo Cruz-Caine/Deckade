@@ -512,7 +512,12 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
 
     m_process = new QProcess(this);
     m_process->setProgram(executable);
-    m_process->setArguments(arguments);
+    // FBNeo maps Player 1 to the controller only when given -joy.
+    QStringList runtimeArguments = arguments;
+    if (m_settings->gameInputDevice() == QStringLiteral("keyboard")) {
+        runtimeArguments.removeAll(QStringLiteral("-joy"));
+    }
+    m_process->setArguments(runtimeArguments);
     m_process->setWorkingDirectory(workDir);
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
     environment.insert(QStringLiteral("MACADE_FIGHTCADE_RUNTIME"), workDir);
@@ -538,12 +543,14 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
     environment.insert(QStringLiteral("MACADE_QUARK_LOG_DIR"), logDir);
     environment.insert(QStringLiteral("DECKADE_P1_JOYSTICK_INDEX"),
                        QString::number(m_settings->controllerIndex()));
-    // FBNeo's SDL input layer owns in-game controller mapping. Do not inject
-    // Deckade's legacy per-game profile here: having both mapping systems live
-    // caused duplicate/overridden bindings. The app still uses its own gamepad
-    // input for UI navigation.
-    if (emulator != QStringLiteral("fbneo")) {
-        const QString profilePath = controllerProfilePath(gameId);
+    // Player-saved bindings override the emulator's defaults for those inputs.
+    // Only FBNeo's are per game, because its inputs differ from game to game.
+    const bool keyboardInput = m_settings->gameInputDevice() == QStringLiteral("keyboard");
+    environment.insert(QStringLiteral("DECKADE_INPUT_DEVICE"), m_settings->gameInputDevice());
+    environment.remove(QStringLiteral("MACADE_GAMEPAD_PROFILE_PATH"));
+    if (!keyboardInput) {
+        const QString profilePath = controllerProfilePath(
+            emulator == QStringLiteral("snes9x") ? emulator : gameId);
         if (QFile::exists(profilePath)) {
             normalizeControllerProfile(profilePath);
             environment.insert(QStringLiteral("MACADE_GAMEPAD_PROFILE_PATH"), profilePath);

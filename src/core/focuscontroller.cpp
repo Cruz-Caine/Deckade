@@ -192,6 +192,15 @@ void FocusController::secondaryActivate()
     QMetaObject::invokeMethod(item, "secondaryActivated");
 }
 
+void FocusController::tertiaryActivate()
+{
+    QQuickItem *item = currentItem();
+    if (!item || !isRegistered(item)) {
+        return;
+    }
+    QMetaObject::invokeMethod(item, "tertiaryActivated");
+}
+
 QList<FocusController::Candidate> FocusController::candidates() const
 {
     QList<Candidate> result;

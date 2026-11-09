@@ -44,12 +44,11 @@ Item {
                 spacing: 3
 
                 Text {
-                    text: "YOUR ROOMS"
+                    text: "Your rooms"
                     color: theme.text
                     font.family: theme.displayFamily
                     font.weight: Font.Bold
                     font.pixelSize: 24
-                    font.letterSpacing: 2
                 }
 
                 Text {
@@ -62,7 +61,7 @@ Item {
 
             AppButton {
                 id: browseButton
-                text: "BROWSE MORE"
+                text: "Browse more"
                 compact: true
                 width: 210
                 anchors.verticalCenter: parent.verticalCenter
@@ -112,7 +111,7 @@ Item {
             visible: screen.rooms.length === 0
             width: parent.width
             height: visible ? 220 : 0
-            radius: 16
+            radius: 10
             color: theme.panel
             border.width: 1
             border.color: theme.border
@@ -122,12 +121,11 @@ Item {
                 spacing: 10
 
                 Text {
-                    text: "NO ROOMS JOINED"
+                    text: "No rooms joined"
                     color: theme.text
                     font.family: theme.displayFamily
                     font.weight: Font.Bold
                     font.pixelSize: 25
-                    font.letterSpacing: 2
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
@@ -140,7 +138,7 @@ Item {
                 }
 
                 AppButton {
-                    text: "BROWSE GAMES"
+                    text: "Browse games"
                     compact: true
                     primary: true
                     width: 190

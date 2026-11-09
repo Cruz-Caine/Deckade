@@ -1,5 +1,8 @@
 #include "romlibrary.h"
 
+#include <QSet>
+#include <QVariantMap>
+
 #include "fightcadelauncher.h"
 #include "../core/settingsstore.h"
 
@@ -60,6 +63,9 @@ RomLibrary::RomLibrary(FightcadeLauncher *launcher, SettingsStore *settings, QOb
     , m_launcher(launcher)
     , m_settings(settings)
 {
+    const auto bump = [this] { ++m_revision; emit revisionChanged(); };
+    connect(this, &RomLibrary::romReady, this, bump);
+    connect(this, &RomLibrary::stateChanged, this, bump);
 }
 
 RomLibrary::~RomLibrary()
@@ -210,6 +216,36 @@ bool RomLibrary::collect(const QString &key)
         m_queue.enqueue(key);
     }
     return true;
+}
+
+QVariantMap RomLibrary::fileStatus(const QString &emulator, const QString &gameId)
+{
+    if (m_busy && (emulator != m_emulator || gameId != m_gameId)) {
+        // Do not disturb the ROM folder of the download in progress.
+        return {{QStringLiteral("known"), false}};
+    }
+    loadEntriesFor(emulator);
+    const QString mainKey = findMainKey(emulator, gameId);
+    if (mainKey.isEmpty() || !m_launcher) return {{QStringLiteral("known"), false}};
+
+    const QString previousRoot = m_romRoot;
+    m_romRoot = m_launcher->romDirectoryFor(emulator);
+    QStringList pending{mainKey};
+    QSet<QString> seen;
+    QStringList missing;
+    while (!pending.isEmpty()) {
+        const QString key = pending.takeFirst();
+        if (seen.contains(key) || !m_entries.contains(key)) continue;
+        seen.insert(key);
+        const Entry entry = m_entries.value(key);
+        if (!QFileInfo::exists(destinationFor(entry))) missing << key;
+        pending += entry.requirements;
+    }
+    m_romRoot = previousRoot;
+    return {{QStringLiteral("known"), true},
+            {QStringLiteral("ready"), missing.isEmpty()},
+            {QStringLiteral("total"), static_cast<int>(seen.size())},
+            {QStringLiteral("missing"), missing}};
 }
 
 void RomLibrary::ensureRom(const QString &emulator, const QString &gameId)

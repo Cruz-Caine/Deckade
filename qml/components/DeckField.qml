@@ -9,23 +9,23 @@ TextField {
     property bool emphasized: false
     property bool deckTextInput: true
 
-    height: 54
-    leftPadding: 18
-    rightPadding: 18
+    height: 44
+    leftPadding: 12
+    rightPadding: 12
     topPadding: 0
     bottomPadding: 0
     verticalAlignment: TextInput.AlignVCenter
     color: theme.text
     placeholderTextColor: theme.textFaint
     selectionColor: theme.accent
-    selectedTextColor: "#16070a"
+    selectedTextColor: "#ffffff"
     font.family: theme.bodyFamily
-    font.pixelSize: 16
+    font.pixelSize: 14
     selectByMouse: true
 
     background: Rectangle {
-        radius: 10
-        color: root.activeFocus ? theme.panelHover : theme.panel
+        radius: 8
+        color: theme.panelRaised
         border.width: root.activeFocus ? 2 : 1
         border.color: root.activeFocus ? theme.accent : root.emphasized ? theme.borderStrong : theme.border
         Behavior on border.color { ColorAnimation { duration: settings.reduceMotion ? 0 : 100 } }

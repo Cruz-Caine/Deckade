@@ -48,7 +48,7 @@ Item {
             Rectangle {
                 width: parent.width
                 height: 150
-                radius: 14
+                radius: 10
                 color: theme.panel
                 border.width: 1
                 border.color: theme.border
@@ -59,12 +59,11 @@ Item {
                     spacing: 10
 
                     Text {
-                        text: "GAME FILES"
+                        text: "Game files"
                         color: theme.text
                         font.family: theme.displayFamily
                         font.weight: Font.Bold
                         font.pixelSize: 17
-                        font.letterSpacing: 1.8
                     }
 
                     Text {
@@ -80,21 +79,21 @@ Item {
                         spacing: 8
 
                         AppButton {
-                            text: "CHOOSE FOLDER"
+                            text: "Choose folder"
                             compact: true
                             width: 158
                             onClicked: folderDialog.open()
                         }
 
                         AppButton {
-                            text: "OPEN ROMS"
+                            text: "Open ROMs"
                             compact: true
                             width: 126
                             onClicked: launcher.openRomFolder()
                         }
 
                         AppButton {
-                            text: "REFRESH"
+                            text: "Refresh"
                             compact: true
                             width: 108
                             onClicked: launcher.refreshInstall()
@@ -106,7 +105,7 @@ Item {
             Rectangle {
                 width: parent.width
                 height: 178
-                radius: 14
+                radius: 10
                 color: theme.panel
                 border.width: 1
                 border.color: theme.border
@@ -117,12 +116,11 @@ Item {
                     spacing: 8
 
                     Text {
-                        text: "NATIVE RUNTIMES"
+                        text: "Native runtimes"
                         color: theme.text
                         font.family: theme.displayFamily
                         font.weight: Font.Bold
                         font.pixelSize: 17
-                        font.letterSpacing: 1.8
                     }
 
                     Text {
@@ -162,12 +160,11 @@ Item {
                                         font.pixelSize: 15
                                     }
                                     Text {
-                                        text: modelData.available ? "NATIVE · READY" : "NOT INSTALLED"
+                                        text: modelData.available ? "NATIVE · READY" : "Not installed"
                                         color: modelData.available ? theme.green : theme.gold
                                         font.family: theme.bodyFamily
                                         font.weight: Font.DemiBold
                                         font.pixelSize: 9
-                                        font.letterSpacing: 0.6
                                     }
                                     Text {
                                         width: parent.width
@@ -192,7 +189,7 @@ Item {
                 Rectangle {
                     width: (parent.width - 14) / 2
                     height: parent.height
-                    radius: 14
+                    radius: 10
                     color: theme.panel
                     border.width: 1
                     border.color: theme.border
@@ -203,12 +200,11 @@ Item {
                         spacing: 10
 
                         Text {
-                            text: "CONTROLLER"
+                            text: "Controller"
                             color: theme.text
                             font.family: theme.displayFamily
                             font.weight: Font.Bold
                             font.pixelSize: 17
-                            font.letterSpacing: 1.8
                         }
 
                         Text {
@@ -266,8 +262,8 @@ Item {
                                 anchors.right: parent.right
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: gamepad.controllerIndex >= 0
-                                      ? "PAD " + (gamepad.controllerIndex + 1)
-                                      : "NO PAD"
+                                      ? "pad " + (gamepad.controllerIndex + 1)
+                                      : "No pad"
                                 color: gamepad.connected ? theme.cyan : theme.textFaint
                                 font.family: theme.displayFamily
                                 font.weight: Font.DemiBold
@@ -289,7 +285,7 @@ Item {
                 Rectangle {
                     width: (parent.width - 14) / 2
                     height: parent.height
-                    radius: 14
+                    radius: 10
                     color: theme.panel
                     border.width: 1
                     border.color: theme.border
@@ -300,12 +296,11 @@ Item {
                         spacing: 8
 
                         Text {
-                            text: "INTERFACE"
+                            text: "Interface"
                             color: theme.text
                             font.family: theme.displayFamily
                             font.weight: Font.Bold
                             font.pixelSize: 17
-                            font.letterSpacing: 1.8
                         }
 
                         Focusable {
@@ -457,7 +452,7 @@ Item {
             Rectangle {
                 width: parent.width
                 height: 140
-                radius: 14
+                radius: 10
                 color: theme.panel
                 border.width: 1
                 border.color: theme.border
@@ -508,7 +503,7 @@ Item {
 
                         AppButton {
                             width: parent.width
-                            text: "SIGN OUT"
+                            text: "Sign out"
                             danger: true
                             compact: true
                             onClicked: screen.signOut()

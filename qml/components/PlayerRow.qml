@@ -13,7 +13,10 @@ Focusable {
     signal friendToggleRequested(var player)
 
     implicitHeight: 48
-    ringRadius: 8
+    ringRadius: 6
+    ringOutside: false
+    hintPrimary: "Challenge"
+    hintSecondary: root.isFriend ? "Remove friend" : "Add friend"
     onActivated: root.challengeRequested(root.player)
     onSecondaryActivated: root.friendToggleRequested(root.player)
 
@@ -56,7 +59,10 @@ Focusable {
         }
 
         Text {
-            width: Math.max(60, parent.width - 96)
+            // Flag, ping bars, rank badge, one spacer and five gaps sit to the
+            // right of the name; leave room for all of them so the badge is
+            // never pushed out of the row.
+            width: Math.max(60, parent.width - 120)
             text: (root.isFriend ? "★ " : "") + (root.player.name ?? "")
             color: root.nameColor()
             font.family: theme.displayFamily
@@ -104,6 +110,6 @@ Focusable {
         anchors.bottom: parent.bottom
         height: 1
         color: theme.border
-        opacity: 0.3
+        opacity: 0.0
     }
 }

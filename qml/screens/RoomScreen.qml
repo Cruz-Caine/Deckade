@@ -36,6 +36,15 @@ Item {
     signal friendToggleRequested(var player)
     signal autoMatchToggleRequested()
     signal channelTvRequested()
+    signal controlsRequested()
+    signal filesRequested()
+
+    readonly property var files: {
+        roms.revision
+        return channel.emulator && channel.gameId
+            ? roms.fileStatus(channel.emulator, channel.gameId)
+            : ({ known: false })
+    }
 
     // Keep an outgoing challenge visible until the server reports an accept,
     // reject, cancel, or match start. A transient toast alone leaves the player
@@ -49,8 +58,8 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         width: Math.min(520, parent.width - 40)
         height: 64
-        radius: 12
-        color: "#16130bdd"
+        radius: 10
+        color: theme.panelRaised
         border.width: 1
         border.color: theme.gold
 
@@ -87,7 +96,7 @@ Item {
             }
 
             AppButton {
-                text: "CANCEL"
+                text: "Cancel"
                 compact: true
                 danger: true
                 width: 108
@@ -223,8 +232,8 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        radius: 16
-        color: "#0f141e"
+        radius: 10
+        color: "#1b1f29"
         border.width: 1
         border.color: theme.border
         clip: true
@@ -236,16 +245,16 @@ Item {
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             cache: true
-            opacity: 0.48
+            opacity: 0.35
         }
 
         Rectangle {
             width: parent.width
             height: 188
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#0f141ecc" }
-                GradientStop { position: 0.55; color: "#0f141e77" }
-                GradientStop { position: 1.0; color: "#0f141e" }
+                GradientStop { position: 0.0; color: "#cc1b1f29" }
+                GradientStop { position: 0.55; color: "#771b1f29" }
+                GradientStop { position: 1.0; color: "#1b1f29" }
             }
         }
 
@@ -259,7 +268,8 @@ Item {
                 height: 132
 
                 Column {
-                    width: parent.width - 624
+                    id: titleColumn
+                    width: Math.max(200, parent.width - actionsRow.width - 24)
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 5
 
@@ -273,10 +283,11 @@ Item {
                             font.weight: Font.Bold
                             font.pixelSize: 30
                             elide: Text.ElideRight
-                            width: parent.width - 78
+                            width: Math.min(implicitWidth, parent.width - rankedPill.width - 8)
                         }
                         Pill {
-                            text: "RANKED"
+                            id: rankedPill
+                            text: "Ranked"
                             visible: screen.channel.isRanked === true
                             strong: true
                             foreground: theme.gold
@@ -298,14 +309,19 @@ Item {
                     Row {
                         spacing: 14
                         Pill {
-                            text: String(screen.visibleUsers.filter(function(u) { return !u.away && !u.channelAway }).length) + " ONLINE"
+                            text: String(screen.visibleUsers.filter(function(u) { return !u.away && !u.channelAway }).length) + " online"
                             dot: true
                             foreground: theme.green
                             fill: "#0b1512"
                             line: "#245544"
                         }
                         Pill {
-                            text: String(screen.incomingChallenges.length) + " CHALLENGES"
+                            visible: screen.files.known === true
+                            text: screen.files.ready ? "Files downloaded" : "Missing " + (screen.files.missing ?? []).length + " of " + screen.files.total + " files"
+                            foreground: screen.files.ready ? theme.green : theme.gold
+                        }
+                        Pill {
+                            text: String(screen.incomingChallenges.length) + " challenges"
                             visible: screen.incomingChallenges.length > 0
                             foreground: theme.gold
                             fill: "#1a160b"
@@ -314,37 +330,56 @@ Item {
                     }
                 }
 
-                Row {
-                    width: 610
-                    spacing: 8
-                    anchors.verticalCenter: parent.verticalCenter
-                    layoutDirection: Qt.RightToLeft
+                Item {
+                    id: actionsSlot
+                    width: actionsRow.width
+                    height: parent.height
 
-                    AppButton {
-                        text: "LEAVE"
-                        compact: true
-                        danger: true
-                        width: 92
-                        onClicked: screen.leaveRequested()
-                    }
-                    AppButton {
-                        text: screen.favorite ? "★ FAVORITE" : "☆ FAVORITE"
-                        compact: true
-                        width: 130
-                        onClicked: screen.favoriteRequested(!screen.favorite)
-                    }
-                    AppButton {
-                        visible: screen.channel.supportsTraining === true
-                        text: "TRAINING"
-                        compact: true
-                        width: 112
-                        onClicked: screen.trainingRequested()
-                    }
-                    AppButton {
-                        text: "TEST GAME"
-                        compact: true
-                        width: 120
-                        onClicked: screen.testRequested()
+                    Row {
+                        id: actionsRow
+                        spacing: 8
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        layoutDirection: Qt.RightToLeft
+
+                        AppButton {
+                            text: "Leave"
+                            compact: true
+                            danger: true
+                            width: 92
+                            onClicked: screen.leaveRequested()
+                        }
+                        AppButton {
+                            text: screen.favorite ? "★ FAVORITE" : "☆ FAVORITE"
+                            compact: true
+                            width: 130
+                            onClicked: screen.favoriteRequested(!screen.favorite)
+                        }
+                        AppButton {
+                            visible: screen.channel.supportsTraining === true
+                            text: "Training"
+                            compact: true
+                            width: 112
+                            onClicked: screen.trainingRequested()
+                        }
+                        AppButton {
+                            text: "Controls"
+                            compact: true
+                            onClicked: screen.controlsRequested()
+                        }
+                        AppButton {
+                            visible: screen.files.known === true && !screen.files.ready
+                            text: roms.busy ? "Downloading" : "Download files"
+                            busy: roms.busy
+                            compact: true
+                            onClicked: screen.filesRequested()
+                        }
+                        AppButton {
+                            text: "Test game"
+                            compact: true
+                            width: 120
+                            onClicked: screen.testRequested()
+                        }
                     }
                 }
             }
@@ -371,18 +406,17 @@ Item {
                             width: parent.width
                             height: 22
                             Text {
-                                text: "PLAYERS"
+                                text: "Players"
                                 color: theme.textMuted
                                 font.family: theme.displayFamily
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 12
-                                font.letterSpacing: 1.5
                             }
                             Item { width: parent.width - 110; height: 1 }
                             Text {
                                 text: screen.playerSearch.length > 0
                                       ? screen.visibleUsers.length + " / " + screen.sortedUsers().length
-                                      : String(screen.sortedUsers().length) + " IN ROOM"
+                                      : String(screen.sortedUsers().length) + " in room"
                                 color: theme.textFaint
                                 font.family: theme.bodyFamily
                                 font.pixelSize: 10
@@ -393,7 +427,7 @@ Item {
                             width: parent.width
                             height: 34
                             compact: true
-                            text: screen.friendsOnly ? "SHOWING FRIENDS" : "FILTER FRIENDS"
+                            text: screen.friendsOnly ? "Showing friends" : "Filter friends"
                             selected: screen.friendsOnly
                             onClicked: screen.friendsOnly = !screen.friendsOnly
                         }
@@ -403,7 +437,7 @@ Item {
                             height: 34
                             compact: true
                             primary: screen.autoMatchActive
-                            text: screen.autoMatchActive ? "AUTO MATCHING..." : "AUTO MATCH"
+                            text: screen.autoMatchActive ? "Auto matching..." : "Auto match"
                             onClicked: screen.autoMatchToggleRequested()
                         }
 
@@ -509,21 +543,19 @@ Item {
                             width: parent.width
                             height: 22
                             Text {
-                                text: "CHAT"
+                                text: "Chat"
                                 color: theme.textMuted
                                 font.family: theme.displayFamily
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 12
-                                font.letterSpacing: 1.5
                             }
                             Item { width: parent.width - 100; height: 1 }
                             Text {
-                                text: "LIVE"
+                                text: "Live"
                                 color: theme.green
                                 font.family: theme.bodyFamily
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 10
-                                font.letterSpacing: 1
                             }
                         }
 
@@ -575,7 +607,7 @@ Item {
                             }
 
                             AppButton {
-                                text: "SEND"
+                                text: "Send"
                                 compact: true
                                 width: 96
                                 height: 46
@@ -599,19 +631,18 @@ Item {
                         spacing: 10
 
                         Text {
-                            text: "LIVE MATCHES"
+                            text: "Live matches"
                             color: theme.textMuted
                             font.family: theme.displayFamily
                             font.weight: Font.DemiBold
                             font.pixelSize: 12
-                            font.letterSpacing: 1.5
                         }
 
                         AppButton {
                             width: parent.width
                             height: 30
                             compact: true
-                            text: "WATCH TOP MATCH"
+                            text: "Watch top match"
                             onClicked: screen.channelTvRequested()
                         }
 
@@ -680,13 +711,12 @@ Item {
                         Item { width: 1; height: 2 }
 
                         Text {
-                            text: "CHANNEL NOTES"
+                            text: "Channel notes"
                             visible: (screen.channel.motd ?? "").length > 0
                             color: theme.textMuted
                             font.family: theme.displayFamily
                             font.weight: Font.DemiBold
                             font.pixelSize: 12
-                            font.letterSpacing: 1.5
                         }
 
                         Text {
