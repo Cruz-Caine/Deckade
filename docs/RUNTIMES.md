@@ -113,9 +113,9 @@ ROMs/fbneo/tg/              PC Engine/TurboGrafx
 ROMs/fbneo/coleco/          ColecoVision
 ```
 
-Training mode uses the official `fbneo-training-mode` Lua scripts when
-available. The current Linux FBNeo build may report a missing Lua `gd` module;
-the game still launches, but the optional trainer overlay may be disabled.
+Training mode runs the bundled `fbneo-training-mode` Lua scripts. Their `gd`
+image module is built into the runtime (`runtime/fbneo/deckade_lua_gd.h`), so no
+system `libgd` is needed.
 
 ## Snes9x
 

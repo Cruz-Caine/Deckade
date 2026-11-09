@@ -12,4 +12,11 @@ Linux-specific changes:
 - POV hat 0 is folded into the left-stick X/Y axes so D-pad directions work
   with FBNeo's legacy axis bindings.
 
+- Official Fightcade Neo Geo savestates predate the `Neo68KFix` offset field;
+  `scripts/patches/fbneo-state-compat.py` detects and loads that layout.
+- Lua `gd` is built in, and SDL paints the Lua gui layer each frame. See
+  `scripts/patches/fbneo-lua-gd.py`.
+- `ui/` holds the match overlay art and font, and `detector/` the per-game score
+  detection data.
+
 The binary is `runtime/bin/deckade-fbneo`.

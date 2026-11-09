@@ -58,7 +58,7 @@ ApplicationWindow {
     property string launchingTitle: ""
     property var pendingChat: null
     property bool virtualKeyboardVisible: false
-    property bool hidLauncher: false
+    property bool gameWindowOpen: false
     property var pendingRomAction: null
     property double suppressGamepadUntil: 0
 
@@ -1068,11 +1068,11 @@ ApplicationWindow {
         target: launcher
         function onStateChanged() {
             if (launcher.running) {
-                hideLauncherTimer.restart()
+                gameOpenedTimer.restart()
             } else {
-                hideLauncherTimer.stop()
-                if (root.hidLauncher) {
-                    root.hidLauncher = false
+                gameOpenedTimer.stop()
+                if (root.gameWindowOpen) {
+                    root.gameWindowOpen = false
                     root.closeTransientUi()
                     root.suppressGamepadUntil = Date.now() + 1200
                     appController.setWindowVisible(true)
@@ -1099,14 +1099,13 @@ ApplicationWindow {
     }
 
     Timer {
-        id: hideLauncherTimer
+        id: gameOpenedTimer
         interval: 1100
         onTriggered: {
             if (launcher.running) {
                 root.closeTransientUi()
                 root.suppressGamepadUntil = Date.now() + 1200
-                root.hidLauncher = true
-                appController.setWindowVisible(false)
+                root.gameWindowOpen = true
             }
         }
     }

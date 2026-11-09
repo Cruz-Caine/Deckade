@@ -305,6 +305,6 @@ gamekeys = {
 }
 
 --folder with scrolling-input-code.lua, icon files, & frame dump folder (relative to this lua file)
-resourcepath = "inputs\\scrolling-input"
+resourcepath = "inputs/scrolling-input"
 
-dofile(resourcepath .. "\\scrolling-input-code.lua")
+dofile(resourcepath .. "/scrolling-input-code.lua")

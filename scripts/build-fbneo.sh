@@ -37,18 +37,6 @@ cp -a "$MACADE_DIR/Sources/FightcadeFBNeo" "$FBNEO_DIR"
 cd "$FBNEO_DIR"
 
 # Linux/SDL build fixes.
-# FBNeo's vendored Lua is built without dynamic module loading by default.
-# Lua-GD (used by the bundled training mode) is a C module, so enable dlopen.
-python3 - <<'LUAFLAGS'
-from pathlib import Path
-p = Path('makefile.sdl')
-s = p.read_text()
-if '-DLUA_USE_DLOPEN' not in s:
-    s = s.replace('CFLAGS = -O2', 'CFLAGS = -DLUA_USE_DLOPEN -O2', 1)
-    s = s.replace('LDFLAGS += -s', 'LDFLAGS += -s\nLDFLAGS += -ldl\nLDFLAGS += -rdynamic', 1)
-p.write_text(s)
-LUAFLAGS
-
 sed -i 's/^NAME\t\t= fbneosdl/NAME\t\t= deckade-fbneo/' makefile.sdl
 sed -i 's/-framework OpenGL -lz/-lGL -lz/' makefile.sdl
 sed -i 's/ASFLAGS += -f macho64/ASFLAGS += -f elf64/' makefile.sdl
@@ -191,8 +179,6 @@ TRAININGSTATE
 
 python3 "$ROOT/scripts/patches/fbneo-enable-menu.py"
 
-python3 "$ROOT/scripts/patches/fbneo-frame-dump.py"
-
 python3 "$ROOT/scripts/patches/fbneo-controller-fixes.py"
 
 # The macOS embedded video/input bridge is intentionally inert on Linux.
@@ -242,6 +228,15 @@ if old not in s:
     raise SystemExit('Could not find the Macade VidPaint block')
 p.write_text(s.replace(old, new, 1))
 PY
+
+# Hooks the VidPaint rewritten above, so it has to stay after that block.
+python3 "$ROOT/scripts/patches/fbneo-frame-dump.py"
+
+python3 "$ROOT/scripts/patches/fbneo-state-compat.py"
+
+python3 "$ROOT/scripts/patches/fbneo-disconnect.py"
+
+python3 "$ROOT/scripts/patches/fbneo-lua-gd.py"
 
 make -f makefile.sdl -j"$(nproc)" CPUTYPE="$CPUTYPE" DEPEND= PERL=perl
 

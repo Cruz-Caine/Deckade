@@ -13,7 +13,7 @@ if not (mame or fba) then error("This script is only intended for FBA-rr and MAM
 if not emu.registerstart then error("This script requires a newer version of FBA-rr.", 0) end
 
 col,inp,module = {},{}
-dofile("inputs\\input-modules.lua","r")
+dofile("inputs/input-modules.lua","r")
 
 local function generic() --try to detect controls and make a generic module
 	local c,width,height = joypad.get(),emu.screenwidth(),emu.screenheight()

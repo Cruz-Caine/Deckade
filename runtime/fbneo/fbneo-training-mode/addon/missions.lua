@@ -608,8 +608,7 @@ end
 local function createMissionsFile(character)
 	-- Create empty missions_list.lua file if one does not exist
 	if not fexists("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua") then
-		os.execute("mkdir games\\"..dirname.."\\missions_saved\\"..character) -- windows
-		os.execute("mkdir games/"..dirname.."/missions_saved/"..character) -- posix
+		os.execute('mkdir -p "games/'..dirname..'/missions_saved/'..character..'"') -- Deckade: Linux only, and -p creates missions_saved
 		local file = io.open("games/"..dirname.."/missions_saved/"..character.."/missions_list.lua", "w")
 		file:write("missions_list[\""..character.."\"] = {}\n---------------------------------------------------------")
 		file:close()

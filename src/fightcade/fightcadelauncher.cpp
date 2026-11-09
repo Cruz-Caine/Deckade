@@ -614,6 +614,19 @@ bool FightcadeLauncher::prepareWorkDirectory(const QString &emulator, const QStr
             }
         }
 
+        // Overlay art and per-game score detection, read relative to the work
+        // directory. Relink on each launch because AppImage mount paths change.
+        for (const QString &bundled : {QStringLiteral("ui"), QStringLiteral("detector")}) {
+            const QString source = QDir(m_runtimeRoot).filePath(QStringLiteral("fbneo/%1").arg(bundled));
+            const QString link = QDir(workDir).filePath(bundled);
+            if (QFileInfo(link).isSymLink()) {
+                QFile::remove(link);
+            }
+            if (QFileInfo(source).isDir() && !QFileInfo::exists(link)) {
+                QFile::link(source, link);
+            }
+        }
+
         const QString configDir = QDir(dataDir).filePath(QStringLiteral("fbneo/config"));
         const QString configPath = QDir(configDir).filePath(QStringLiteral("fbneo.ini"));
         const QString markerPath = QDir(workDir).filePath(QStringLiteral("deckade-rom-root"));
@@ -701,16 +714,6 @@ bool FightcadeLauncher::launchRuntime(const QString &emulator, const QStringList
     } else {
         environment.remove(QStringLiteral("MACADE_SINGLE_PLAYER_INPUT"));
     }
-    // FBNeo's training-mode Lua requires the Lua-GD module. The module is
-    // loaded with a relative ./?.so path after FBNeo changes into the training
-    // script directory, so expose the runtime workdir explicitly.
-    const QString luaGd = QDir(m_runtimeRoot).filePath(QStringLiteral("fbneo/gd.so"));
-    const QString luaGdTarget = QDir(workDir).filePath(QStringLiteral("gd.so"));
-    if (QFileInfo::exists(luaGd) && !QFileInfo::exists(luaGdTarget)) {
-        QFile::copy(luaGd, luaGdTarget);
-    }
-    environment.insert(QStringLiteral("LUA_CPATH"),
-                       QDir(workDir).filePath(QStringLiteral("?.so")) + QLatin1Char(';'));
     // Keep native GGPO/Quark diagnostics when a match does not reach video.
     const QString logDir = QDir(workDir).filePath(QStringLiteral("logs"));
     QDir().mkpath(logDir);

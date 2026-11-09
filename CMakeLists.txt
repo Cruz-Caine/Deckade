@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(Deckade VERSION 0.2.10 LANGUAGES CXX)
+project(Deckade VERSION 0.2.11 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -219,6 +219,9 @@ add_executable(deckade_social_tests
 target_include_directories(deckade_social_tests PRIVATE src)
 target_link_libraries(deckade_social_tests PRIVATE Qt6::Core Qt6::Network)
 add_test(NAME deckade_social_tests COMMAND deckade_social_tests)
+
+add_test(NAME deckade_runtime_assets_tests
+         COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tests/runtime_assets_tests.py)
 
 # Ship the native runtimes and their build notes alongside the app.
 install(DIRECTORY runtime/ DESTINATION share/deckade/runtime USE_SOURCE_PERMISSIONS)

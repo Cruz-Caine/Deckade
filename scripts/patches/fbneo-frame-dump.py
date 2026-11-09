@@ -23,8 +23,13 @@ static void DeckadeMaybeDumpFrame()
 }
 '''
     s = s.replace('INT32 VidPaint(INT32 bValidate)', helper + '\nINT32 VidPaint(INT32 bValidate)', 1)
-    s = s.replace('''\treturn pVidOut[nVidActive]->Paint(bValidate);
-}''', '''\tconst INT32 result = pVidOut[nVidActive]->Paint(bValidate);
+    # Must run after the VidPaint rewrite in build-fbneo.sh. Fail loudly: a
+    # silent miss here leaves tests/game_matrix.sh with no frames to check.
+    present = '''\treturn pVidOut[nVidActive]->Paint(bValidate);
+}'''
+    if present not in s:
+        raise SystemExit('fbneo-frame-dump: rewritten VidPaint not found')
+    s = s.replace(present, '''\tconst INT32 result = pVidOut[nVidActive]->Paint(bValidate);
 \tDeckadeMaybeDumpFrame();
 \treturn result;
 }''', 1)
